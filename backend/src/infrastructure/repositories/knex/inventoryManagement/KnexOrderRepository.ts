@@ -1,18 +1,17 @@
 import {AbstractKnexRepository} from "../AbstractKnexRepository";
 import {OrderRepository} from "../../../../application/inventoryManagement/repositories/OrderRepository";
-import {AbstractRepositoryResponse} from "../../../../shared/IRepository";
 import {Order} from "../../../../domain/inventoryManagement/entities/Order";
-import {KnexRepositoryResponse} from "../KnexRepositoryResponse";
 import {DealerSiret} from "../../../../domain/inventoryManagement/value-object/DealerSiret";
 import {InventorySparePart} from "../../../../domain/inventoryManagement/entities/InventorySparePart";
 import {OrderLine} from "../../../../domain/inventoryManagement/value-object/OrderLine";
+import {Result, VoidResult} from "../../../../shared/Result";
 
 export class KnexOrderRepository extends AbstractKnexRepository implements OrderRepository{
     protected tableName: string = "orders";
     protected orderLinesTableName: string = "order_lines";
     protected sparePartsTableName: string = "spare_parts";
 
-    async findOrdersByDealer(dealerSiret: DealerSiret): Promise<AbstractRepositoryResponse<Order[]>> {
+    async findOrdersByDealer(dealerSiret: DealerSiret): Promise<Result<Order[]>> {
         try{
             // @ts-ignore
             const ordersWithSpartParts = await this.getQuery()
@@ -28,7 +27,7 @@ export class KnexOrderRepository extends AbstractKnexRepository implements Order
                 .where('dealer_siret', dealerSiret.getValue()) as any[];
 
             const orders = ordersWithSpartParts.reduce((acc, order) => {
-                const existingOrder = acc.find(o => o.id === order.id);
+                const existingOrder = acc.find((o : {id:number})=> o.id === order.id);
                 const sparePart = new InventorySparePart(order.spare_part_reference, order.spare_part_name);
                 const orderLine = new OrderLine(sparePart, order.quantity, order.unit_price);
 
@@ -43,20 +42,30 @@ export class KnexOrderRepository extends AbstractKnexRepository implements Order
                 return acc;
             }, []);
 
+            const results = orders.map((order: any) => {
+                return new Order(
+                    order.id,
+                    new Date(order.orderedAt),
+                    new Date(order.deliveredAt),
+                    dealerSiret,
+                    order.lines
+                );
+            });
 
-            return new KnexRepositoryResponse<Order[]>(orders);
+            return Result.Success<Order[]>(results);
         }catch (e){
-            return new KnexRepositoryResponse<Order[]>([], true);
+            console.error(e);
+            return Result.FailureStr("An error occurred while getting orders");
         }
     }
 
-    async store(order: Order): Promise<AbstractRepositoryResponse<void>> {
+    async store(order: Order): Promise<VoidResult> {
         const transaction = await this.connection.transaction();
         try{
             await transaction(this.tableName).insert({
                 id: order.id,
                 orderedAt: order.orderedAt,
-                dealer_siret: order.dealer.siret.getValue()
+                dealer_siret: order.dealerSiret.getValue()
             });
 
             for(const orderLine of order.lines){
@@ -68,10 +77,11 @@ export class KnexOrderRepository extends AbstractKnexRepository implements Order
             }
 
             transaction.commit();
-            return new KnexRepositoryResponse<void>(undefined, false);
+            return Result.SuccessVoid();
         }catch (e){
             transaction.rollback();
-            return new KnexRepositoryResponse<void>(undefined, true);
+            console.error(e);
+            return Result.FailureStr("An error occurred while storing order");
         }
     }
 }

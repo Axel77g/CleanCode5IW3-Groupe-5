@@ -1,8 +1,8 @@
 import {Order} from "../../../domain/inventoryManagement/entities/Order";
-import {Dealer} from "../../../domain/inventoryManagement/entities/Dealer";
-import {AbstractRepositoryResponse} from "../../../shared/IRepository";
+import {Result, VoidResult} from "../../../shared/Result";
+import {DealerSiret} from "../../../domain/inventoryManagement/value-object/DealerSiret";
 
 export interface OrderRepository {
-    store(order : Order) : Promise<AbstractRepositoryResponse<void>>
-    findOrdersByDealer(dealerSiret: Dealer) : Promise<AbstractRepositoryResponse<Order[]>>
+    store(order : Order) : Promise<VoidResult>
+    findOrdersByDealer(dealerSiret: DealerSiret) : Promise<Result<Order[]>>
 }

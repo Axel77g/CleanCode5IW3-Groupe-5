@@ -2,13 +2,12 @@ import {AbstractKnexRepository} from "../AbstractKnexRepository";
 import {StockRepository} from "../../../../application/inventoryManagement/repositories/StockRepository"
 import {InventorySparePart} from "../../../../domain/inventoryManagement/entities/InventorySparePart";
 import {DealerSiret} from "../../../../domain/inventoryManagement/value-object/DealerSiret";
-import {AbstractRepositoryResponse} from "../../../../shared/IRepository";
 import {StockInventorySparePart} from "../../../../domain/inventoryManagement/value-object/StockInventorySparePart";
-import {KnexRepositoryResponse} from "../KnexRepositoryResponse";
+import {Result, VoidResult} from "../../../../shared/Result";
 export class KnexStockRepository extends AbstractKnexRepository implements StockRepository{
     protected tableName: string = "dealers_stock_transactions";
 
-    async add(sparePart: InventorySparePart, dealerSiret: DealerSiret, quantity: number): Promise<AbstractRepositoryResponse<void>> {
+    async add(sparePart: InventorySparePart, dealerSiret: DealerSiret, quantity: number): Promise<VoidResult> {
         const transaction = await this.connection.transaction();
         try{
             await transaction(this.tableName).insert({
@@ -18,13 +17,14 @@ export class KnexStockRepository extends AbstractKnexRepository implements Stock
                 transaction_at: new Date()
             });
             await transaction.commit();
-            return new KnexRepositoryResponse<void>(undefined, false);
+            return Result.SuccessVoid();
         }catch (e){
-            return new KnexRepositoryResponse<void>(undefined, true);
+            console.error(e);
+            return Result.FailureStr("An error occurred while adding spare part in stock");
         }
     }
 
-    async getStock(dealerSiret: DealerSiret): Promise<AbstractRepositoryResponse<StockInventorySparePart[]>> {
+    async getStock(dealerSiret: DealerSiret): Promise<Result<StockInventorySparePart[]>> {
         try{
             const allTransactions = await this.getQuery().where('dealer_siret', dealerSiret.getValue()) as any[];
             const stockInventorySpareParts: Map<string,StockInventorySparePart> = new Map();
@@ -40,13 +40,14 @@ export class KnexStockRepository extends AbstractKnexRepository implements Stock
                 }
             }
 
-            return new KnexRepositoryResponse<StockInventorySparePart[]>(Array.from(stockInventorySpareParts.values()));
+            return Result.Success<StockInventorySparePart[]>(Array.from(stockInventorySpareParts.values()));
         }catch (e){
-            return new KnexRepositoryResponse<StockInventorySparePart[]>(undefined, true);
+            console.error(e);
+            return Result.FailureStr("An error occurred while getting stock");
         }
     }
 
-    async getStockQuantity(sparePart: InventorySparePart, dealerSiret: DealerSiret): Promise<AbstractRepositoryResponse<number>> {
+    async getStockQuantity(sparePart: InventorySparePart, dealerSiret: DealerSiret): Promise<Result<number>> {
         try{
             const stockTransactionsForSparePart = await this.getQuery()
                 .select('spare_part_reference')
@@ -57,13 +58,14 @@ export class KnexStockRepository extends AbstractKnexRepository implements Stock
                 .first() as any;
 
             const quantity = stockTransactionsForSparePart ? stockTransactionsForSparePart.total_quantity : 0;
-            return new KnexRepositoryResponse<number>(quantity);
+            return Result.Success<number>(quantity);
         }catch (e){
-            return new KnexRepositoryResponse<number>(undefined, true);
+            console.error(e);
+            return Result.FailureStr("An error occurred while getting stock quantity");
         }
     }
 
-    async remove(sparePart: InventorySparePart, dealerSiret: DealerSiret, quantity: number): Promise<AbstractRepositoryResponse<void>> {
+    async remove(sparePart: InventorySparePart, dealerSiret: DealerSiret, quantity: number): Promise<VoidResult> {
         const transaction = await this.connection.transaction();
         try{
             await transaction(this.tableName).insert({
@@ -72,9 +74,10 @@ export class KnexStockRepository extends AbstractKnexRepository implements Stock
                 quantity: -quantity
             });
             await transaction.commit();
-            return new KnexRepositoryResponse<void>(undefined, false);
+            return Result.SuccessVoid();
         }catch (e){
-            return new KnexRepositoryResponse<void>(undefined, true);
+            console.error(e);
+            return Result.FailureStr("An error occurred while removing spare part from stock");
         }
     }
 

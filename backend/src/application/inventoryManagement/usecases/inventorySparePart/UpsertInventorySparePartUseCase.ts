@@ -1,40 +1,32 @@
-import {AbstractUseCaseException, IInputUseCase, IOutputUseCase, IUseCase} from "../../../../shared/IUseCase";
+import { IInputUseCase, IUseCase} from "../../../../shared/IUseCase";
 import {InventorySparePartRepository} from "../../repositories/InventorySparePartRepository";
 import {InventorySparePart} from "../../../../domain/inventoryManagement/entities/InventorySparePart";
 import {GetInventorySparePartUseCase} from "./GetInventorySparePartUseCase";
+import {Result} from "../../../../shared/Result";
 
 interface UpsertInventorySparePartInput extends IInputUseCase{
     reference: string,
     name: string
 }
 
-interface UpsertInventorySparePartOutput extends IOutputUseCase{}
+export type UpsertInventorySparePartUseCase = IUseCase<UpsertInventorySparePartInput, Result>
+export const upsertInventorySparePartUseCase = (
+    _sparePartRepository: InventorySparePartRepository,
+    _getInventorySparePartUseCase: GetInventorySparePartUseCase
+): UpsertInventorySparePartUseCase => {
 
-class CannotAddSparePartInStock extends AbstractUseCaseException implements UpsertInventorySparePartOutput{
-    constructor(message: string = `Cannot add spare part`){
-        super(message);
-    }
-}
-
-export class UpsertInventorySparePartUseCase implements IUseCase<UpsertInventorySparePartInput, UpsertInventorySparePartOutput> {
-
-    constructor( private _sparePartRepository: InventorySparePartRepository, private _getInventorySparePartUseCase: GetInventorySparePartUseCase)
-    {}
-
-    async execute(input: UpsertInventorySparePartInput): Promise<UpsertInventorySparePartOutput> {
-        const getSpartPartUseCaseResponse = await this._getInventorySparePartUseCase.execute({reference: input.reference});
-        if(getSpartPartUseCaseResponse.sparePart != null && !getSpartPartUseCaseResponse.error){
-            const updatedSparePart = getSpartPartUseCaseResponse.sparePart.setName(input.name);
-            const updateResponse = await this._sparePartRepository.update(updatedSparePart);
-            if(updateResponse.hasError()) return new CannotAddSparePartInStock("Cannot update spare part")
+    return async (input: UpsertInventorySparePartInput) => {
+        const spartResponse = await _getInventorySparePartUseCase({reference: input.reference});
+        if(spartResponse.success){
+            const updatedSparePart = spartResponse.value.setName(input.name);
+            const updateResponse = await _sparePartRepository.update(updatedSparePart);
+            if(!updateResponse.success) return Result.FailureStr("Cannot update spare part, an error occurred while updating")
         }else{
             const sparePart = new InventorySparePart(input.reference, input.name);
-            const createResponse = await this._sparePartRepository.create(sparePart);
-            if(createResponse.hasError()) return new CannotAddSparePartInStock()
+            const createResponse = await _sparePartRepository.create(sparePart);
+            if(!createResponse.success) return Result.FailureStr("Cannot create spare part, an error occurred while creating")
         }
-        return {
-            message: "Spare part create / updated successfully",
-            error: false
-        }
+        return Result.Success("Spare part upserted successfully")
     }
+
 }

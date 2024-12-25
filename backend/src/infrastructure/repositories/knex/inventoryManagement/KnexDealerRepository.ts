@@ -1,24 +1,23 @@
 import {AbstractKnexRepository} from "../AbstractKnexRepository";
 import {DealerRepository} from "../../../../application/inventoryManagement/repositories/DealerRepository";
 import {DealerSiret} from "../../../../domain/inventoryManagement/value-object/DealerSiret";
-import {AbstractRepositoryResponse} from "../../../../shared/IRepository";
 import {Dealer} from "../../../../domain/inventoryManagement/entities/Dealer";
-import {KnexRepositoryResponse} from "../KnexRepositoryResponse";
 import {DealerAddress} from "../../../../domain/inventoryManagement/value-object/DealerAddress";
+import {Result, VoidResult} from "../../../../shared/Result";
 
 export class KnexDealerRepository extends AbstractKnexRepository implements DealerRepository{
     protected tableName: string = "dealers";
     private addressesTableName: string = "dealers_addresses";
 
-    async getBySiret(siret: DealerSiret): Promise<AbstractRepositoryResponse<Dealer>> {
+    async getBySiret(siret: DealerSiret): Promise<Result<Dealer>> {
         try{
             const dealerRow = await this.getQuery().where('siret', siret.getValue).first() as any;
             if(!dealerRow) {
-                return new KnexRepositoryResponse<Dealer>();
+                return Result.FailureStr("Dealer not found");
             }
             const dealerAddressRow = await this.getQuery(this.addressesTableName).where('id', dealerRow.address_id).first() as any;
             if(!dealerAddressRow) {
-                return new KnexRepositoryResponse<Dealer>();
+                return Result.FailureStr("Dealer address not found");
             }
             const dealerAddress = new DealerAddress(
                 dealerAddressRow.street,
@@ -33,15 +32,16 @@ export class KnexDealerRepository extends AbstractKnexRepository implements Deal
                 dealerRow.phoneNumber
             );
 
-            return new KnexRepositoryResponse<Dealer>(dealer);
+            return Result.Success<Dealer>(dealer);
         }catch (e){
-            return new KnexRepositoryResponse<Dealer>(undefined, true);
+            console.error(e);
+            return Result.FailureStr("An error occurred while getting dealer");
         }
     }
 
 
 
-    async store(dealer: Dealer): Promise<AbstractRepositoryResponse<void>> {
+    async store(dealer: Dealer): Promise<VoidResult> {
         const transaction = await this.connection.transaction();
         try{
             const addressId = await transaction.insert({
@@ -59,22 +59,24 @@ export class KnexDealerRepository extends AbstractKnexRepository implements Deal
             }).into(this.tableName);
 
             await transaction.commit();
-            return new KnexRepositoryResponse<void>();
+            return Result.SuccessVoid();
         }catch (e){
             await transaction.rollback();
-            return new KnexRepositoryResponse<void>(undefined, true);
+            console.error(e);
+            return Result.FailureStr("An error occurred while storing dealer");
         }
     }
 
-    async delete(siret: DealerSiret): Promise<AbstractRepositoryResponse<void>> {
+    async delete(siret: DealerSiret): Promise<VoidResult> {
         const transaction = await this.connection.transaction();
         try{
             await transaction.delete().from(this.tableName).where('siret', siret.getValue());
             await transaction.commit();
-            return new KnexRepositoryResponse<void>();
+            return Result.SuccessVoid();
         }catch (e){
             await transaction.rollback();
-            return new KnexRepositoryResponse<void>(undefined, true);
+            console.error(e);
+            return Result.FailureStr("An error occurred while deleting dealer");
         }
     }
 }

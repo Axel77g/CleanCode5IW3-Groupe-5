@@ -1,37 +1,20 @@
-import {AbstractUseCaseException, IInputUseCase, IOutputUseCase, IUseCase} from "../../../../shared/IUseCase";
+import {IInputUseCase, IOutputUseCase, IUseCase} from "../../../../shared/IUseCase";
 import {InventorySparePartRepository} from "../../repositories/InventorySparePartRepository";
 import {InventorySparePart} from "../../../../domain/inventoryManagement/entities/InventorySparePart";
+import {Result} from "../../../../shared/Result";
 
 interface GetInventorySparePartInput extends IInputUseCase{
     reference: string,
 }
 
-interface GetInventorySparePartOutput extends IOutputUseCase{
-    sparePart: InventorySparePart | null
-}
-class NotFoundSparePart extends AbstractUseCaseException implements GetInventorySparePartOutput{
-    sparePart: InventorySparePart | null = null;
-    constructor(message: string = `Spare part not found`){
-        super(message);
+type GetInventorySparePartResult = Result<InventorySparePart>
+
+export type GetInventorySparePartUseCase = IUseCase<GetInventorySparePartInput, GetInventorySparePartResult>
+export const getInventorySparePartUseCase = (_sparePartRepository: InventorySparePartRepository): GetInventorySparePartUseCase => {
+    return async (input: GetInventorySparePartInput) => {
+        const findSparePartResponse = await _sparePartRepository.find(input.reference);
+        if(!findSparePartResponse.success) return Result.FailureStr("An error occurred while finding spare part")
+        return findSparePartResponse;
     }
 }
 
-export class GetInventorySparePartUseCase implements IUseCase<GetInventorySparePartInput, GetInventorySparePartOutput> {
-
-    constructor( private _sparePartRepository: InventorySparePartRepository)
-    {}
-
-    async execute(input: GetInventorySparePartInput): Promise<GetInventorySparePartOutput> {
-        const findSparePartResponse = await this._sparePartRepository.find(input.reference);
-        if(findSparePartResponse.hasError() || findSparePartResponse.empty()){
-            return new NotFoundSparePart()
-        }
-
-        const sparePart = findSparePartResponse.value
-        return {
-            sparePart,
-            message: "Spare part found",
-            error: false
-        }
-    }
-}

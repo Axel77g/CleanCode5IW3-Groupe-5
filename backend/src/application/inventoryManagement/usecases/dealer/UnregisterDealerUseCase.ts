@@ -1,32 +1,17 @@
-import {AbstractUseCaseException, IInputUseCase, IOutputUseCase, IUseCase} from "../../../../shared/IUseCase";
+import {IInputUseCase, IUseCase} from "../../../../shared/IUseCase";
 import {DealerRepository} from "../../repositories/DealerRepository";
 import {DealerSiret} from "../../../../domain/inventoryManagement/value-object/DealerSiret";
+import {Result} from "../../../../shared/Result";
 
 interface UnregisterDealerInput extends IInputUseCase{
     dealerSiret: DealerSiret
 }
 
-interface UnregisterDealerOutput extends IOutputUseCase {}
-
-class CannotUnregisterDealerError extends AbstractUseCaseException implements UnregisterDealerOutput{
-    constructor() {
-        super("Cannot unregister dealer");
-    }
-}
-
-export class UnregisterDealerUseCase implements IUseCase<UnregisterDealerInput, UnregisterDealerOutput>{
-    constructor(private _dealerRepository: DealerRepository)
-    {}
-    async execute(input: UnregisterDealerInput): Promise<UnregisterDealerOutput> {
-        const deleteResponse = await this._dealerRepository.delete(input.dealerSiret)
-
-        if(deleteResponse.hasError()){
-            return new CannotUnregisterDealerError()
-        }
-
-        return {
-            message: "Dealer found",
-            error: false
-        }
+export type UnregisterDealerUseCase = IUseCase<UnregisterDealerInput, Result>
+export const unregisterDealerUseCase = (_dealerRepository: DealerRepository): UnregisterDealerUseCase => {
+    return async (input: UnregisterDealerInput) => {
+        const deleteResponse = await _dealerRepository.delete(input.dealerSiret)
+        if(!deleteResponse.success) return Result.FailureStr("Cannot unregister dealer")
+        return Result.Success("Dealer unregistered")
     }
 }

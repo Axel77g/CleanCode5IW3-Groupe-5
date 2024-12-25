@@ -1,8 +1,9 @@
-import {AbstractUseCaseException, IInputUseCase, IOutputUseCase, IUseCase} from "../../../../shared/IUseCase";
+import { IInputUseCase, IUseCase} from "../../../../shared/IUseCase";
 import {DealerSiret} from "../../../../domain/inventoryManagement/value-object/DealerSiret";
 import {InventorySparePart} from "../../../../domain/inventoryManagement/entities/InventorySparePart";
 import {StockRepository} from "../../repositories/StockRepository";
 import {NotificationServices} from "../../services/NotificationServices";
+import {Result} from "../../../../shared/Result";
 
 interface RemoveSparePartInStockInput extends IInputUseCase{
     dealerSiret: DealerSiret,
@@ -10,51 +11,21 @@ interface RemoveSparePartInStockInput extends IInputUseCase{
     quantity: number
 }
 
-interface RemoveSparePartInStockOutput extends IOutputUseCase{}
+export type RemoveSparePartInStockUseCase = IUseCase<RemoveSparePartInStockInput, Result>
+export const removeSparePartInStockUseCase = (_stockRepository: StockRepository, _notificationService: NotificationServices): RemoveSparePartInStockUseCase => {
+    return async (input: RemoveSparePartInStockInput) => {
+        const stockQuantityResponse = await _stockRepository.getStockQuantity(input.sparePart, input.dealerSiret);
+        if(!stockQuantityResponse.success) return Result.FailureStr("Stock not found")
 
-class CannotRemoveSparePartInStock extends AbstractUseCaseException implements RemoveSparePartInStockOutput{
-    constructor(input : RemoveSparePartInStockInput){
-        super(`Cannot remove spare part ${input.sparePart.reference} in stock of dealer ${input.dealerSiret.getValue()}`);
-    }
-}
+        const stockQuantity = stockQuantityResponse.value;
+        if(stockQuantity < input.quantity) return Result.FailureStr("Stock run out")
 
-class StockRunOut extends AbstractUseCaseException implements RemoveSparePartInStockOutput{
-    constructor(input : RemoveSparePartInStockInput){
-        super(`Stock run out for spare part ${input.sparePart.reference} in stock of dealer ${input.dealerSiret.getValue()}`);
-    }
-}
+        const removeResponse = await _stockRepository.remove(input.sparePart, input.dealerSiret, input.quantity);
+        if(!removeResponse.success) return Result.FailureStr("Cannot remove spare part from stock, an error occurred while removing")
 
-export class RemoveSparePartInStockUseCase implements IUseCase<RemoveSparePartInStockInput, RemoveSparePartInStockOutput> {
+        const newStockQuantity = stockQuantity - input.quantity;
+        if(newStockQuantity === 5) _notificationService.notifyLowStock(input.dealerSiret, input.sparePart)
 
-    constructor(
-        private _stockRepository: StockRepository,
-        private _notificationService: NotificationServices
-    ) {}
-
-    async execute(input: RemoveSparePartInStockInput): Promise<RemoveSparePartInStockOutput> {
-        const stockQuantityResponse = await this._stockRepository.getStockQuantity(input.sparePart, input.dealerSiret);
-        if(stockQuantityResponse.hasError()){
-            return new CannotRemoveSparePartInStock(input)
-        }
-
-        if(stockQuantityResponse.value == null || stockQuantityResponse.value < input.quantity){
-            return new StockRunOut(input)
-        }
-
-
-        const removeResponse = await this._stockRepository.remove(input.sparePart, input.dealerSiret, input.quantity);
-        if(removeResponse.hasError()){
-            return new CannotRemoveSparePartInStock(input)
-        }
-
-        const newStockQuantity = stockQuantityResponse.value - input.quantity;
-        if(newStockQuantity === 5){
-            this._notificationService.notifyLowStock(input.dealerSiret, input.sparePart)
-        }
-
-        return {
-            message: "Spare part remove from the stock",
-            error: false
-        }
+        return Result.Success("Spare part removed from stock successfully")
     }
 }

@@ -1,19 +1,14 @@
+import {Result} from "./Result";
+
 export interface IInputUseCase{}
 export interface IOutputUseCase{
     message: string
     error : boolean
 }
 
-export abstract class AbstractUseCaseException extends Error implements IOutputUseCase{
-    message: string;
-    error: boolean;
-    constructor(message: string) {
-        super(message);
-        this.message = message;
-        this.error = true;
-    }
-}
-
-export interface IUseCase<TI extends IInputUseCase, TR extends IOutputUseCase>{
+/*export interface IUseCase<TI extends IInputUseCase, TR extends Result<any>>{
     execute(input : TI): Promise<TR>
-}
+}*/
+
+export type IUseCase<TI extends IInputUseCase, TR extends Result<any>> = (input : TI) =>  Promise<TR>
+

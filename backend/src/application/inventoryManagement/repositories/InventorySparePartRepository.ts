@@ -1,8 +1,9 @@
 import {InventorySparePart} from "../../../domain/inventoryManagement/entities/InventorySparePart";
-import {IRepository, AbstractRepositoryResponse} from "../../../shared/IRepository";
+import {IRepository} from "../../../shared/IRepository";
+import {Result, VoidResult} from "../../../shared/Result";
 
 export interface InventorySparePartRepository extends IRepository{
-    find(reference: string): Promise<AbstractRepositoryResponse<InventorySparePart>>
-    update(inventorySparePart: InventorySparePart): Promise<AbstractRepositoryResponse<void>>
-    create(inventorySparePart: InventorySparePart): Promise<AbstractRepositoryResponse<void>>
+    find(reference: string): Promise<Result<InventorySparePart>>
+    update(inventorySparePart: InventorySparePart): Promise<VoidResult>
+    create(inventorySparePart: InventorySparePart): Promise<VoidResult>
 }
