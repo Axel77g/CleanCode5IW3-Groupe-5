@@ -1,4 +1,4 @@
-import { IInputUseCase, IOutputUseCase, IUseCase} from "../../../../shared/IUseCase";
+import { IInputUseCase, IUseCase} from "../../../../shared/IUseCase";
 import {OrderRepository} from "../../repositories/OrderRepository";
 import {Order} from "../../../../domain/inventoryManagement/entities/Order";
 import {OrderLine} from "../../../../domain/inventoryManagement/value-object/OrderLine";

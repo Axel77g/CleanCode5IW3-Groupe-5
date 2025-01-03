@@ -1,4 +1,4 @@
-import {IInputUseCase, IOutputUseCase, IUseCase} from "../../../../shared/IUseCase";
+import {IInputUseCase, IUseCase} from "../../../../shared/IUseCase";
 import {InventorySparePartRepository} from "../../repositories/InventorySparePartRepository";
 import {InventorySparePart} from "../../../../domain/inventoryManagement/entities/InventorySparePart";
 import {Result} from "../../../../shared/Result";

@@ -1,9 +1,6 @@
 import {Result} from "./Result";
 
-export interface IInputUseCase{}
-export interface IOutputUseCase{
-    message: string
-    error : boolean
+export interface IInputUseCase{
 }
 
 /*export interface IUseCase<TI extends IInputUseCase, TR extends Result<any>>{
