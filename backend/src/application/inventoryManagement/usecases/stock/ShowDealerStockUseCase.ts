@@ -1,19 +1,19 @@
-import { IInputUseCase,  IUseCase} from "../../../../shared/IUseCase";
-import {DealerSiret} from "../../../../domain/inventoryManagement/value-object/DealerSiret";
-import {StockRepository} from "../../repositories/StockRepository";
-import {StockInventorySparePart} from "../../../../domain/inventoryManagement/value-object/StockInventorySparePart";
-import {Result} from "../../../../shared/Result";
+import { StockInventorySparePart } from "../../../../domain/inventoryManagement/value-object/StockInventorySparePart";
+import { Siret } from '../../../../domain/shared/value-object/Siret';
+import { IInputUseCase, IUseCase } from "../../../../shared/IUseCase";
+import { Result } from "../../../../shared/Result";
+import { StockRepository } from "../../repositories/StockRepository";
 
-interface ShowDealerStockInput extends IInputUseCase{
-    dealerSiret: DealerSiret,
+interface ShowDealerStockInput extends IInputUseCase {
+    siret: Siret,
 }
 
 type ShowDealerStockResult = Result<StockInventorySparePart[]>
 export type ShowDealerStockUseCase = IUseCase<ShowDealerStockInput, ShowDealerStockResult>
 export const showDealerStockUseCase = (_stockRepository: StockRepository): ShowDealerStockUseCase => {
     return async (input: ShowDealerStockInput) => {
-        const getStockResponse = await _stockRepository.getStock(input.dealerSiret);
-        if(!getStockResponse.success) return Result.FailureStr("Cannot get dealer stock")
+        const getStockResponse = await _stockRepository.getStock(input.siret);
+        if (!getStockResponse.success) return Result.FailureStr("Cannot get dealer stock")
         return getStockResponse
     }
 }

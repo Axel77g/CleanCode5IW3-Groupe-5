@@ -1,6 +1,6 @@
-export class DealerSiret{
-    constructor(private siret: string){
-        if(!this.isValid()){
+export class Siret {
+    constructor(private siret: string) {
+        if (!this.isValid()) {
             throw new Error("Invalid SIRET number");
         }
     }
@@ -10,7 +10,7 @@ export class DealerSiret{
         return siretValidRegex.test(this.siret);
     }
 
-    getValue() : string {
+    getValue(): string {
         return this.siret;
-    }
+    }   
 }

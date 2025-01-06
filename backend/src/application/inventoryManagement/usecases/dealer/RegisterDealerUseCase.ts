@@ -1,12 +1,12 @@
-import { IInputUseCase, IUseCase} from "../../../../shared/IUseCase";
-import {DealerRepository} from "../../repositories/DealerRepository";
-import {DealerSiret} from "../../../../domain/inventoryManagement/value-object/DealerSiret";
-import {Dealer} from "../../../../domain/inventoryManagement/entities/Dealer";
-import {DealerAddress} from "../../../../domain/inventoryManagement/value-object/DealerAddress";
-import {Result} from "../../../../shared/Result";
+import { Dealer } from "../../../../domain/inventoryManagement/entities/Dealer";
+import { DealerAddress } from "../../../../domain/inventoryManagement/value-object/DealerAddress";
+import { Siret } from '../../../../domain/shared/value-object/Siret';
+import { IInputUseCase, IUseCase } from "../../../../shared/IUseCase";
+import { Result } from "../../../../shared/Result";
+import { DealerRepository } from "../../repositories/DealerRepository";
 
-interface RegisterDealerInput extends IInputUseCase{
-    siret: DealerSiret,
+interface RegisterDealerInput extends IInputUseCase {
+    siret: Siret,
     name: string,
     address: DealerAddress,
     phoneNumber: string
@@ -22,7 +22,7 @@ export const registerOrderUseCase = (_dealerRepository: DealerRepository): Regis
             input.phoneNumber
         );
         const storeResponse = await _dealerRepository.store(dealer);
-        if(!storeResponse.success) return Result.FailureStr("Cannot register dealer")
+        if (!storeResponse.success) return Result.FailureStr("Cannot register dealer")
         return Result.Success("Dealer registered")
     }
 }

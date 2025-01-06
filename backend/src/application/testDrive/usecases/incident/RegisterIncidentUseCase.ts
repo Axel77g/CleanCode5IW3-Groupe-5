@@ -5,6 +5,7 @@ import {Result} from "../../../../shared/Result";
 import {IncidentRepository} from "../../repositories/IncidentRepository";
 import {Incident} from "../../../../domain/testDrive/entities/Incident";
 import {DriverRepository} from "../../repositories/DriverRepository";
+import { registerDriverUseCase } from '../driver/RegisterDriverUseCase';
 
 interface RegisterIncidentInput extends IInputUseCase {
     driverLicenseId: DriverLicenseId;
@@ -25,3 +26,4 @@ export const registerIncidentUseCase = (_incidentRepository: IncidentRepository,
         return Result.Success("Incident registered")
     }
 }
+

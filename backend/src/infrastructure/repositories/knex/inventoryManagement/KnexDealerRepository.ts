@@ -1,22 +1,22 @@
-import {AbstractKnexRepository} from "../AbstractKnexRepository";
-import {DealerRepository} from "../../../../application/inventoryManagement/repositories/DealerRepository";
-import {DealerSiret} from "../../../../domain/inventoryManagement/value-object/DealerSiret";
-import {Dealer} from "../../../../domain/inventoryManagement/entities/Dealer";
-import {DealerAddress} from "../../../../domain/inventoryManagement/value-object/DealerAddress";
-import {Result, VoidResult} from "../../../../shared/Result";
+import { DealerRepository } from "../../../../application/inventoryManagement/repositories/DealerRepository";
+import { Dealer } from "../../../../domain/inventoryManagement/entities/Dealer";
+import { DealerAddress } from "../../../../domain/inventoryManagement/value-object/DealerAddress";
+import { Siret } from "../../../../domain/shared/value-object/Siret";
+import { Result, VoidResult } from "../../../../shared/Result";
+import { AbstractKnexRepository } from "../AbstractKnexRepository";
 
-export class KnexDealerRepository extends AbstractKnexRepository implements DealerRepository{
+export class KnexDealerRepository extends AbstractKnexRepository implements DealerRepository {
     protected tableName: string = "dealers";
     private addressesTableName: string = "dealers_addresses";
 
-    async getBySiret(siret: DealerSiret): Promise<Result<Dealer>> {
-        try{
+    async getBySiret(siret: Siret): Promise<Result<Dealer>> {
+        try {
             const dealerRow = await this.getQuery().where('siret', siret.getValue).first() as any;
-            if(!dealerRow) {
+            if (!dealerRow) {
                 return Result.FailureStr("Dealer not found");
             }
             const dealerAddressRow = await this.getQuery(this.addressesTableName).where('id', dealerRow.address_id).first() as any;
-            if(!dealerAddressRow) {
+            if (!dealerAddressRow) {
                 return Result.FailureStr("Dealer address not found");
             }
             const dealerAddress = new DealerAddress(
@@ -33,7 +33,7 @@ export class KnexDealerRepository extends AbstractKnexRepository implements Deal
             );
 
             return Result.Success<Dealer>(dealer);
-        }catch (e){
+        } catch (e) {
             console.error(e);
             return Result.FailureStr("An error occurred while getting dealer");
         }
@@ -43,7 +43,7 @@ export class KnexDealerRepository extends AbstractKnexRepository implements Deal
 
     async store(dealer: Dealer): Promise<VoidResult> {
         const transaction = await this.connection.transaction();
-        try{
+        try {
             const addressId = await transaction.insert({
                 street: dealer.address.street,
                 city: dealer.address.city,
@@ -60,20 +60,20 @@ export class KnexDealerRepository extends AbstractKnexRepository implements Deal
 
             await transaction.commit();
             return Result.SuccessVoid();
-        }catch (e){
+        } catch (e) {
             await transaction.rollback();
             console.error(e);
             return Result.FailureStr("An error occurred while storing dealer");
         }
     }
 
-    async delete(siret: DealerSiret): Promise<VoidResult> {
+    async delete(siret: Siret): Promise<VoidResult> {
         const transaction = await this.connection.transaction();
-        try{
+        try {
             await transaction.delete().from(this.tableName).where('siret', siret.getValue());
             await transaction.commit();
             return Result.SuccessVoid();
-        }catch (e){
+        } catch (e) {
             await transaction.rollback();
             console.error(e);
             return Result.FailureStr("An error occurred while deleting dealer");

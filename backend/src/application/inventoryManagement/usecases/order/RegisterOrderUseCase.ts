@@ -3,10 +3,10 @@ import {OrderRepository} from "../../repositories/OrderRepository";
 import {Order} from "../../../../domain/inventoryManagement/entities/Order";
 import {OrderLine} from "../../../../domain/inventoryManagement/value-object/OrderLine";
 import {Result} from "../../../../shared/Result";
-import {DealerSiret} from "../../../../domain/inventoryManagement/value-object/DealerSiret";
+import { Siret } from '../../../../domain/shared/value-object/Siret';
 
 interface RegisterOrderInput extends IInputUseCase{
-    dealer: DealerSiret,
+    dealer: Siret,
     deliveryDate: Date,
     orderedDate: Date,
     orderLines: OrderLine[]

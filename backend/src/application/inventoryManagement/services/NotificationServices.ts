@@ -1,6 +1,6 @@
 import {InventorySparePart} from "../../../domain/inventoryManagement/entities/InventorySparePart";
-import {DealerSiret} from "../../../domain/inventoryManagement/value-object/DealerSiret";
+import { Siret } from '../../../domain/shared/value-object/Siret';
 
 export interface NotificationServices {
-    notifyLowStock(siret : DealerSiret, sparePart: InventorySparePart): void
+    notifyLowStock(siret : Siret, sparePart: InventorySparePart): void
 }

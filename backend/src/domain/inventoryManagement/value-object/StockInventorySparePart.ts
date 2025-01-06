@@ -1,5 +1,4 @@
 import {InventorySparePart} from "../entities/InventorySparePart";
-import {DealerSiret} from "./DealerSiret";
 
 export class StockInventorySparePart {
     constructor(
