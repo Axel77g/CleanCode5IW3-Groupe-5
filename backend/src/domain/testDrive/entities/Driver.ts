@@ -2,11 +2,11 @@ import {DriverLicenseId} from "../value-object/DriverLicenseId";
 
 export class Driver{
     constructor(
-        private readonly driverLicenceId: DriverLicenseId,
-        private readonly firstName: string,
-        private readonly lastName: string,
-        private readonly email: string,
-        private readonly driverLicensedAt: Date,
+        public readonly driverLicenceId: DriverLicenseId,
+        public readonly firstName: string,
+        public readonly lastName: string,
+        public readonly email: string,
+        public readonly driverLicensedAt: Date,
     ) {}
 
     patch(partialDriver: Partial<Driver>){

@@ -3,7 +3,7 @@ export class DriverLicenseId{
         private readonly driverLicenceId: string
     ) {}
 
-    public getDriverLicenseId(): string {
+    public getValue(): string {
         return this.driverLicenceId;
     }
 
