@@ -1,5 +1,5 @@
 import {Driver} from "../entities/Driver";
-import {AbstractEvent} from "../../../shared/AbstractEvent";
+import {AbstractEvent, IEvent} from "../../../shared/AbstractEvent";
 import {DriverCreatedEvent} from "../Events/DriverCreatedEvent";
 import {DriverUpdatedEvent} from "../Events/DriverUpdatedEvent";
 import {DriverLicenseId} from "../value-object/DriverLicenseId";
@@ -11,8 +11,8 @@ import {DriverDeleteDocumentEvent} from "../Events/DriverDeleteDocumentEvent";
 
 export class DriverAggregate implements IEventAggregate<Driver>{
     private driver : Driver | null = null;
-    private events : AbstractEvent[] = [];
-    constructor(driverEvents: AbstractEvent[]){
+    private events : IEvent[] = [];
+    constructor(driverEvents: IEvent[]){
         this.events = driverEvents;
     }
 

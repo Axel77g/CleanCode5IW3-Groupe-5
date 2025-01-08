@@ -1,11 +1,10 @@
 import {Document} from "mongodb";
+import {IEvent} from "../../shared/AbstractEvent";
 
 export class EventAggregateMapper<T>{
     constructor(private readonly aggregateClass: any) {}
 
-    map(date : Document[]) : T[] {
-        return date.map((data) => {
-            return new this.aggregateClass(data);
-        });
+    transform(data : Document[]) : T[] {
+        return new this.aggregateClass(data as IEvent[]);
     }
 }
