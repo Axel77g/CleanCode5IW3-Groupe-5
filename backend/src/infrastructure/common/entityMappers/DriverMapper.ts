@@ -1,5 +1,5 @@
-import {Driver} from "../../domain/testDrive/entities/Driver";
-import {DriverLicenseId} from "../../domain/testDrive/value-object/DriverLicenseId";
+import {Driver} from "../../../domain/testDrive/entities/Driver";
+import {DriverLicenseId} from "../../../domain/testDrive/value-object/DriverLicenseId";
 import {MappedEntities, MappedEntity} from "./MappedEntity";
 
 export class DriverMapper{

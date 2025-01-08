@@ -4,28 +4,25 @@ import {IInputUseCase, IUseCase} from "../../../../shared/IUseCase";
 import {DriverLicenseId} from "../../../../domain/testDrive/value-object/DriverLicenseId";
 import {DriverRepository} from "../../repositories/DriverRepository";
 import {DriverDocumentsRepository} from "../../repositories/DriverDocumentsRepository";
-import {DriverDocuments} from "../../../../domain/testDrive/entities/DriverDocuments";
+import {DriverDocuments} from "../../../../domain/testDrive/value-object/DriverDocuments";
+import {TestDriveEventRepository} from "../../repositories/TestDriveEventRepository";
+import {DriverAggregate} from "../../../../domain/testDrive/aggregate/DriverAggregate";
+import {EventAggregateMapper} from "../../EventAggregateMapper";
 
 interface ShowDriverInput extends IInputUseCase{
     driverLicenseId: DriverLicenseId
 }
 
-interface ShowDriverOutput {
-    driver: Driver
-    documents: DriverDocuments[]
-}
 
-export type ShowDriverUseCase =  IUseCase<ShowDriverInput, Result<ShowDriverOutput>>
 
-export const showDriverUseCase = (_driverRepository: DriverRepository, _driverDocumentRepository : DriverDocumentsRepository): ShowDriverUseCase => {
+export type ShowDriverUseCase =  IUseCase<ShowDriverInput, Result<Driver>>
+
+export const showDriverUseCase = (_testDriveEventRepository : TestDriveEventRepository, _eventAggregateMapper : EventAggregateMapper<DriverAggregate>): ShowDriverUseCase => {
     return async (input: ShowDriverInput) => {
-        const findResponse = await _driverRepository.getByLicenseId(input.driverLicenseId)
+        const findResponse = await _testDriveEventRepository.getEvents<DriverAggregate>('driver-' + input.driverLicenseId.getValue(), _eventAggregateMapper)
         if(!findResponse.success) return Result.FailureStr("Driver not found")
-        const findDocumentsResponse = await _driverDocumentRepository.showDriverDocuments(input.driverLicenseId)
-        if(!findDocumentsResponse.success) return Result.FailureStr("Driver documents not found")
-        return Result.Success<ShowDriverOutput>({
-            driver: findResponse.value,
-            documents: findDocumentsResponse.value
-        })
+        const driver = findResponse.value.aggregate()
+        if(!driver) return Result.FailureStr("Driver not found")
+        return Result.Success<Driver>(driver)
     }
 }

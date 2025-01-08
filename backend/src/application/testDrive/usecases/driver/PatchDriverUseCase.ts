@@ -2,7 +2,8 @@ import {Driver} from "../../../../domain/testDrive/entities/Driver";
 import {IInputUseCase, IUseCase} from "../../../../shared/IUseCase";
 import {DriverLicenseId} from "../../../../domain/testDrive/value-object/DriverLicenseId";
 import {Result} from "../../../../shared/Result";
-import {DriverRepository} from "../../repositories/DriverRepository";
+import {TestDriveEventRepository} from "../../repositories/TestDriveEventRepository";
+import {DriverUpdatedEvent} from "../../../../domain/testDrive/Events/DriverUpdatedEvent";
 
 interface PatchDriverInput extends IInputUseCase {
     driverLicenseId: DriverLicenseId;
@@ -11,13 +12,13 @@ interface PatchDriverInput extends IInputUseCase {
 
 export type PatchDriverUseCase =  IUseCase<PatchDriverInput, Result>
 
-export const patchDriverUseCase = (_driverRepository: DriverRepository): PatchDriverUseCase => {
+export const patchDriverUseCase = (_testDriveEventRepository: TestDriveEventRepository): PatchDriverUseCase => {
     return async (input: PatchDriverInput) => {
-        const findResponse = await _driverRepository.getByLicenseId(input.driverLicenseId)
-        if(!findResponse.success) return Result.FailureStr("Driver not found")
-        const driver = findResponse.value
-        const storeResponse = await _driverRepository.update(driver.patch(input.driver));
-        if(!storeResponse.success) return Result.FailureStr("Cannot update driver")
-        return Result.Success("Driver updated")
+        const existResponse = await _testDriveEventRepository.exists('driver-' + input.driverLicenseId.getValue())
+        if(!existResponse.success) return Result.FailureStr("Driver does not exist")
+        const driverUpdatedEvent = new DriverUpdatedEvent(input.driverLicenseId, input.driver.firstName, input.driver.lastName, input.driver.email)
+        const response = await _testDriveEventRepository.storeEvent(driverUpdatedEvent)
+        if(!response.success) return response
+        return Result.Success('Driver updated')
     }
 }

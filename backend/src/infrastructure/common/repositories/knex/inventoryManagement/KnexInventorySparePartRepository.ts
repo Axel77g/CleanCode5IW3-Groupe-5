@@ -1,9 +1,9 @@
 import {AbstractKnexRepository} from "../AbstractKnexRepository";
 import {
     InventorySparePartRepository
-} from "../../../../application/inventoryManagement/repositories/InventorySparePartRepository";
-import {InventorySparePart} from "../../../../domain/inventoryManagement/entities/InventorySparePart";
-import {Result, VoidResult} from "../../../../shared/Result";
+} from "../../../../../application/inventoryManagement/repositories/InventorySparePartRepository";
+import {InventorySparePart} from "../../../../../domain/inventoryManagement/entities/InventorySparePart";
+import {Result, VoidResult} from "../../../../../shared/Result";
 
 export class KnexInventorySparePartRepository extends AbstractKnexRepository implements InventorySparePartRepository{
     protected tableName: string = "spare_parts";

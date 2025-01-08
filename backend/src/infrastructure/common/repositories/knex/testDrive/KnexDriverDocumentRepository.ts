@@ -1,8 +1,8 @@
 import {AbstractKnexRepository} from "../AbstractKnexRepository";
-import {DriverDocumentsRepository} from "../../../../application/testDrive/repositories/DriverDocumentsRepository";
-import { DriverDocuments } from "../../../../domain/testDrive/entities/DriverDocuments";
-import { DriverLicenseId } from "../../../../domain/testDrive/value-object/DriverLicenseId";
-import { Result } from "../../../../shared/Result";
+import {DriverDocumentsRepository} from "../../../../../application/testDrive/repositories/DriverDocumentsRepository";
+import { DriverDocuments } from "../../../../../domain/testDrive/value-object/DriverDocuments";
+import { DriverLicenseId } from "../../../../../domain/testDrive/value-object/DriverLicenseId";
+import { Result } from "../../../../../shared/Result";
 
 export class KnexDriverDocumentRepository extends AbstractKnexRepository implements DriverDocumentsRepository {
     tableName = 'driver_documents';

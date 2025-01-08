@@ -1,7 +1,7 @@
-import {TestDrive} from "../../domain/testDrive/entities/TestDrive";
-import {DriverLicenseId} from "../../domain/testDrive/value-object/DriverLicenseId";
-import {VehicleImmatriculation} from "../../domain/shared/value-object/VehicleImmatriculation";
-import {Period} from "../../domain/testDrive/value-object/Period";
+import {TestDrive} from "../../../domain/testDrive/entities/TestDrive";
+import {DriverLicenseId} from "../../../domain/testDrive/value-object/DriverLicenseId";
+import {VehicleImmatriculation} from "../../../domain/shared/value-object/VehicleImmatriculation";
+import {Period} from "../../../domain/testDrive/value-object/Period";
 import {MappedEntities, MappedEntity} from "./MappedEntity";
 
 export class TestDriveMapper{

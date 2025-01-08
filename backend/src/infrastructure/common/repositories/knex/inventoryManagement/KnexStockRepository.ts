@@ -1,8 +1,8 @@
-import { StockRepository } from "../../../../application/inventoryManagement/repositories/StockRepository";
-import { InventorySparePart } from "../../../../domain/inventoryManagement/entities/InventorySparePart";
-import { StockInventorySparePart } from "../../../../domain/inventoryManagement/value-object/StockInventorySparePart";
-import { Siret } from "../../../../domain/shared/value-object/Siret";
-import { Result, VoidResult } from "../../../../shared/Result";
+import { StockRepository } from "../../../../../application/inventoryManagement/repositories/StockRepository";
+import { InventorySparePart } from "../../../../../domain/inventoryManagement/entities/InventorySparePart";
+import { StockInventorySparePart } from "../../../../../domain/inventoryManagement/value-object/StockInventorySparePart";
+import { Siret } from "../../../../../domain/shared/value-object/Siret";
+import { Result, VoidResult } from "../../../../../shared/Result";
 import { AbstractKnexRepository } from "../AbstractKnexRepository";
 
 export class KnexStockRepository extends AbstractKnexRepository implements StockRepository {

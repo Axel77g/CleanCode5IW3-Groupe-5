@@ -1,7 +1,7 @@
-import { DealerRepository } from "../../../../application/inventoryManagement/repositories/DealerRepository";
-import { Dealer } from "../../../../domain/inventoryManagement/entities/Dealer";
-import { Siret } from "../../../../domain/shared/value-object/Siret";
-import { Result, VoidResult } from "../../../../shared/Result";
+import { DealerRepository } from "../../../../../application/inventoryManagement/repositories/DealerRepository";
+import { Dealer } from "../../../../../domain/inventoryManagement/entities/Dealer";
+import { Siret } from "../../../../../domain/shared/value-object/Siret";
+import { Result, VoidResult } from "../../../../../shared/Result";
 import { AbstractKnexRepository } from "../AbstractKnexRepository";
 import {DealerMapper} from "../../../entityMappers/DealerMapper";
 

@@ -1,6 +1,6 @@
-import {Incident} from "../../domain/testDrive/entities/Incident";
-import {IncidentType} from "../../domain/testDrive/enums/IncidentType";
-import {DriverLicenseId} from "../../domain/testDrive/value-object/DriverLicenseId";
+import {Incident} from "../../../domain/testDrive/entities/Incident";
+import {IncidentType} from "../../../domain/testDrive/enums/IncidentType";
+import {DriverLicenseId} from "../../../domain/testDrive/value-object/DriverLicenseId";
 import {MappedEntities, MappedEntity} from "./MappedEntity";
 
 export class IncidentMapper {

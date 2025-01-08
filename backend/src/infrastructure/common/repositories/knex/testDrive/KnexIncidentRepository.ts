@@ -1,9 +1,9 @@
 import {AbstractKnexRepository} from "../AbstractKnexRepository";
-import {IncidentRepository} from "../../../../application/testDrive/repositories/IncidentRepository";
-import { Incident } from "../../../../domain/testDrive/entities/Incident";
-import { DriverLicenseId } from "../../../../domain/testDrive/value-object/DriverLicenseId";
-import { PaginatedInput } from "../../../../shared/PaginatedInput";
-import {PaginatedResult, Result, VoidResult} from "../../../../shared/Result";
+import {IncidentRepository} from "../../../../../application/testDrive/repositories/IncidentRepository";
+import { Incident } from "../../../../../domain/testDrive/entities/Incident";
+import { DriverLicenseId } from "../../../../../domain/testDrive/value-object/DriverLicenseId";
+import { PaginatedInput } from "../../../../../shared/PaginatedInput";
+import {PaginatedResult, Result, VoidResult} from "../../../../../shared/Result";
 import {IncidentMapper} from "../../../entityMappers/IncidentMapper";
 
 export class KnexIncidentRepository extends AbstractKnexRepository implements IncidentRepository {

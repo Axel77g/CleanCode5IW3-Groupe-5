@@ -1,4 +1,5 @@
 import {DriverLicenseId} from "../value-object/DriverLicenseId";
+import {DriverDocuments} from "../value-object/DriverDocuments";
 
 export class Driver{
     constructor(
@@ -7,22 +8,8 @@ export class Driver{
         public readonly lastName: string,
         public readonly email: string,
         public readonly driverLicensedAt: Date,
+        public readonly documents : DriverDocuments[]
     ) {}
 
-    patch(partialDriver: Partial<Driver>){
-        const updatedProperties = {
-            firstName: this.firstName,
-            lastName: this.lastName,
-            email: this.email,
-            ...partialDriver
-        };
 
-        return new Driver(
-            this.driverLicenceId,
-            updatedProperties.firstName,
-            updatedProperties.lastName,
-            updatedProperties.email,
-            this.driverLicensedAt
-        );
-    }
 }

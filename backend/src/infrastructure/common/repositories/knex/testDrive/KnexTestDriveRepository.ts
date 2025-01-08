@@ -1,9 +1,9 @@
 import {AbstractKnexRepository} from "../AbstractKnexRepository";
-import {TestDriveRepository} from "../../../../application/testDrive/repositories/TestDriveRepository";
-import { TestDrive } from "../../../../domain/testDrive/entities/TestDrive";
-import { DriverLicenseId } from "../../../../domain/testDrive/value-object/DriverLicenseId";
-import { PaginatedInput } from "../../../../shared/PaginatedInput";
-import {PaginatedResult, Result, VoidResult} from "../../../../shared/Result";
+import {TestDriveRepository} from "../../../../../application/testDrive/repositories/TestDriveRepository";
+import { TestDrive } from "../../../../../domain/testDrive/entities/TestDrive";
+import { DriverLicenseId } from "../../../../../domain/testDrive/value-object/DriverLicenseId";
+import { PaginatedInput } from "../../../../../shared/PaginatedInput";
+import {PaginatedResult, Result, VoidResult} from "../../../../../shared/Result";
 import {TestDriveMapper} from "../../../entityMappers/TestDriveMapper";
 
 export class KnexTestDriveRepository extends AbstractKnexRepository implements TestDriveRepository {
