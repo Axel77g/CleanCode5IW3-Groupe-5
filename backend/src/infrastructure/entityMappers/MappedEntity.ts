@@ -22,3 +22,26 @@ export class MappedEntity{
         return newMappedEntity
     }
 }
+
+export class MappedEntities extends Array{
+    constructor(entities: MappedEntity[]){
+        super();
+        this.concat(entities);
+    }
+
+    public only(properties: string[]){
+        let newMappedEntities = new MappedEntities([]);
+        this.forEach((mappedEntity: MappedEntity) => {
+            newMappedEntities.push(mappedEntity.only(properties));
+        });
+        return newMappedEntities;
+    }
+
+    public except(properties: string[]){
+        let newMappedEntities = new MappedEntities([]);
+        this.forEach((mappedEntity: MappedEntity) => {
+            newMappedEntities.push(mappedEntity.except(properties));
+        });
+        return newMappedEntities;
+    }
+}

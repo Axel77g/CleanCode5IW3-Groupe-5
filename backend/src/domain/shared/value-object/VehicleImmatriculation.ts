@@ -7,6 +7,10 @@ export class VehicleImmatriculation {
         }
     }
 
+    public getValue(): string {
+        return this.immatriculation;
+    }
+
     public validate(): boolean
     {
         const regex = new RegExp("^[A-Z]{2}[0-9]{3}[A-Z]{2}$");

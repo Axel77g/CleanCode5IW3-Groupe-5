@@ -1,6 +1,6 @@
 import {Driver} from "../../domain/testDrive/entities/Driver";
 import {DriverLicenseId} from "../../domain/testDrive/value-object/DriverLicenseId";
-import {MappedEntity} from "./MappedEntity";
+import {MappedEntities, MappedEntity} from "./MappedEntity";
 
 export class DriverMapper{
     public static toPersistence(driver: Driver) : MappedEntity {
@@ -23,10 +23,10 @@ export class DriverMapper{
     }
 
 
-    public static toPersistenceList(drivers: Driver[]) : MappedEntity[] {
-        return drivers.map(driver => {
+    public static toPersistenceList(drivers: Driver[]) : MappedEntities {
+        return new MappedEntities(drivers.map(driver => {
             return DriverMapper.toPersistence(driver);
-        })
+        }))
     }
     public static toDomainList(drivers: any[]){
         return drivers.map(driver => {

@@ -1,13 +1,12 @@
 import { DealerRepository } from "../../../../application/inventoryManagement/repositories/DealerRepository";
 import { Dealer } from "../../../../domain/inventoryManagement/entities/Dealer";
-import { DealerAddress } from "../../../../domain/inventoryManagement/value-object/DealerAddress";
 import { Siret } from "../../../../domain/shared/value-object/Siret";
 import { Result, VoidResult } from "../../../../shared/Result";
 import { AbstractKnexRepository } from "../AbstractKnexRepository";
+import {DealerMapper} from "../../../entityMappers/DealerMapper";
 
 export class KnexDealerRepository extends AbstractKnexRepository implements DealerRepository {
     protected tableName: string = "dealers";
-    private addressesTableName: string = "dealers_addresses";
 
     async getBySiret(siret: Siret): Promise<Result<Dealer>> {
         try {
@@ -15,49 +14,19 @@ export class KnexDealerRepository extends AbstractKnexRepository implements Deal
             if (!dealerRow) {
                 return Result.FailureStr("Dealer not found");
             }
-            const dealerAddressRow = await this.getQuery(this.addressesTableName).where('id', dealerRow.address_id).first() as any;
-            if (!dealerAddressRow) {
-                return Result.FailureStr("Dealer address not found");
-            }
-            const dealerAddress = new DealerAddress(
-                dealerAddressRow.street,
-                dealerAddressRow.city,
-                dealerAddressRow.postalCode,
-                dealerAddressRow.country
-            );
-            const dealer = new Dealer(
-                dealerRow.siret,
-                dealerRow.name,
-                dealerAddress,
-                dealerRow.phoneNumber
-            );
-
-            return Result.Success<Dealer>(dealer);
+            return Result.Success<Dealer>(DealerMapper.toDomain(dealerRow));
         } catch (e) {
             console.error(e);
             return Result.FailureStr("An error occurred while getting dealer");
         }
     }
 
-
-
     async store(dealer: Dealer): Promise<VoidResult> {
         const transaction = await this.connection.transaction();
         try {
-            const addressId = await transaction.insert({
-                street: dealer.address.street,
-                city: dealer.address.city,
-                postalCode: dealer.address.postalCode,
-                country: dealer.address.country
-            }).into(this.addressesTableName);
-
-            await transaction.insert({
-                siret: dealer.siret.getValue(),
-                name: dealer.name,
-                address_id: addressId,
-                phoneNumber: dealer.phoneNumber
-            }).into(this.tableName);
-
+            await transaction.insert(
+                DealerMapper.toPersistence(dealer)
+            ).into(this.tableName);
             await transaction.commit();
             return Result.SuccessVoid();
         } catch (e) {

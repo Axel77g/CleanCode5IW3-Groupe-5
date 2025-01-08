@@ -4,9 +4,9 @@ import {DriverLicenseId} from "../value-object/DriverLicenseId";
 
 export class TestDrive{
     constructor(
-        private readonly driverLicenseId: DriverLicenseId,
-        private readonly vehicleImmatriculation: VehicleImmatriculation,
-        private readonly period : Period
+        public readonly driverLicenseId: DriverLicenseId,
+        public readonly vehicleImmatriculation: VehicleImmatriculation,
+        public readonly period : Period
     ) {}
 
 }
