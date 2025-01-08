@@ -1,4 +1,4 @@
-import { GarageRepository } from "../../../../application/maintenance/GarageRepository";
+import { GarageRepository } from "../../../../application/maintenance/repositories/GarageRepository";
 import { Garage } from "../../../../domain/maintenance/entities/Garage";
 import { GarageAddress } from "../../../../domain/maintenance/value-object/GarageAddress";
 import { Siret } from "../../../../domain/shared/value-object/Siret";

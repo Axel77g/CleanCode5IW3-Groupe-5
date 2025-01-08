@@ -1,6 +1,7 @@
 import { VehicleImmatriculation } from "../../shared/value-object/VehicleImmatriculation";
 import { CustomerAddress } from "../value-object/CustomerAddress";
 
+
 export class Customer {
     constructor(
         public readonly id: string,

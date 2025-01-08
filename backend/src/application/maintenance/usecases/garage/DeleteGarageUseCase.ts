@@ -1,7 +1,7 @@
 import { Siret } from "../../../../domain/shared/value-object/Siret";
 import { IInputUseCase, IUseCase } from "../../../../shared/IUseCase";
 import { Result } from "../../../../shared/Result";
-import { GarageRepository } from "../../maintenance/GarageRepository";
+import { GarageRepository } from "../../repositories/GarageRepository";
 
 interface DeleteGarageInput extends IInputUseCase {
     siret: Siret,

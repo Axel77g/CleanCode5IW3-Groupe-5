@@ -1,4 +1,4 @@
-import { CustomerRepository } from "../../../../application/maintenance/CustomerRepository";
+import { CustomerRepository } from "../../../../application/maintenance/repositories/CustomerRepository";
 import { Customer } from "../../../../domain/maintenance/entities/Customer";
 import { CustomerAddress } from "../../../../domain/maintenance/value-object/CustomerAddress";
 import { VehicleImmatriculation } from "../../../../domain/shared/value-object/VehicleImmatriculation";
