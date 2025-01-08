@@ -1,5 +1,5 @@
+import { DealerAddress } from "../../maintenance/value-object/DealerAddress";
 import { Siret } from "../../shared/value-object/Siret";
-import { DealerAddress } from "../value-object/DealerAddress";
 
 export class Dealer {
     constructor(

@@ -1,5 +1,5 @@
 import { Dealer } from "../../../../domain/inventoryManagement/entities/Dealer";
-import { DealerAddress } from "../../../../domain/inventoryManagement/value-object/DealerAddress";
+import { DealerAddress } from "../../../../domain/maintenance/value-object/DealerAddress";
 import { Siret } from '../../../../domain/shared/value-object/Siret';
 import { IInputUseCase, IUseCase } from "../../../../shared/IUseCase";
 import { Result } from "../../../../shared/Result";

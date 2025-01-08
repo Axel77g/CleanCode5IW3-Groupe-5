@@ -28,11 +28,6 @@ export class KnexGarageRepository extends AbstractKnexRepository implements Gara
                 garageAddressRow.country
             );
 
-            const dealerGarageRow = await this.getQuery(this.addressesTableName).where('id', garageRow.address_id).first() as any;
-            if (!dealerGarageRow) {
-                return Result.FailureStr("Garage address not found");
-            }
-
             const garage = new Garage(
                 garageRow.siret,
                 garageRow.name,
