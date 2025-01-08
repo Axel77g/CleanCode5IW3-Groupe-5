@@ -1,5 +1,6 @@
 import { Customer } from "../../domain/maintenance/entities/Customer";
 import { CustomerAddress } from "../../domain/maintenance/value-object/CustomerAddress";
+import { VehicleImmatriculation } from "../../domain/shared/value-object/VehicleImmatriculation";
 import { MappedEntity } from "./MappedEntity";
 
 export class CustomerMapper {
@@ -19,7 +20,7 @@ export class CustomerMapper {
             customer.name,
             customer.phone_number,
             customer.email,
-            customer.vehiculeImmatriculation,
+            new VehicleImmatriculation(customer.immatriculation),
             new CustomerAddress(
                 customer.address.street,
                 customer.address.city,

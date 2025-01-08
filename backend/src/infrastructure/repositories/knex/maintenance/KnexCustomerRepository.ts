@@ -3,6 +3,7 @@ import { Customer } from "../../../../domain/maintenance/entities/Customer";
 import { CustomerAddress } from "../../../../domain/maintenance/value-object/CustomerAddress";
 import { VehicleImmatriculation } from "../../../../domain/shared/value-object/VehicleImmatriculation";
 import { Result, VoidResult } from "../../../../shared/Result";
+import { CustomerMapper } from "../../../entityMappers/CustomerMapper";
 import { AbstractKnexRepository } from "../AbstractKnexRepository";
 
 export class KnexCustomerRepository extends AbstractKnexRepository implements CustomerRepository {
@@ -31,11 +32,11 @@ export class KnexCustomerRepository extends AbstractKnexRepository implements Cu
                 customerRow.name,
                 customerRow.email,
                 customerRow.phone,
-                customerRow.address,
                 vehiculeImmatriculation,
+                customerRow.address,
             );
 
-            return Result.Success<Customer>(customer);
+            return Result.Success<Customer>(CustomerMapper.toDomain(customer));
         } catch (e) {
             console.error(e);
             return Result.FailureStr("An error occurred while getting customer");
@@ -46,20 +47,9 @@ export class KnexCustomerRepository extends AbstractKnexRepository implements Cu
         const transaction = await this.connection.transaction();
 
         try {
-            const addressId = await transaction(this.tableName).insert({
-                street: customer.address.street,
-                city: customer.address.city,
-                postalCode: customer.address.postalCode,
-                country: customer.address.country,
-            }).into(this.addressesTableName);
-
-            await transaction.insert({
-                name: customer.name,
-                email: customer.email,
-                phone: customer.phoneNumber,
-                address_id: addressId,
-            }).into(this.tableName);
-
+            await transaction.insert(
+                CustomerMapper.toPersistence(customer)
+            ).into(this.tableName);
             await transaction.insert({
                 immatriculation: customer.vehiculeImmatrictulation,
                 customer_id: customer.id,
