@@ -11,7 +11,9 @@ export class EventObserver implements IEventObserver{
     }
 
     emit(event : IEvent){
+        console.log("Event dispateched", event)
         let subscribers = this.subscribers[event.type]
+        if(!subscribers) return
         for(let subscriberCallback of subscribers){
             subscriberCallback(event)
         }

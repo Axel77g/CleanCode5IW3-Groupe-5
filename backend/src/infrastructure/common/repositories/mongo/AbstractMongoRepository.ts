@@ -1,7 +1,7 @@
 import {MongoClient} from 'mongodb'
 export abstract class AbstractMongoRepository {
     protected abstract collectionName: string;
-    protected constructor(
+    public constructor(
         protected connection: MongoClient,
     ) {}
 

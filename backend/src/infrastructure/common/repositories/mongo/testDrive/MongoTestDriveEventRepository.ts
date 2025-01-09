@@ -1,10 +1,7 @@
 import {AbstractMongoRepository} from "../AbstractMongoRepository";
 import {TestDriveEventRepository} from "../../../../../application/testDrive/repositories/TestDriveEventRepository";
 import {AbstractEvent} from "../../../../../shared/AbstractEvent";
-import {PaginatedResult, Result, VoidResult} from "../../../../../shared/Result";
-import {IEventAggregate} from "../../../../../shared/IEventAggregate";
-import {PaginatedInput} from "../../../../../shared/PaginatedInput";
-import {EventAggregateMapper} from "../../../../../application/testDrive/EventAggregateMapper";
+import { Result, VoidResult} from "../../../../../shared/Result";
 import {IEventObserver} from "../../../../../application/testDrive/observers/IEventObserver";
 import {MongoClient} from "mongodb";
 export class MongoTestDriveEventRepository extends AbstractMongoRepository implements TestDriveEventRepository{
@@ -23,8 +20,8 @@ export class MongoTestDriveEventRepository extends AbstractMongoRepository imple
             this._eventObserver.emit(event)
             return Result.SuccessVoid()
         }catch (e){
-            await session.abortTransaction();
             console.error(e);
+            await session.abortTransaction();
             return Result.FailureStr("An error occurred while storing event");
         }
     }
@@ -33,9 +30,7 @@ export class MongoTestDriveEventRepository extends AbstractMongoRepository imple
         try{
             const count = await this.getQuery().countDocuments(
                 {
-                    streamId: {
-                        $startWith: streamId
-                    }
+                    streamId: { $regex: `^${streamId}` }
                 }
             );
             if(count === 0) return Result.FailureStr("Event not found");

@@ -28,11 +28,11 @@ export class KnexDriverRepository extends AbstractKnexRepository  {
         try{
             this.getQuery()
                 .transacting(transaction)
-                .where('driver_licence_id', driver.driverLicenceId.getValue())
+                .where('driver_licence_id', driver.driverLicenseId.getValue())
                 .update(
                     DriverMapper
                         .toPersistence(driver)
-                        .except(['driver_licence_id','driver_licensed_at'])
+                        .except(['driverLicenseId','driverLicensedAt'])
                 );
             transaction.commit();
             return Result.SuccessVoid();
@@ -42,6 +42,7 @@ export class KnexDriverRepository extends AbstractKnexRepository  {
         }
     }
     async getByLicenseId(driverLicenseId: DriverLicenseId): Promise<Result<Driver>> {
+
         try{
             const driver = await this.getQuery()
                 .where('driver_licence_id', driverLicenseId.getValue())
@@ -50,6 +51,7 @@ export class KnexDriverRepository extends AbstractKnexRepository  {
             if(!driver){
                 return Result.FailureStr("Driver not found");
             }
+            // @ts-ignore
             return Result.Success<Driver>(DriverMapper.toDomain(driver));
         }catch(error){
             const message = error instanceof Error ? error.message : "Unknown Error";

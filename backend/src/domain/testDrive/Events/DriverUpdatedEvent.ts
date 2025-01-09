@@ -8,14 +8,19 @@ interface DriverUpdatedEventPayload {
     email: string | undefined;
 }
 export class DriverUpdatedEvent extends AbstractEvent{
+    static type = "DRIVER_UPDATED"
+    readonly type = DriverUpdatedEvent.type;
+
     readonly streamId: string;
     readonly payload: DriverUpdatedEventPayload;
-    readonly type = "DRIVER_UPDATED"
     constructor(
-        driverUpdateEventPayload: DriverUpdatedEventPayload
+        payload: DriverUpdatedEventPayload
     ) {
         super();
-        this.streamId = 'driver-' + driverUpdateEventPayload.driverLicenseId
-        this.payload = driverUpdateEventPayload;
+        this.streamId = `driver-${payload.driverLicenseId}`
+        let cleanedPayload = {...payload}
+        //@ts-ignore
+        Object.keys(cleanedPayload).forEach((key:string) => cleanedPayload[key] === undefined && delete cleanedPayload[key]);
+        this.payload = cleanedPayload;
     }
 }

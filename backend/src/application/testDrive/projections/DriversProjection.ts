@@ -3,37 +3,39 @@ import {Driver} from "../../../domain/testDrive/entities/Driver";
 import {DriverCreatedEvent} from "../../../domain/testDrive/Events/DriverCreatedEvent";
 import {DriverUpdatedEvent} from "../../../domain/testDrive/Events/DriverUpdatedEvent";
 import {DriverRepository} from "../repositories/DriverRepository";
+import {IProjection} from "../../../shared/IProjection";
 
-interface Projection{
-    receive(events: IEvent[]) : void
-}
-
-export class DriversProjection implements Projection {
+export class DriversProjection implements IProjection {
     constructor(private _driverRepository: DriverRepository) {}
-    receive(events: IEvent[]) {
-        events.forEach(async (event) => {
-            switch (event.constructor) {
-                case DriverCreatedEvent:
-                    await this.applyDriverCreatedEvent(event as DriverCreatedEvent)
-                    break;
-                case DriverUpdatedEvent:
-                    await this.applyDriverUpdatedEvent(event as DriverUpdatedEvent)
-                    break;
-            }
-        })
+    async receive(event: IEvent) : Promise<void> {
+        switch (event.constructor) {
+            case DriverCreatedEvent:
+                await this.applyDriverCreatedEvent(event as DriverCreatedEvent)
+                break;
+            case DriverUpdatedEvent:
+                await this.applyDriverUpdatedEvent(event as DriverUpdatedEvent)
+                break;
+        }
     }
 
     async applyDriverCreatedEvent(event: DriverCreatedEvent) {
-        await this._driverRepository.store(event.payload)
+        const driver = Driver.fromObject(event.payload)
+        if(driver instanceof Error) return console.error(driver)
+        await this._driverRepository.store(driver)
     }
 
     async applyDriverUpdatedEvent(event : DriverUpdatedEvent) {
         const driverResponse = await  this._driverRepository.getByLicenseId(event.payload.driverLicenseId)
-        if(!driverResponse.success) return;
-        let driver = {
-            ...driverResponse.value,
-            ...event.payload
-        }
+        if(!driverResponse.success) return console.error(driverResponse.error)
+        const driver = Driver.fromObject({
+            driverLicenseId: driverResponse.value.driverLicenseId.getValue(),
+            firstName: event.payload.firstName || driverResponse.value.firstName,
+            lastName: event.payload.lastName || driverResponse.value.lastName,
+            email: event.payload.email || driverResponse.value.email,
+            driverLicensedAt: new Date(driverResponse.value.driverLicensedAt),
+            documents: []
+        })
+        if(driver instanceof Error) return console.error(driver)
         await this._driverRepository.store(driver)
     }
 }

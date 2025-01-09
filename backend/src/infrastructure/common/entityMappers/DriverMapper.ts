@@ -1,37 +1,39 @@
-import {Driver} from "../../../domain/testDrive/entities/Driver";
+import {Driver, DriverDTO} from "../../../domain/testDrive/entities/Driver";
 import {DriverLicenseId} from "../../../domain/testDrive/value-object/DriverLicenseId";
 import {MappedEntities, MappedEntity} from "./MappedEntity";
 
 export class DriverMapper{
-    public static toPersistence(driver: Driver) : MappedEntity {
-        return new MappedEntity({
-            driver_licence_id: driver.driverLicenceId.getValue(),
-            first_name: driver.firstName,
-            last_name: driver.lastName,
+    public static toPersistence(driver: Driver) : MappedEntity<DriverDTO> {
+        return new MappedEntity<DriverDTO>({
+            driverLicenseId: driver.driverLicenseId.getValue(),
+            firstName: driver.firstName,
+            lastName: driver.lastName,
             email: driver.email,
-            driver_licensed_at: driver.driverLicensedAt,
+            driverLicensedAt: driver.driverLicensedAt,
+            documents: driver.documents
         })
     }
-    public static toDomain(driver: any){
+    public static toDomain(driver: any) : Driver | Error {
+        const driverLicenceId = DriverLicenseId.create(driver.driverLicenseId)
+        if(driverLicenceId instanceof Error) return driverLicenceId
         return new Driver(
-            new DriverLicenseId(driver.driver_licence_id),
-            driver.first_name,
-            driver.last_name,
+            driverLicenceId,
+            driver.firstName,
+            driver.lastName,
             driver.email,
-            driver.driver_licensed,
+            driver.driverLicensedAt,
             driver.documents
         )
     }
 
-
-    public static toPersistenceList(drivers: Driver[]) : MappedEntities {
+    public static toPersistenceList(drivers: Driver[]) : MappedEntities<DriverDTO> {
         return new MappedEntities(drivers.map(driver => {
             return DriverMapper.toPersistence(driver);
         }))
     }
-    public static toDomainList(drivers: any[]){
+    public static toDomainList(drivers: any[]) : Driver[]{
         return drivers.map(driver => {
             return DriverMapper.toDomain(driver);
-        })
+        }).filter(driver => !(driver instanceof Error)) as Driver[];
     }
 }

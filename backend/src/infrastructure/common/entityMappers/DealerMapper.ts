@@ -20,7 +20,7 @@ export class DealerMapper {
         );
     }
 
-    static toPersistence(dealer : Dealer) : MappedEntity {
+    static toPersistence(dealer : Dealer) : MappedEntity<any> {
         return new MappedEntity({
             siret: dealer.siret.getValue(),
             name: dealer.name,
@@ -40,7 +40,7 @@ export class DealerMapper {
         })
     }
 
-    static toPersistenceList(dealers: Dealer[]) : MappedEntities {
+    static toPersistenceList(dealers: Dealer[]) : MappedEntities<any> {
         return new MappedEntities(dealers.map(dealer => {
             return DealerMapper.toPersistence(dealer);
         }))

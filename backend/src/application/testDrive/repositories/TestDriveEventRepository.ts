@@ -1,8 +1,5 @@
 import {AbstractEvent} from "../../../shared/AbstractEvent";
-import {PaginatedResult, Result, VoidResult} from "../../../shared/Result";
-import {IEventAggregate} from "../../../shared/IEventAggregate";
-import {PaginatedInput} from "../../../shared/PaginatedInput";
-import {EventAggregateMapper} from "../EventAggregateMapper";
+import { Result, VoidResult} from "../../../shared/Result";
 
 export interface TestDriveEventRepository {
     storeEvent(event: AbstractEvent): Promise<VoidResult>;

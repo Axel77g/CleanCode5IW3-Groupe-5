@@ -1,14 +1,26 @@
+import {NotValidDriverLicense} from "../Errors/NotValidDriverLicense";
+
 export class DriverLicenseId{
-    constructor(
-        private readonly driverLicenceId: string
+    private constructor(
+        private readonly driverLicenseId: string
     ) {}
 
+    public static create(driverLicenseId: string): DriverLicenseId | NotValidDriverLicense
+    {
+        let driver = new DriverLicenseId(driverLicenseId);
+        if(driver.isValid()){
+            return driver;
+        }
+        return new NotValidDriverLicense();
+    }
+
     public getValue(): string {
-        return this.driverLicenceId;
+        return this.driverLicenseId;
     }
 
     public isValid(){
+        return true
         const regex = new RegExp("^[A-Z]{1,2}\\d{1,6}[A-Z]{1,3}$");
-        return regex.test(this.driverLicenceId);
+        return regex.test(this.driverLicenseId);
     }
 }

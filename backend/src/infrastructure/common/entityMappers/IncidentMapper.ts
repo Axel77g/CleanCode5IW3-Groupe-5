@@ -1,23 +1,25 @@
-import {Incident} from "../../../domain/testDrive/entities/Incident";
+import {Incident, IncidentDTO} from "../../../domain/testDrive/entities/Incident";
 import {IncidentType} from "../../../domain/testDrive/enums/IncidentType";
 import {DriverLicenseId} from "../../../domain/testDrive/value-object/DriverLicenseId";
 import {MappedEntities, MappedEntity} from "./MappedEntity";
 
 export class IncidentMapper {
-    static toDomain(incidentRaw: any) {
+    static toDomain(incidentEventRaw: any) : Incident | Error {
+        const driverLicenceId = DriverLicenseId.create(incidentEventRaw.driverLicenceId)
+        if(driverLicenceId instanceof Error) return driverLicenceId
         return new Incident(
-            incidentRaw.id,
-            new DriverLicenseId(incidentRaw.driver_licence_id),
-            incidentRaw.type as IncidentType,
-            incidentRaw.description,
-            new Date(incidentRaw.date)
+            incidentEventRaw.incidentId,
+            driverLicenceId,
+            incidentEventRaw.type as IncidentType,
+            incidentEventRaw.description,
+            new Date(incidentEventRaw.date)
         );
     }
 
-    static toPersistence(incident: Incident) : MappedEntity {
-        return new MappedEntity({
-            id: incident.id,
-            driver_licence_id: incident.driverLicenceId.getValue(),
+    static toPersistence(incident: Incident) : MappedEntity<IncidentDTO> {
+        return new MappedEntity<IncidentDTO>({
+            incidentId: incident.id,
+            driverLicenseId: incident.driverLicenseId.getValue(),
             type: incident.type,
             description: incident.description,
             date: incident.date
@@ -27,10 +29,10 @@ export class IncidentMapper {
     static toDomainList(incidentsRaw: any[]) : Incident[] {
         return incidentsRaw.map(incident => {
             return IncidentMapper.toDomain(incident);
-        })
+        }).filter(incident => !(incident instanceof Error)) as Incident[];
     }
 
-    static toPersistenceList(incidents: Incident[]) : MappedEntities {
+    static toPersistenceList(incidents: Incident[]) : MappedEntities<IncidentDTO> {
         return new MappedEntities(incidents.map(incident => {
             return IncidentMapper.toPersistence(incident);
         }))
