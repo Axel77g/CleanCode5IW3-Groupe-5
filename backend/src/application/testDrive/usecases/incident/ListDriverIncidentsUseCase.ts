@@ -14,10 +14,11 @@ export type ListDriverIncidentsUseCase = IUseCase<ListDriverIncidentsInput, Pagi
 
 export const listDriverIncidentsUseCase = (_incidentRepository : IncidentRepository, _driverRepository : DriverRepository): ListDriverIncidentsUseCase => {
     return async (input : ListDriverIncidentsInput) => {
-        const driverResponse = await _driverRepository.getByLicenseId(input.driverLicenseId)
-        if(!driverResponse.success) return Result.Failure(driverResponse.error)
-        const incidentsResponse = await _incidentRepository.listDriverIncidents(input.driverLicenseId, input)
-        if(!incidentsResponse.success) return Result.FailureStr("Cannot list incidents")
-        return incidentsResponse
+        return Result.SuccessPaginated<Incident>([],0,0,0)
+        // const driverResponse = await _driverRepository.getByLicenseId(input.driverLicenseId)
+        // if(!driverResponse.success) return Result.Failure(driverResponse.error)
+        // const incidentsResponse = await _incidentRepository.listDriverIncidents(input.driverLicenseId, input)
+        // if(!incidentsResponse.success) return Result.FailureStr("Cannot list incidents")
+        // return incidentsResponse
     }
 }

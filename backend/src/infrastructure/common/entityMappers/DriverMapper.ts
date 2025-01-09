@@ -18,7 +18,8 @@ export class DriverMapper{
             driver.first_name,
             driver.last_name,
             driver.email,
-            driver.driver_licensed
+            driver.driver_licensed,
+            driver.documents
         )
     }
 

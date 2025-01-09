@@ -7,6 +7,7 @@ import {MappedEntities, MappedEntity} from "./MappedEntity";
 export class TestDriveMapper{
     static toDomain(testDrive: any) : TestDrive{
         return new TestDrive(
+            testDrive.id,
             new DriverLicenseId(testDrive.driver_licence_id),
             new VehicleImmatriculation(testDrive.vehicle_immatriculation),
             new Period(

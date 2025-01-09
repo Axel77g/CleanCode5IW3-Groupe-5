@@ -1,12 +1,19 @@
 import {AbstractEvent} from "../../../shared/AbstractEvent";
 
+interface DriverDeleteDocumentPayload {
+    driverLicenceId: string,
+    name: string,
+}
+
 export class DriverDeleteDocumentEvent extends AbstractEvent{
     readonly streamId: string;
+    readonly type = "DRIVER_DELETED"
+    readonly payload : DriverDeleteDocumentPayload
     constructor(
-        public readonly driverLicenceId: string,
-        public readonly name: string,
+        payload : DriverDeleteDocumentPayload
     ) {
         super();
-        this.streamId = 'driver-' + driverLicenceId;
+        this.streamId = 'driver-' + payload.driverLicenceId;
+        this.payload = payload
     }
 }

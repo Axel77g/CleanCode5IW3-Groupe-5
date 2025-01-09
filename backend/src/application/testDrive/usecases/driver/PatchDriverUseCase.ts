@@ -16,7 +16,12 @@ export const patchDriverUseCase = (_testDriveEventRepository: TestDriveEventRepo
     return async (input: PatchDriverInput) => {
         const existResponse = await _testDriveEventRepository.exists('driver-' + input.driverLicenseId.getValue())
         if(!existResponse.success) return Result.FailureStr("Driver does not exist")
-        const driverUpdatedEvent = new DriverUpdatedEvent(input.driverLicenseId, input.driver.firstName, input.driver.lastName, input.driver.email)
+        const driverUpdatedEvent = new DriverUpdatedEvent({
+            driverLicenseId: input.driverLicenseId.getValue(),
+            firstName: input.driver?.firstName,
+            lastName: input.driver?.lastName,
+            email: input.driver?.email
+        })
         const response = await _testDriveEventRepository.storeEvent(driverUpdatedEvent)
         if(!response.success) return response
         return Result.Success('Driver updated')

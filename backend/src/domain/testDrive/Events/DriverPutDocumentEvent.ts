@@ -1,14 +1,20 @@
 import {AbstractEvent} from "../../../shared/AbstractEvent";
 
+interface DriverPutDocumentPayload {
+    driverLicenceId: string,
+    name: string,
+    type: string,
+    description: string,
+}
 export class DriverPutDocumentEvent extends AbstractEvent{
     readonly streamId: string;
+    readonly payload : DriverPutDocumentPayload
+    readonly type = "DRIVER_PUT_DOCUMENT"
     constructor(
-        public readonly driverLicenceId: string,
-        public readonly name: string,
-        public readonly type: string,
-        public readonly description: string,
+        payload : DriverPutDocumentPayload
     ) {
         super();
-        this.streamId = 'driver-' + driverLicenceId;
+        this.streamId = 'driver-' + payload.driverLicenceId;
+        this.payload = payload
     }
 }

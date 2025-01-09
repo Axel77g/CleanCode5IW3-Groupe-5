@@ -6,7 +6,7 @@ import { PaginatedInput } from "../../../../../shared/PaginatedInput";
 import { VoidResult, Result, PaginatedResult } from "../../../../../shared/Result";
 import {DriverMapper} from "../../../entityMappers/DriverMapper";
 
-export class KnexDriverRepository extends AbstractKnexRepository implements DriverRepository {
+export class KnexDriverRepository extends AbstractKnexRepository  {
     tableName = 'drivers';
 
     async store(driver: Driver): Promise<VoidResult> {

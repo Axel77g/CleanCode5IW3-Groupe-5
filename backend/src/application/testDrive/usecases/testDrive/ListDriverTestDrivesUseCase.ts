@@ -14,10 +14,11 @@ export type ListDriverTestDrivesUseCase = IUseCase<ListDriverTestDrivesInput, Pa
 
 export const listDriverTestDrivesUseCase = (_testDriveRepository : TestDriveRepository, _driverRepository : DriverRepository): ListDriverTestDrivesUseCase => {
     return async (input : ListDriverTestDrivesInput) => {
-        const driverResponse = await _driverRepository.getByLicenseId(input.driverLicenseId)
-        if(!driverResponse.success) return Result.Failure(driverResponse.error)
-        const testDrivesResponse = await _testDriveRepository.listDriverTestDrives(input.driverLicenseId, input)
-        if(!testDrivesResponse.success) return Result.FailureStr("Cannot list test drives")
-        return testDrivesResponse
+        return Result.SuccessPaginated<TestDrive>([],0,0,0)
+        // const driverResponse = await _driverRepository.getByLicenseId(input.driverLicenseId)
+        // if(!driverResponse.success) return Result.Failure(driverResponse.error)
+        // const testDrivesResponse = await _testDriveRepository.listDriverTestDrives(input.driverLicenseId, input)
+        // if(!testDrivesResponse.success) return Result.FailureStr("Cannot list test drives")
+        // return testDrivesResponse
     }
 }

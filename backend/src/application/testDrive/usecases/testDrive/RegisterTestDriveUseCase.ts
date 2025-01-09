@@ -17,11 +17,11 @@ export type RegisterTestDriveUseCase = IUseCase<RegisterTestDriveInput, Result>
 
 export const registerTestDriveUseCase = (_testDriveRepository: TestDriveRepository, _driverRepository : DriverRepository): RegisterTestDriveUseCase => {
     return async (input: RegisterTestDriveInput) => {
-        const driverResponse = await _driverRepository.getByLicenseId(input.driverLicenseId)
-        if(!driverResponse.success) return Result.Failure(driverResponse.error)
-        const testDrive = new TestDrive(input.driverLicenseId, input.vehicleImmatriculation, input.period)
-        const storeResponse = await _testDriveRepository.store(testDrive)
-        if (!storeResponse.success) return Result.Failure(storeResponse.error)
+        //const driverResponse = await _driverRepository.getByLicenseId(input.driverLicenseId)
+        //if(!driverResponse.success) return Result.Failure(driverResponse.error)
+        //const testDrive = new TestDrive(input.driverLicenseId, input.vehicleImmatriculation, input.period)
+        //const storeResponse = await _testDriveRepository.store(testDrive)
+        //if (!storeResponse.success) return Result.Failure(storeResponse.error)
         return Result.Success("Test Drive registered")
     }
 }

@@ -13,16 +13,16 @@ export class KnexDriverDocumentRepository extends AbstractKnexRepository impleme
                 .where('driver_licence_id', driverLicenseId.getValue())
                 .select('*') as any[];
 
-            const mappedDriverDocuments = driverDocuments.map(driverDocument => {
-                return new DriverDocuments(
-                    driverDocument.id,
-                    driverLicenseId,
-                    driverDocument.type,
-                    driverDocument.description
-                )
-            })
+            // const mappedDriverDocuments = driverDocuments.map(driverDocument => {
+            //     return new DriverDocuments(
+            //         driverLicenseId,
+            //         driverDocument.type,
+            //
+            //     )
+            // })
 
-            return Result.Success<DriverDocuments[]>(mappedDriverDocuments);
+            // return Result.Success<DriverDocuments[]>(mappedDriverDocuments);
+            return Result.Success<DriverDocuments[]>([])
         }catch (error){
             const message = error instanceof Error  ? error.message :  "Unknown Error";
             return Result.FailureStr(message);

@@ -1,15 +1,20 @@
 import {AbstractEvent} from "../../../shared/AbstractEvent";
 
+
+interface DriverCreatedEventPayload {
+    driverLicenceId: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    driverLicensedAt: Date;
+}
 export class DriverCreatedEvent extends AbstractEvent{
     readonly streamId: string;
-    constructor(
-        public readonly driverLicenceId: string,
-        public readonly firstName: string,
-        public readonly lastName: string,
-        public readonly email: string,
-        public readonly driverLicensedAt: Date,
-    ) {
+    readonly payload: DriverCreatedEventPayload;
+    readonly type = "DRIVER_CREATED"
+    constructor(driverCreatedEventPayload: DriverCreatedEventPayload) {
         super();
-        this.streamId = 'driver-' + driverLicenceId;
+        this.streamId = 'driver-' + driverCreatedEventPayload.driverLicenceId;
+        this.payload = driverCreatedEventPayload;
     }
 }

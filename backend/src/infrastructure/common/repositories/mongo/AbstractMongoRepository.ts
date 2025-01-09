@@ -3,7 +3,6 @@ export abstract class AbstractMongoRepository {
     protected abstract collectionName: string;
     protected constructor(
         protected connection: MongoClient,
-        protected dbName: string
     ) {}
 
     protected getQuery(collectionName: string = this.collectionName)

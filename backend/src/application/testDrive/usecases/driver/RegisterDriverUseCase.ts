@@ -1,8 +1,6 @@
 import { IInputUseCase, IUseCase} from "../../../../shared/IUseCase";
 import {Result} from "../../../../shared/Result";
 import {DriverLicenseId} from "../../../../domain/testDrive/value-object/DriverLicenseId";
-import {Driver} from "../../../../domain/testDrive/entities/Driver";
-import {DriverRepository} from "../../repositories/DriverRepository";
 import {TestDriveEventRepository} from "../../repositories/TestDriveEventRepository";
 import {DriverCreatedEvent} from "../../../../domain/testDrive/Events/DriverCreatedEvent";
 
@@ -20,13 +18,13 @@ export const registerDriverUseCase = (_testDriveEventRepository: TestDriveEventR
     return async (input: RegisterDriverInput) => {
         if(!input.driverLicenceId.isValid()) return Result.FailureStr("Invalid driver license id")
         if(input.driverLicensedAt > new Date()) return Result.FailureStr("Invalid driver license date")
-        const driverCreatedEvent = new DriverCreatedEvent(
-            input.driverLicenceId.getValue(),
-            input.firstName,
-            input.lastName,
-            input.email,
-            input.driverLicensedAt
-        )
+        const driverCreatedEvent = new DriverCreatedEvent({
+            driverLicenceId: input.driverLicenceId.getValue(),
+            firstName: input.firstName,
+            lastName: input.lastName,
+            email: input.email,
+            driverLicensedAt: input.driverLicensedAt
+        })
         const storeResponse = await _testDriveEventRepository.storeEvent(driverCreatedEvent);
         if(!storeResponse.success) return Result.FailureStr("Cannot register driver")
         return Result.Success("driver registered")

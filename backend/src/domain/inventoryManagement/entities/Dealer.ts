@@ -8,5 +8,6 @@ export class Dealer {
         public readonly address: DealerAddress,
         public readonly phoneNumber: string,
     ) { }
+    
 
 }
