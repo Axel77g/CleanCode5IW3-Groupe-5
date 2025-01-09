@@ -5,6 +5,7 @@ import {PaginatedResult, Result} from "../../../../shared/Result";
 import {TestDrive} from "../../../../domain/testDrive/entities/TestDrive";
 import {TestDriveRepository} from "../../repositories/TestDriveRepository";
 import {DriverRepository} from "../../repositories/DriverRepository";
+import {ApplicationException} from "../../../../shared/ApplicationException";
 
 interface ListDriverTestDrivesInput extends PaginatedInput{
     driverLicenseId: DriverLicenseId,
@@ -12,13 +13,16 @@ interface ListDriverTestDrivesInput extends PaginatedInput{
 
 export type ListDriverTestDrivesUseCase = IUseCase<ListDriverTestDrivesInput, PaginatedResult<TestDrive>>
 
+const ListDriverTestDrivesErrors = {
+    DRIVER_NOT_FOUND : new ApplicationException("ListDriverTestDrives.CannotListDriverTestDrives", "Cannot list test drives")
+}
+
 export const listDriverTestDrivesUseCase = (_testDriveRepository : TestDriveRepository, _driverRepository : DriverRepository): ListDriverTestDrivesUseCase => {
     return async (input : ListDriverTestDrivesInput) => {
-        return Result.SuccessPaginated<TestDrive>([],0,0,0)
-        // const driverResponse = await _driverRepository.getByLicenseId(input.driverLicenseId)
-        // if(!driverResponse.success) return Result.Failure(driverResponse.error)
-        // const testDrivesResponse = await _testDriveRepository.listDriverTestDrives(input.driverLicenseId, input)
-        // if(!testDrivesResponse.success) return Result.FailureStr("Cannot list test drives")
-        // return testDrivesResponse
+         const driverResponse = await _driverRepository.getByLicenseId(input.driverLicenseId.getValue())
+         if(!driverResponse.success) return Result.Failure(driverResponse.error)
+         const testDrivesResponse = await _testDriveRepository.listDriverTestDrives(input.driverLicenseId, input)
+         if(!testDrivesResponse.success) return Result.Failure(ListDriverTestDrivesErrors.DRIVER_NOT_FOUND)
+         return testDrivesResponse
     }
 }

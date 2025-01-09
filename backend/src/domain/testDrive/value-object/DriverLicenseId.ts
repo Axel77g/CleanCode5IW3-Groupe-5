@@ -1,17 +1,22 @@
-import {NotValidDriverLicense} from "../Errors/NotValidDriverLicense";
+import {ApplicationException} from "../../../shared/ApplicationException";
 
 export class DriverLicenseId{
+
+    static errors = {
+        NOT_VALID: new ApplicationException("DriverLicenseId.NotValid", "Driver license is not valid")
+    }
+
     private constructor(
         private readonly driverLicenseId: string
     ) {}
 
-    public static create(driverLicenseId: string): DriverLicenseId | NotValidDriverLicense
+    public static create(driverLicenseId: string): DriverLicenseId | ApplicationException
     {
         let driver = new DriverLicenseId(driverLicenseId);
         if(driver.isValid()){
             return driver;
         }
-        return new NotValidDriverLicense();
+        return DriverLicenseId.errors.NOT_VALID;
     }
 
     public getValue(): string {
@@ -19,8 +24,7 @@ export class DriverLicenseId{
     }
 
     public isValid(){
-        return true
-        const regex = new RegExp("^[A-Z]{1,2}\\d{1,6}[A-Z]{1,3}$");
+        const regex = /^[A-Z]\d{12}$/;
         return regex.test(this.driverLicenseId);
     }
 }

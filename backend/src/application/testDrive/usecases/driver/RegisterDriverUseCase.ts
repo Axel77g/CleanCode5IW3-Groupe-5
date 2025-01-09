@@ -3,6 +3,7 @@ import {Result} from "../../../../shared/Result";
 import {DriverLicenseId} from "../../../../domain/testDrive/value-object/DriverLicenseId";
 import {TestDriveEventRepository} from "../../repositories/TestDriveEventRepository";
 import {DriverCreatedEvent} from "../../../../domain/testDrive/Events/DriverCreatedEvent";
+import {ApplicationException} from "../../../../shared/ApplicationException";
 
 interface RegisterDriverInput extends IInputUseCase{
     driverLicenseId: DriverLicenseId,
@@ -14,10 +15,14 @@ interface RegisterDriverInput extends IInputUseCase{
 
 export type RegisterDriverUseCase = IUseCase<RegisterDriverInput, Result>
 
+const registerDriverErrors = {
+    INVALID_DRIVER_LICENSE_DATE: new ApplicationException("RegisterDriver.INVALID_DRIVER_LICENSE_DATE", "Invalid driver license date"),
+    CANNOT_REGISTER_DRIVER: new ApplicationException("RegisterDriver.CannotRegisterDriver", "Cannot register driver")
+}
+
 export const registerDriverUseCase = (_testDriveEventRepository: TestDriveEventRepository): RegisterDriverUseCase => {
     return async (input: RegisterDriverInput) => {
-        if(!input.driverLicenseId.isValid()) return Result.FailureStr("Invalid driver license id")
-        if(input.driverLicensedAt > new Date()) return Result.FailureStr("Invalid driver license date")
+        if(input.driverLicensedAt > new Date()) return Result.Failure(registerDriverErrors.INVALID_DRIVER_LICENSE_DATE)
         const driverCreatedEvent = new DriverCreatedEvent({
             driverLicenseId: input.driverLicenseId.getValue(),
             firstName: input.firstName,
@@ -27,7 +32,7 @@ export const registerDriverUseCase = (_testDriveEventRepository: TestDriveEventR
             documents: []
         })
         const storeResponse = await _testDriveEventRepository.storeEvent(driverCreatedEvent);
-        if(!storeResponse.success) return Result.FailureStr("Cannot register driver")
+        if(!storeResponse.success) return Result.Failure(registerDriverErrors.CANNOT_REGISTER_DRIVER)
         return Result.Success("driver registered")
     }
 }

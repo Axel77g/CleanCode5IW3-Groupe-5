@@ -1,6 +1,10 @@
-import {NotValidVehicleImmatriculation} from "../Errors/NotValidVehicleImmatriculation";
+import {ApplicationException} from "../../../shared/ApplicationException";
 
 export class VehicleImmatriculation {
+    static errors = {
+        NOT_VALID: new ApplicationException("VehicleImmatriculation.NotValid", "Vehicle immatriculation is not valid")
+    }
+
     private readonly immatriculation: string
     constructor(immatriculation: string) {
         this.immatriculation = immatriculation;
@@ -17,10 +21,10 @@ export class VehicleImmatriculation {
         return regex.test(this.immatriculation);
     }
 
-    public static create(immatriculation: string): VehicleImmatriculation | Error {
+    public static create(immatriculation: string): VehicleImmatriculation | ApplicationException {
         const vehicleImmatriculation = new VehicleImmatriculation(immatriculation);
         if(!vehicleImmatriculation.validate())
-            return new NotValidVehicleImmatriculation();
+            return VehicleImmatriculation.errors.NOT_VALID;
         return vehicleImmatriculation;
     }
 }

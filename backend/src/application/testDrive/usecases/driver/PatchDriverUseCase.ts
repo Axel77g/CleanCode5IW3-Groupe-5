@@ -4,6 +4,7 @@ import {DriverLicenseId} from "../../../../domain/testDrive/value-object/DriverL
 import {Result} from "../../../../shared/Result";
 import {TestDriveEventRepository} from "../../repositories/TestDriveEventRepository";
 import {DriverUpdatedEvent} from "../../../../domain/testDrive/Events/DriverUpdatedEvent";
+import {ApplicationException} from "../../../../shared/ApplicationException";
 
 interface PatchDriverInput extends IInputUseCase {
     driverLicenseId: DriverLicenseId;
@@ -12,10 +13,14 @@ interface PatchDriverInput extends IInputUseCase {
 
 export type PatchDriverUseCase =  IUseCase<PatchDriverInput, Result>
 
+const patchDriverErrors = {
+    DRIVER_NOT_FOUND: new ApplicationException("PatchDriver.CannotPatchDriver", "Cannot patch driver")
+}
+
 export const patchDriverUseCase = (_testDriveEventRepository: TestDriveEventRepository): PatchDriverUseCase => {
     return async (input: PatchDriverInput) => {
         const existResponse = await _testDriveEventRepository.exists('driver-' + input.driverLicenseId.getValue()) //@TODO: Change to driverRepository getDriverByLicenseId to check if driver exists and is not deleted
-        if(!existResponse.success) return Result.FailureStr("Driver does not exist")
+        if(!existResponse.success) return Result.Failure(patchDriverErrors.DRIVER_NOT_FOUND)
         const driverUpdatedEvent = new DriverUpdatedEvent({
             driverLicenseId: input.driverLicenseId.getValue(),
             firstName: input.driver?.firstName,
