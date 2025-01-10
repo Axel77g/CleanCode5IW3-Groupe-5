@@ -1,4 +1,4 @@
-import {IEvent} from "../../../shared/AbstractEvent";
+import {IEvent} from "@shared/AbstractEvent";
 
 export type EventCallbackHandler = (event : IEvent) => unknown
 

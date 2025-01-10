@@ -1,11 +1,11 @@
-import { IInputUseCase, IUseCase} from "../../../../shared/IUseCase";
+import { IInputUseCase, IUseCase} from "@shared/IUseCase";
 import {
         InventorySparePartDTO
-} from "../../../../domain/inventoryManagement/entities/InventorySparePart";
-import {Result} from "../../../../shared/Result";
+} from "@domain/inventoryManagement/entities/InventorySparePart";
+import {Result} from "@shared/Result";
 import {
     UpsertInventorySparePartEvent
-} from "../../../../domain/inventoryManagement/events/UpsertInventorySparePartEvent";
+} from "@domain/inventoryManagement/events/UpsertInventorySparePartEvent";
 import {EventRepository} from "../../../shared/repositories/EventRepository";
 
 interface UpsertInventorySparePartInput extends IInputUseCase, InventorySparePartDTO{}

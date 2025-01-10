@@ -1,12 +1,12 @@
-import { InventorySparePart } from "../../../../domain/inventoryManagement/entities/InventorySparePart";
-import { Siret } from '../../../../domain/shared/value-object/Siret';
-import { IInputUseCase, IUseCase } from "../../../../shared/IUseCase";
-import { Result } from "../../../../shared/Result";
+import { InventorySparePart } from "@domain/inventoryManagement/entities/InventorySparePart";
+import { Siret } from '@domain/shared/value-object/Siret';
+import { IInputUseCase, IUseCase } from "@shared/IUseCase";
+import { Result } from "@shared/Result";
 import { StockRepository } from "../../repositories/StockRepository";
 import { NotificationServices } from "../../services/NotificationServices";
 import {EventRepository} from "../../../shared/repositories/EventRepository";
-import {DealerStockUpdatedEvent} from "../../../../domain/inventoryManagement/events/DealerStockUpdatedEvent";
-import {ApplicationException} from "../../../../shared/ApplicationException";
+import {DealerStockUpdatedEvent} from "@domain/inventoryManagement/events/DealerStockUpdatedEvent";
+import {ApplicationException} from "@shared/ApplicationException";
 
 interface RemoveSparePartInStockInput extends IInputUseCase {
     siret: Siret,

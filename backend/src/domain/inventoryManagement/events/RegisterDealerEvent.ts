@@ -1,4 +1,4 @@
-import {AbstractEvent} from "../../../shared/AbstractEvent";
+import {AbstractEvent} from "@shared/AbstractEvent";
 import {DealerDTO} from "../entities/Dealer";
 
 export class RegisterDealerEvent extends AbstractEvent{

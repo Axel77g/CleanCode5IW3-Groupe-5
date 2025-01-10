@@ -1,7 +1,7 @@
-import { StockInventorySparePart } from "../../../../domain/inventoryManagement/value-object/StockInventorySparePart";
-import { Siret } from '../../../../domain/shared/value-object/Siret';
-import { IInputUseCase, IUseCase } from "../../../../shared/IUseCase";
-import { Result } from "../../../../shared/Result";
+import { StockInventorySparePart } from "@domain/inventoryManagement/value-object/StockInventorySparePart";
+import { Siret } from '@domain/shared/value-object/Siret';
+import { IInputUseCase, IUseCase } from "@shared/IUseCase";
+import { Result } from "@shared/Result";
 import { StockRepository } from "../../repositories/StockRepository";
 
 interface ShowDealerStockInput extends IInputUseCase {

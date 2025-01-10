@@ -1,4 +1,4 @@
-import {AbstractEvent} from "../../../shared/AbstractEvent";
+import {AbstractEvent} from "@shared/AbstractEvent";
 import {DriverDTO} from "../entities/Driver";
 
 export class DriverCreatedEvent extends AbstractEvent{

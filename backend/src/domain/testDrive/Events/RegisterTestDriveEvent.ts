@@ -1,4 +1,4 @@
-import {AbstractEvent} from "../../../shared/AbstractEvent";
+import {AbstractEvent} from "@shared/AbstractEvent";
 import {TestDriveDTO} from "../entities/TestDrive";
 export class RegisterTestDriveEvent extends AbstractEvent {
     static type = "REGISTER_TEST_DRIVE"

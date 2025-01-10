@@ -1,11 +1,15 @@
-import {IProjection} from "../../../shared/IProjection";
-import {IEvent} from "../../../shared/AbstractEvent";
-import {RegisterIncidentEvent} from "../../../domain/testDrive/Events/RegisterIncidentEvent";
+import {IProjection} from "@shared/IProjection";
+import {IEvent} from "@shared/AbstractEvent";
+import {RegisterIncidentEvent} from "@domain/testDrive/Events/RegisterIncidentEvent";
 import {IncidentRepository} from "../repositories/IncidentRepository";
-import {Incident} from "../../../domain/testDrive/entities/Incident";
+import {Incident} from "@domain/testDrive/entities/Incident";
+import {IEventObserver} from "@application/shared/observers/IEventObserver";
 
 export class IncidentsProjection implements IProjection{
-    constructor(private _incidentRepository: IncidentRepository) {}
+    constructor(private _incidentRepository: IncidentRepository, _eventObserver : IEventObserver) {
+        _eventObserver.subscribe(RegisterIncidentEvent.type, this.receive.bind(this))
+    }
+
     async receive(event: IEvent) : Promise<void> {
         switch (event.constructor) {
             case RegisterIncidentEvent:

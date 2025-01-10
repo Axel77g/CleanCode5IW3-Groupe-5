@@ -1,9 +1,9 @@
-import {IInputUseCase, IUseCase} from "../../../../shared/IUseCase";
-import {DriverLicenseId} from "../../../../domain/testDrive/value-object/DriverLicenseId";
-import {IncidentType} from "../../../../domain/testDrive/enums/IncidentType";
-import {Result} from "../../../../shared/Result";
+import {IInputUseCase, IUseCase} from "@shared/IUseCase";
+import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
+import {IncidentType} from "@domain/testDrive/enums/IncidentType";
+import {Result} from "@shared/Result";
 import {DriverRepository} from "../../repositories/DriverRepository";
-import {RegisterIncidentEvent} from "../../../../domain/testDrive/Events/RegisterIncidentEvent";
+import {RegisterIncidentEvent} from "@domain/testDrive/Events/RegisterIncidentEvent";
 import {randomUUID} from "node:crypto";
 import {EventRepository} from "../../../shared/repositories/EventRepository";
 
@@ -16,7 +16,7 @@ interface RegisterIncidentInput extends IInputUseCase {
 
 export type RegisterIncidentUseCase = IUseCase<RegisterIncidentInput, Result>
 
-export const registerIncidentUseCase = (_eventRepository: EventRepository, _driverRepository : DriverRepository): RegisterIncidentUseCase => {
+export const createRegisterIncidentUseCase = (_eventRepository: EventRepository, _driverRepository : DriverRepository): RegisterIncidentUseCase => {
     return async (input: RegisterIncidentInput) => {
         const driverResponse = await _driverRepository.getByLicenseId(input.driverLicenseId.getValue())
         if(!driverResponse.success) return driverResponse

@@ -1,9 +1,9 @@
 import {AbstractMongoRepository} from "../AbstractMongoRepository";
-import {StockRepository} from "../../../../../application/inventoryManagement/repositories/StockRepository";
-import {Siret} from "../../../../../domain/shared/value-object/Siret";
-import {Result, VoidResult} from "../../../../../shared/Result";
-import {StockInventorySparePart} from "../../../../../domain/inventoryManagement/value-object/StockInventorySparePart";
-import {InventorySparePart} from "../../../../../domain/inventoryManagement/entities/InventorySparePart";
+import {StockRepository} from "@application/inventoryManagement/repositories/StockRepository";
+import {Siret} from "@domain/shared/value-object/Siret";
+import {Result, VoidResult} from "@shared/Result";
+import {StockInventorySparePart} from "@domain/inventoryManagement/value-object/StockInventorySparePart";
+import {InventorySparePart} from "@domain/inventoryManagement/entities/InventorySparePart";
 
 export class MongoStockRepository extends AbstractMongoRepository implements StockRepository{
     protected collectionName: string = 'stock';

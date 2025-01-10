@@ -1,9 +1,9 @@
 import {AbstractMongoRepository} from "../AbstractMongoRepository";
-import {EventRepository} from "../../../../../application/shared/repositories/EventRepository";
+import {EventRepository} from "@application/shared/repositories/EventRepository";
 import {MongoClient} from "mongodb";
-import {IEventObserver} from "../../../../../application/shared/observers/IEventObserver";
-import {AbstractEvent} from "../../../../../shared/AbstractEvent";
-import {Result, VoidResult} from "../../../../../shared/Result";
+import {IEventObserver} from "@application/shared/observers/IEventObserver";
+import {AbstractEvent} from "@shared/AbstractEvent";
+import {Result, VoidResult} from "@shared/Result";
 
 export abstract class MongoEventRepository extends AbstractMongoRepository implements EventRepository{
     protected abstract collectionName: string;
@@ -15,6 +15,7 @@ export abstract class MongoEventRepository extends AbstractMongoRepository imple
     async storeEvent(event: AbstractEvent): Promise<VoidResult> {
         const session = this.getSessionTransaction();
         try{
+            console.log(this.collectionName, "storing event", event);
             session.startTransaction();
             await this.getQuery().insertOne(event);
             await session.commitTransaction();

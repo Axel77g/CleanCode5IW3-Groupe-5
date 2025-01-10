@@ -1,7 +1,7 @@
-import {IInputUseCase, IUseCase} from "../../../../shared/IUseCase";
+import {IInputUseCase, IUseCase} from "@shared/IUseCase";
 import {InventorySparePartRepository} from "../../repositories/InventorySparePartRepository";
-import {InventorySparePart} from "../../../../domain/inventoryManagement/entities/InventorySparePart";
-import {Result} from "../../../../shared/Result";
+import {InventorySparePart} from "@domain/inventoryManagement/entities/InventorySparePart";
+import {Result} from "@shared/Result";
 
 interface GetInventorySparePartInput extends IInputUseCase{
     reference: string,

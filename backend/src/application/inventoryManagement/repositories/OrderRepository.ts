@@ -1,6 +1,6 @@
-import {Order} from "../../../domain/inventoryManagement/entities/Order";
-import {Result, VoidResult} from "../../../shared/Result";
-import { Siret } from '../../../domain/shared/value-object/Siret';
+import {Order} from "@domain/inventoryManagement/entities/Order";
+import {Result, VoidResult} from "@shared/Result";
+import { Siret } from '@domain/shared/value-object/Siret';
 
 
 export interface OrderRepository {

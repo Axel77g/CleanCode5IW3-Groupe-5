@@ -1,4 +1,4 @@
-import {AbstractEvent} from "../../../shared/AbstractEvent";
+import {AbstractEvent} from "@shared/AbstractEvent";
 import {InventorySparePartDTO} from "../entities/InventorySparePart";
 
 export class UpsertInventorySparePartEvent extends AbstractEvent{

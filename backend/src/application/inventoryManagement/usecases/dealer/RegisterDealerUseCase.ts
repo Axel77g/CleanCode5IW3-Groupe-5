@@ -1,11 +1,11 @@
-import { Dealer } from "../../../../domain/inventoryManagement/entities/Dealer";
-import { DealerAddress } from "../../../../domain/inventoryManagement/value-object/DealerAddress";
-import { Siret } from '../../../../domain/shared/value-object/Siret';
-import { IInputUseCase, IUseCase } from "../../../../shared/IUseCase";
-import { Result } from "../../../../shared/Result";
+import { Dealer } from "@domain/inventoryManagement/entities/Dealer";
+import { DealerAddress } from "@domain/inventoryManagement/value-object/DealerAddress";
+import { Siret } from '@domain/shared/value-object/Siret';
+import { IInputUseCase, IUseCase } from "@shared/IUseCase";
+import { Result } from "@shared/Result";
 import { DealerRepository } from "../../repositories/DealerRepository";
 import {EventRepository} from "../../../shared/repositories/EventRepository";
-import {RegisterDealerEvent} from "../../../../domain/inventoryManagement/events/RegisterDealerEvent";
+import {RegisterDealerEvent} from "@domain/inventoryManagement/events/RegisterDealerEvent";
 
 interface RegisterDealerInput extends IInputUseCase {
     siret: Siret,

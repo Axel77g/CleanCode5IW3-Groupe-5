@@ -1,4 +1,4 @@
-import {AbstractEvent} from "../../../shared/AbstractEvent";
+import {AbstractEvent} from "@shared/AbstractEvent";
 import {OrderStatusEnum} from "../enums/OrderStatusEnum";
 
 export interface UpdateOrderStatusEventPayload {

@@ -2,7 +2,7 @@ import { Siret } from "../../shared/value-object/Siret";
 import {OrderLine, OrderLineDTO} from "../value-object/OrderLine";
 import {randomUUID} from "node:crypto";
 import {OrderStatusEnum} from "../enums/OrderStatusEnum";
-import {ApplicationException} from "../../../shared/ApplicationException";
+import {ApplicationException} from "@shared/ApplicationException";
 
 
 export interface OrderDTO {

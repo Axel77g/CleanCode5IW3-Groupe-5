@@ -1,12 +1,16 @@
-import {IEvent} from "../../../shared/AbstractEvent";
-import {Driver} from "../../../domain/testDrive/entities/Driver";
-import {DriverCreatedEvent} from "../../../domain/testDrive/Events/DriverCreatedEvent";
-import {DriverUpdatedEvent} from "../../../domain/testDrive/Events/DriverUpdatedEvent";
+import {IEvent} from "@shared/AbstractEvent";
+import {Driver} from "@domain/testDrive/entities/Driver";
+import {DriverCreatedEvent} from "@domain/testDrive/Events/DriverCreatedEvent";
+import {DriverUpdatedEvent} from "@domain/testDrive/Events/DriverUpdatedEvent";
 import {DriverRepository} from "../repositories/DriverRepository";
-import {IProjection} from "../../../shared/IProjection";
+import {IProjection} from "@shared/IProjection";
+import {IEventObserver} from "@application/shared/observers/IEventObserver";
 
 export class DriversProjection implements IProjection {
-    constructor(private _driverRepository: DriverRepository) {}
+    constructor(private _driverRepository: DriverRepository, eventObserver: IEventObserver) {
+        eventObserver.subscribe(DriverCreatedEvent.type, this.receive.bind(this))
+        eventObserver.subscribe(DriverUpdatedEvent.type, this.receive.bind(this))
+    }
     async receive(event: IEvent) : Promise<void> {
         switch (event.constructor) {
             case DriverCreatedEvent:

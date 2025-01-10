@@ -1,13 +1,13 @@
-import { IInputUseCase, IUseCase} from "../../../../shared/IUseCase";
+import { IInputUseCase, IUseCase} from "@shared/IUseCase";
 import {OrderRepository} from "../../repositories/OrderRepository";
-import {Order} from "../../../../domain/inventoryManagement/entities/Order";
-import {OrderLine, OrderLineDTO} from "../../../../domain/inventoryManagement/value-object/OrderLine";
-import {Result} from "../../../../shared/Result";
-import { Siret } from '../../../../domain/shared/value-object/Siret';
+import {Order} from "@domain/inventoryManagement/entities/Order";
+import {OrderLine, OrderLineDTO} from "@domain/inventoryManagement/value-object/OrderLine";
+import {Result} from "@shared/Result";
+import { Siret } from '@domain/shared/value-object/Siret';
 import {EventRepository} from "../../../shared/repositories/EventRepository";
 import {DealerRepository} from "../../repositories/DealerRepository";
-import {ApplicationException} from "../../../../shared/ApplicationException";
-import {RegisterOrderEvent} from "../../../../domain/inventoryManagement/events/RegisterOrderEvent";
+import {ApplicationException} from "@shared/ApplicationException";
+import {RegisterOrderEvent} from "@domain/inventoryManagement/events/RegisterOrderEvent";
 
 interface RegisterOrderInput extends IInputUseCase{
     dealer: Siret,

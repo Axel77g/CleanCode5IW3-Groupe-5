@@ -1,10 +1,10 @@
 import {AbstractMongoRepository} from "../AbstractMongoRepository";
-import {IncidentRepository} from "../../../../../application/testDrive/repositories/IncidentRepository";
-import {DriverLicenseId} from "../../../../../domain/testDrive/value-object/DriverLicenseId";
-import {PaginatedInput} from "../../../../../shared/PaginatedInput";
-import {PaginatedResult, Result, VoidResult} from "../../../../../shared/Result";
-import {Incident} from "../../../../../domain/testDrive/entities/Incident";
-import {IncidentMapper} from "../../../entityMappers/IncidentMapper";
+import {IncidentRepository} from "@application/testDrive/repositories/IncidentRepository";
+import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
+import {PaginatedInput} from "@shared/PaginatedInput";
+import {PaginatedResult, Result, VoidResult} from "@shared/Result";
+import {Incident} from "@domain/testDrive/entities/Incident";
+import {IncidentMapper} from "@infrastructure/common/entityMappers/IncidentMapper";
 
 export class MongoIncidentRepository extends AbstractMongoRepository implements IncidentRepository{
     protected collectionName: string = 'incidents';

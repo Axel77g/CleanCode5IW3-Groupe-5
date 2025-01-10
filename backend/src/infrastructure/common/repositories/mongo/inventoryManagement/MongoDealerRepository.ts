@@ -1,9 +1,10 @@
 import {AbstractMongoRepository} from "../AbstractMongoRepository";
-import {DealerRepository} from "../../../../../application/inventoryManagement/repositories/DealerRepository";
-import {Siret} from "../../../../../domain/shared/value-object/Siret";
-import {Result, VoidResult} from "../../../../../shared/Result";
-import {Dealer} from "../../../../../domain/inventoryManagement/entities/Dealer";
-import {DealerMapper} from "../../../entityMappers/DealerMapper";
+import {DealerRepository} from "@application/inventoryManagement/repositories/DealerRepository";
+import {Siret} from "@domain/shared/value-object/Siret";
+import {Result, VoidResult} from "@shared/Result";
+import {Dealer} from "@domain/inventoryManagement/entities/Dealer";
+import {DealerMapper} from "@infrastructure/common/entityMappers/DealerMapper";
+
 
 export class MongoDealerRepository extends AbstractMongoRepository implements DealerRepository{
     protected collectionName: string = "dealers";

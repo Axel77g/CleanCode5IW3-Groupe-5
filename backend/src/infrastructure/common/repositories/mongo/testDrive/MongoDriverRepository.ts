@@ -1,9 +1,9 @@
 import {AbstractMongoRepository} from "../AbstractMongoRepository";
-import {DriverRepository} from "../../../../../application/testDrive/repositories/DriverRepository";
-import {Driver} from "../../../../../domain/testDrive/entities/Driver";
-import { PaginatedInput } from "../../../../../shared/PaginatedInput";
-import { VoidResult, Result, PaginatedResult } from "../../../../../shared/Result";
-import {DriverMapper} from "../../../entityMappers/DriverMapper";
+import {DriverRepository} from "@application/testDrive/repositories/DriverRepository";
+import {Driver} from "@domain/testDrive/entities/Driver";
+import { PaginatedInput } from "@shared/PaginatedInput";
+import { VoidResult, Result, PaginatedResult } from "@shared/Result";
+import {DriverMapper} from "@infrastructure/common/entityMappers/DriverMapper";
 
 export class MongoDriverRepository extends AbstractMongoRepository implements DriverRepository {
     protected collectionName = "drivers";
@@ -40,14 +40,7 @@ export class MongoDriverRepository extends AbstractMongoRepository implements Dr
     async listDrivers(pagination: PaginatedInput): Promise<PaginatedResult<Driver>> {
         const {limit, page}  = pagination
          try{
-             const driversDocuments = await this.getQuery().aggregate([
-                 {
-                     $skip: limit * page
-                 },
-                 {
-                     $limit: limit
-                 }
-             ])
+             const driversDocuments = await this.getQuery().find().skip((page - 1) * limit).limit(limit)
              const total = await this.getQuery().countDocuments({})
              const drivers = DriverMapper.toDomainList(await driversDocuments.toArray())
              return Result.SuccessPaginated<Driver>(drivers, total, page, limit)

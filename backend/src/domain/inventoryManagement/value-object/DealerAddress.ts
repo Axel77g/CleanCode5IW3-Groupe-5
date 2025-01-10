@@ -1,4 +1,4 @@
-import {ApplicationException} from "../../../shared/ApplicationException";
+import {ApplicationException} from "@shared/ApplicationException";
 
 export interface AddressDTO {
     street: string

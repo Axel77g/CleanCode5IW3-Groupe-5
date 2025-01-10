@@ -1,9 +1,9 @@
-import {IProjection} from "../../../shared/IProjection";
+import {IProjection} from "@shared/IProjection";
 import {OrderRepository} from "../repositories/OrderRepository";
-import {RegisterOrderEvent} from "../../../domain/inventoryManagement/events/RegisterOrderEvent";
-import {UpdateOrderStatusEvent} from "../../../domain/inventoryManagement/events/UpdateOrderStatusEvent";
-import {Order} from "../../../domain/inventoryManagement/entities/Order";
-import {IEvent} from "../../../shared/AbstractEvent";
+import {RegisterOrderEvent} from "@domain/inventoryManagement/events/RegisterOrderEvent";
+import {UpdateOrderStatusEvent} from "@domain/inventoryManagement/events/UpdateOrderStatusEvent";
+import {Order} from "@domain/inventoryManagement/entities/Order";
+import {IEvent} from "@shared/AbstractEvent";
 
 export class OrderProjection implements IProjection{
     constructor(private _orderRepository: OrderRepository) {}

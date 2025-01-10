@@ -1,10 +1,10 @@
 //write test case in jest
 import {MongoClient} from "mongodb";
 import {MongoDealerRepository} from "./MongoDealerRepository";
-import {Result} from "../../../../../shared/Result";
-import {Siret} from "../../../../../domain/shared/value-object/Siret";
-import {Dealer} from "../../../../../domain/inventoryManagement/entities/Dealer";
-import {DealerMapper} from "../../../entityMappers/DealerMapper";
+import {Result} from "@shared/Result";
+import {Siret} from "@domain/shared/value-object/Siret";
+import {Dealer} from "@domain/inventoryManagement/entities/Dealer";
+import {DealerMapper} from "@infrastructure/common/entityMappers/DealerMapper";
 
 jest.mock('mongodb');
 const mockClient = new MongoClient('mongodb://localhost:27017/');

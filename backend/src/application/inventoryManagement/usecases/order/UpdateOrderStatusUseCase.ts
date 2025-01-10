@@ -1,15 +1,15 @@
-import {IInputUseCase, IUseCase} from "../../../../shared/IUseCase";
-import {Siret} from "../../../../domain/shared/value-object/Siret";
-import {OrderLine} from "../../../../domain/inventoryManagement/value-object/OrderLine";
-import {Result} from "../../../../shared/Result";
-import {ApplicationException} from "../../../../shared/ApplicationException";
+import {IInputUseCase, IUseCase} from "@shared/IUseCase";
+import {Siret} from "@domain/shared/value-object/Siret";
+import {OrderLine} from "@domain/inventoryManagement/value-object/OrderLine";
+import {Result} from "@shared/Result";
+import {ApplicationException} from "@shared/ApplicationException";
 import {EventRepository} from "../../../shared/repositories/EventRepository";
 import {DealerRepository} from "../../repositories/DealerRepository";
-import {RegisterOrderEvent} from "../../../../domain/inventoryManagement/events/RegisterOrderEvent";
-import {Order} from "../../../../domain/inventoryManagement/entities/Order";
+import {RegisterOrderEvent} from "@domain/inventoryManagement/events/RegisterOrderEvent";
+import {Order} from "@domain/inventoryManagement/entities/Order";
 import {OrderRepository} from "../../repositories/OrderRepository";
-import {OrderStatusEnum} from "../../../../domain/inventoryManagement/enums/OrderStatusEnum";
-import {UpdateOrderStatusEvent} from "../../../../domain/inventoryManagement/events/UpdateOrderStatusEvent";
+import {OrderStatusEnum} from "@domain/inventoryManagement/enums/OrderStatusEnum";
+import {UpdateOrderStatusEvent} from "@domain/inventoryManagement/events/UpdateOrderStatusEvent";
 
 interface UpdateOrderInput extends IInputUseCase{
     orderId: string,

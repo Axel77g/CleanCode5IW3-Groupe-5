@@ -1,7 +1,7 @@
-import {Dealer, DealerDTO} from "../../../domain/inventoryManagement/entities/Dealer";
+import {Dealer, DealerDTO} from "@domain/inventoryManagement/entities/Dealer";
 import {MappedEntities, MappedEntity} from "./MappedEntity";
-import {DealerAddress} from "../../../domain/inventoryManagement/value-object/DealerAddress";
-import {Siret} from "../../../domain/shared/value-object/Siret";
+import {DealerAddress} from "@domain/inventoryManagement/value-object/DealerAddress";
+import {Siret} from "@domain/shared/value-object/Siret";
 
 export class DealerMapper {
     static toDomain(dealerRaw: any) : Dealer | Error {

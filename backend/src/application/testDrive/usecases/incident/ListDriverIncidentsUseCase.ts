@@ -1,11 +1,11 @@
-import {IUseCase} from "../../../../shared/IUseCase";
-import {DriverLicenseId} from "../../../../domain/testDrive/value-object/DriverLicenseId";
-import {PaginatedResult, Result} from "../../../../shared/Result";
-import {Incident} from "../../../../domain/testDrive/entities/Incident";
+import {IUseCase} from "@shared/IUseCase";
+import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
+import {PaginatedResult, Result} from "@shared/Result";
+import {Incident} from "@domain/testDrive/entities/Incident";
 import {IncidentRepository} from "../../repositories/IncidentRepository";
-import {PaginatedInput} from "../../../../shared/PaginatedInput";
+import {PaginatedInput} from "@shared/PaginatedInput";
 import {DriverRepository} from "../../repositories/DriverRepository";
-import {ApplicationException} from "../../../../shared/ApplicationException";
+import {ApplicationException} from "@shared/ApplicationException";
 
 interface ListDriverIncidentsInput extends PaginatedInput{
     driverLicenseId: DriverLicenseId,
@@ -17,7 +17,7 @@ const ListDriverIncidentsErrors = {
     DRIVER_NOT_FOUND : new ApplicationException("ListDriverIncidents.CannotListDriverIncidents", "Cannot list incidents")
 }
 
-export const listDriverIncidentsUseCase = (_incidentRepository : IncidentRepository, _driverRepository : DriverRepository): ListDriverIncidentsUseCase => {
+export const createListDriverIncidentsUseCase = (_incidentRepository : IncidentRepository, _driverRepository : DriverRepository): ListDriverIncidentsUseCase => {
     return async (input : ListDriverIncidentsInput) => {
         const driverResponse = await _driverRepository.getByLicenseId(input.driverLicenseId.getValue())
         if(!driverResponse.success) return Result.Failure(driverResponse.error)

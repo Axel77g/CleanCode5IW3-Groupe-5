@@ -1,5 +1,5 @@
 import {MongoClient} from 'mongodb'
-import {Result} from "../../../../shared/Result";
+import {Result} from "@shared/Result";
 export abstract class AbstractMongoRepository {
     protected abstract collectionName: string;
     public constructor(

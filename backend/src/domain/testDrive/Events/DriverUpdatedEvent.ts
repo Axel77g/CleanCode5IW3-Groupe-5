@@ -1,4 +1,4 @@
-import {AbstractEvent} from "../../../shared/AbstractEvent";
+import {AbstractEvent} from "@shared/AbstractEvent";
 import {DriverLicenseId} from "../value-object/DriverLicenseId";
 
 interface DriverUpdatedEventPayload {

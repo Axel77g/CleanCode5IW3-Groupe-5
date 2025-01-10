@@ -1,12 +1,12 @@
 import {AbstractMongoRepository} from "../AbstractMongoRepository";
 import {
     InventorySparePartRepository
-} from "../../../../../application/inventoryManagement/repositories/InventorySparePartRepository";
-import {Result, VoidResult} from "../../../../../shared/Result";
+} from "@application/inventoryManagement/repositories/InventorySparePartRepository";
+import {Result, VoidResult} from "@shared/Result";
 import {
     InventorySparePart,
     InventorySparePartDTO
-} from "../../../../../domain/inventoryManagement/entities/InventorySparePart";
+} from "@domain/inventoryManagement/entities/InventorySparePart";
 
 export class MongoInventorySparePartRepository extends AbstractMongoRepository implements InventorySparePartRepository{
     protected collectionName: string = 'inventorySpareParts';

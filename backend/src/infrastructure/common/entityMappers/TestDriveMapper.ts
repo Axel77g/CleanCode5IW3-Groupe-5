@@ -1,15 +1,16 @@
-import {TestDrive, TestDriveDTO} from "../../../domain/testDrive/entities/TestDrive";
-import {DriverLicenseId} from "../../../domain/testDrive/value-object/DriverLicenseId";
-import {VehicleImmatriculation} from "../../../domain/shared/value-object/VehicleImmatriculation";
-import {Period} from "../../../domain/testDrive/value-object/Period";
+import {TestDrive, TestDriveDTO} from "@domain/testDrive/entities/TestDrive";
+import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
+import {VehicleImmatriculation} from "@domain/shared/value-object/VehicleImmatriculation";
+import {Period} from "@domain/testDrive/value-object/Period";
 import {MappedEntities, MappedEntity} from "./MappedEntity";
 
 export class TestDriveMapper{
     static toDomain(testDrive: any) : TestDrive | Error{
-        const driverLicenseId = DriverLicenseId.create(testDrive.driver_licence_id)
+
+        const driverLicenseId = DriverLicenseId.create(testDrive.driverLicenseId)
         if(driverLicenseId instanceof Error) return driverLicenseId
 
-        const vehicleImmatriculation = VehicleImmatriculation.create(testDrive.vehicle_immatriculation)
+        const vehicleImmatriculation = VehicleImmatriculation.create(testDrive.vehicleImmatriculation)
         if(vehicleImmatriculation instanceof Error) return vehicleImmatriculation
 
         return new TestDrive(
