@@ -27,7 +27,7 @@ export class MongoIncidentRepository extends AbstractMongoRepository implements 
         const session = this.getSessionTransaction();
         try{
             session.startTransaction();
-            await this.getQuery().updateOne({incidentId: incident.id}, {$set: IncidentMapper.toPersistence(incident)}, {upsert: true});
+            await this.getQuery().updateOne({incidentId: incident.incidentId}, {$set: IncidentMapper.toPersistence(incident)}, {upsert: true});
             await session.commitTransaction();
             return Result.SuccessVoid();
         }catch (e){

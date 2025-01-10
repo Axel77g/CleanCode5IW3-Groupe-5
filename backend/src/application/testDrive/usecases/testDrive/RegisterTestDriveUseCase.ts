@@ -4,7 +4,7 @@ import {Result} from "../../../../shared/Result";
 import {DriverRepository} from "../../repositories/DriverRepository";
 import {VehicleImmatriculation} from "../../../../domain/shared/value-object/VehicleImmatriculation";
 import {Period} from "../../../../domain/testDrive/value-object/Period";
-import {TestDriveEventRepository} from "../../repositories/TestDriveEventRepository";
+import {EventRepository} from "../../../shared/repositories/EventRepository";
 import {RegisterTestDriveEvent} from "../../../../domain/testDrive/Events/RegisterTestDriveEvent";
 import {randomUUID} from "node:crypto";
 
@@ -16,7 +16,7 @@ interface RegisterTestDriveInput extends IInputUseCase {
 
 export type RegisterTestDriveUseCase = IUseCase<RegisterTestDriveInput, Result>
 
-export const registerTestDriveUseCase = (_testDriveEventRepository: TestDriveEventRepository, _driverRepository : DriverRepository): RegisterTestDriveUseCase => {
+export const registerTestDriveUseCase = (_eventRepository: EventRepository, _driverRepository : DriverRepository): RegisterTestDriveUseCase => {
     return async (input: RegisterTestDriveInput) => {
         const driverResponse = await _driverRepository.getByLicenseId(input.driverLicenseId.getValue())
         if(!driverResponse.success) return driverResponse
@@ -27,7 +27,7 @@ export const registerTestDriveUseCase = (_testDriveEventRepository: TestDriveEve
             periodStart: input.period.startDate,
             periodEnd: input.period.endDate
         })
-        const storeResponse = await _testDriveEventRepository.storeEvent(testDriveEvent)
+        const storeResponse = await _eventRepository.storeEvent(testDriveEvent)
         if (!storeResponse.success) return storeResponse
         return Result.Success("Test Drive registered")
     }

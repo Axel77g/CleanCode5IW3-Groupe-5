@@ -2,7 +2,7 @@ import {Driver} from "../../../../domain/testDrive/entities/Driver";
 import {IInputUseCase, IUseCase} from "../../../../shared/IUseCase";
 import {DriverLicenseId} from "../../../../domain/testDrive/value-object/DriverLicenseId";
 import {Result} from "../../../../shared/Result";
-import {TestDriveEventRepository} from "../../repositories/TestDriveEventRepository";
+import {EventRepository} from "../../../shared/repositories/EventRepository";
 import {DriverUpdatedEvent} from "../../../../domain/testDrive/Events/DriverUpdatedEvent";
 import {ApplicationException} from "../../../../shared/ApplicationException";
 
@@ -17,9 +17,9 @@ const patchDriverErrors = {
     DRIVER_NOT_FOUND: new ApplicationException("PatchDriver.CannotPatchDriver", "Cannot patch driver")
 }
 
-export const patchDriverUseCase = (_testDriveEventRepository: TestDriveEventRepository): PatchDriverUseCase => {
+export const patchDriverUseCase = (_eventRepository: EventRepository): PatchDriverUseCase => {
     return async (input: PatchDriverInput) => {
-        const existResponse = await _testDriveEventRepository.exists('driver-' + input.driverLicenseId.getValue()) //@TODO: Change to driverRepository getDriverByLicenseId to check if driver exists and is not deleted
+        const existResponse = await _eventRepository.exists('driver-' + input.driverLicenseId.getValue()) //@TODO: Change to driverRepository getDriverByLicenseId to check if driver exists and is not deleted
         if(!existResponse.success) return Result.Failure(patchDriverErrors.DRIVER_NOT_FOUND)
         const driverUpdatedEvent = new DriverUpdatedEvent({
             driverLicenseId: input.driverLicenseId.getValue(),
@@ -28,7 +28,7 @@ export const patchDriverUseCase = (_testDriveEventRepository: TestDriveEventRepo
             email: input.driver?.email
         })
 
-        const response = await _testDriveEventRepository.storeEvent(driverUpdatedEvent)
+        const response = await _eventRepository.storeEvent(driverUpdatedEvent)
         if(!response.success) return response
         return Result.Success('Driver updated')
     }

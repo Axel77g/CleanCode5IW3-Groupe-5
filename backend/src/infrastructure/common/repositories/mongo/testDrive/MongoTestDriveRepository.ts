@@ -29,7 +29,7 @@ export class MongoTestDriveRepository extends AbstractMongoRepository implements
         const session = this.getSessionTransaction();
         try{
             session.startTransaction();
-            await this.getQuery().updateOne({testDriveId: testDrive.id}, {$set: TestDriveMapper.toPersistence(testDrive)}, {upsert: true});
+            await this.getQuery().updateOne({testDriveId: testDrive.testDriveId}, {$set: TestDriveMapper.toPersistence(testDrive)}, {upsert: true});
             await session.commitTransaction();
             return Result.SuccessVoid();
         }catch (e){

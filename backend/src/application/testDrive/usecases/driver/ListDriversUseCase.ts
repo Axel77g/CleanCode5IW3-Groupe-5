@@ -2,7 +2,6 @@ import {IUseCase} from "../../../../shared/IUseCase";
 import { PaginatedResult, Result} from "../../../../shared/Result";
 import {Driver} from "../../../../domain/testDrive/entities/Driver";
 import {PaginatedInput} from "../../../../shared/PaginatedInput";
-import {TestDriveEventRepository} from "../../repositories/TestDriveEventRepository";
 import {DriverRepository} from "../../repositories/DriverRepository";
 import {ApplicationException} from "../../../../shared/ApplicationException";
 //@ts-ignore

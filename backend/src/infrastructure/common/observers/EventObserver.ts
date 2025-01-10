@@ -1,5 +1,5 @@
 import {IEvent} from "../../../shared/AbstractEvent";
-import {EventCallbackHandler, IEventObserver} from "../../../application/testDrive/observers/IEventObserver";
+import {EventCallbackHandler, IEventObserver} from "../../../application/shared/observers/IEventObserver";
 
 export class EventObserver implements IEventObserver{
     private subscribers : Record<string, EventCallbackHandler[]> = {}
@@ -11,7 +11,7 @@ export class EventObserver implements IEventObserver{
     }
 
     emit(event : IEvent){
-        console.log("Event dispateched", event)
+        console.log("Event dispatched", event)
         let subscribers = this.subscribers[event.type]
         if(!subscribers) return
         for(let subscriberCallback of subscribers){

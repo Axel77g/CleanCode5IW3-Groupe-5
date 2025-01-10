@@ -12,7 +12,7 @@ export interface TestDriveDTO{
 
 export class TestDrive{
     constructor(
-        public readonly id: string,
+        public readonly testDriveId: string,
         public readonly driverLicenseId: DriverLicenseId,
         public readonly vehicleImmatriculation: VehicleImmatriculation,
         public readonly period : Period

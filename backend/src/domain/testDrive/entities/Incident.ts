@@ -11,7 +11,7 @@ export interface IncidentDTO{
 
 export class Incident{
     constructor(
-        public readonly id: string,
+        public readonly incidentId: string,
         public readonly driverLicenseId: DriverLicenseId,
         public readonly type : IncidentType,
         public readonly description: string,

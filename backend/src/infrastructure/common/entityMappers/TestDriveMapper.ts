@@ -25,7 +25,7 @@ export class TestDriveMapper{
 
     static toPersistence(testDrive: TestDrive) : MappedEntity<TestDriveDTO> {
         return new MappedEntity<TestDriveDTO>({
-            testDriveId: testDrive.id,
+            testDriveId: testDrive.testDriveId,
             driverLicenseId: testDrive.driverLicenseId.getValue(),
             vehicleImmatriculation: testDrive.vehicleImmatriculation.getValue(),
             periodStart: testDrive.period.startDate,

@@ -5,7 +5,7 @@ import {Result} from "../../../../shared/Result";
 import {DriverRepository} from "../../repositories/DriverRepository";
 import {RegisterIncidentEvent} from "../../../../domain/testDrive/Events/RegisterIncidentEvent";
 import {randomUUID} from "node:crypto";
-import {TestDriveEventRepository} from "../../repositories/TestDriveEventRepository";
+import {EventRepository} from "../../../shared/repositories/EventRepository";
 
 interface RegisterIncidentInput extends IInputUseCase {
     driverLicenseId: DriverLicenseId;
@@ -16,7 +16,7 @@ interface RegisterIncidentInput extends IInputUseCase {
 
 export type RegisterIncidentUseCase = IUseCase<RegisterIncidentInput, Result>
 
-export const registerIncidentUseCase = (_testDriveEventRepository: TestDriveEventRepository, _driverRepository : DriverRepository): RegisterIncidentUseCase => {
+export const registerIncidentUseCase = (_eventRepository: EventRepository, _driverRepository : DriverRepository): RegisterIncidentUseCase => {
     return async (input: RegisterIncidentInput) => {
         const driverResponse = await _driverRepository.getByLicenseId(input.driverLicenseId.getValue())
         if(!driverResponse.success) return driverResponse
@@ -27,7 +27,7 @@ export const registerIncidentUseCase = (_testDriveEventRepository: TestDriveEven
             type: input.type,
             date: input.date
         })
-        const storeResponse = await _testDriveEventRepository.storeEvent(registerIncidentEvent)
+        const storeResponse = await _eventRepository.storeEvent(registerIncidentEvent)
         if (!storeResponse.success) return Result.Failure(storeResponse.error)
         return Result.Success("Incident registered")
     }

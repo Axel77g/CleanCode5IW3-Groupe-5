@@ -18,7 +18,7 @@ export class IncidentMapper {
 
     static toPersistence(incident: Incident) : MappedEntity<IncidentDTO> {
         return new MappedEntity<IncidentDTO>({
-            incidentId: incident.id,
+            incidentId: incident.incidentId,
             driverLicenseId: incident.driverLicenseId.getValue(),
             type: incident.type,
             description: incident.description,
