@@ -6,9 +6,6 @@ import {
 import {Controller} from "../../types/Controller";
 import {Response} from "../../core/Response";
 import {registerDriverRequest} from "@expressApp/requests/registerDriverRequest";
-import {
-    inventoryManagementEventRepository
-} from "@expressApp/repositories/inventoryManagement/inventoryManagementEventRepository";
 import {testDriveEventRepository} from "@expressApp/repositories/testDrive/testDriveEventRepository";
 
 export const registerDriverController : Controller<typeof registerDriverRequest> = async (payload) => {

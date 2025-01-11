@@ -1,4 +1,3 @@
-import {IProjection} from "@shared/IProjection";
 import {IEvent} from "@shared/AbstractEvent";
 import {DealerRepository} from "../repositories/DealerRepository";
 import {RegisterDealerEvent} from "@domain/inventoryManagement/events/RegisterDealerEvent";
@@ -6,7 +5,7 @@ import {UnregisterDealerEvent} from "@domain/inventoryManagement/events/Unregist
 import {Dealer} from "@domain/inventoryManagement/entities/Dealer";
 import {Siret} from "@domain/shared/value-object/Siret";
 
-export class DealerProjection implements IProjection {
+export class DealerProjection  {
     constructor(private _dealerRepository: DealerRepository) {}
     async receive(event: IEvent) : Promise<void> {
         switch (event.constructor) {

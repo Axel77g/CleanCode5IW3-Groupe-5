@@ -1,11 +1,10 @@
-import {IProjection} from "@shared/IProjection";
 import {StockRepository} from "../repositories/StockRepository";
 import {IEvent} from "@shared/AbstractEvent";
 import {DealerStockUpdatedEvent} from "@domain/inventoryManagement/events/DealerStockUpdatedEvent";
 import {InventorySparePartRepository} from "../repositories/InventorySparePartRepository";
 import {Siret} from "@domain/shared/value-object/Siret";
 
-export class StockProjection implements IProjection{
+export class StockProjection {
     constructor(private _stockRepository: StockRepository, private _inventorySparePartRepository : InventorySparePartRepository) {}
 
     async receive(event: IEvent): Promise<void> {

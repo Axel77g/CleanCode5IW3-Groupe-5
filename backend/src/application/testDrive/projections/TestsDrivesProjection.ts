@@ -1,25 +1,29 @@
-import {IProjection} from "@shared/IProjection";
+import {AbstractProjection} from "@application/shared/projections/AbstractProjection";
 import {IEvent} from "@shared/AbstractEvent";
 import {TestDriveRepository} from "../repositories/TestDriveRepository";
 import {RegisterTestDriveEvent} from "@domain/testDrive/Events/RegisterTestDriveEvent";
 import {TestDrive} from "@domain/testDrive/entities/TestDrive";
-import {EventObserver} from "@infrastructure/common/observers/EventObserver";
+import {ProjectionJobScheduler} from "@application/shared/projections/ProjectionJobScheduler";
+import {Result, VoidResult} from "@shared/Result";
 
-export class TestsDrivesProjection implements IProjection{
-    constructor(private _testDriveRepository: TestDriveRepository, _eventObserver : EventObserver) {
-        _eventObserver.subscribe(RegisterTestDriveEvent.type, this.receive.bind(this))
+export class TestsDrivesProjection extends AbstractProjection{
+    constructor(private _testDriveRepository: TestDriveRepository) {
+        super()
     }
-    async receive(event: IEvent) : Promise<void> {
-        switch (event.constructor) {
-            case RegisterTestDriveEvent:
-                await this.applyIncidentCreatedEvent(event as RegisterTestDriveEvent)
-                break;
+    init(projectionJobScheduler: ProjectionJobScheduler) {
+        projectionJobScheduler.schedule(RegisterTestDriveEvent.type, this.constructor.name)
+    }
+
+    bindEvents(){
+        return {
+            [RegisterTestDriveEvent.type]: this.applyIncidentCreatedEvent
         }
     }
 
-    async applyIncidentCreatedEvent(event: RegisterTestDriveEvent) {
+    async applyIncidentCreatedEvent(event: RegisterTestDriveEvent) : Promise<VoidResult> {
         const testDrive = TestDrive.fromObject(event.payload)
-        if(testDrive instanceof Error) return console.error(testDrive)
+        if(testDrive instanceof Error) return Result.Failure(testDrive)
         await this._testDriveRepository.store(testDrive)
+        return Result.SuccessVoid()
     }
 }

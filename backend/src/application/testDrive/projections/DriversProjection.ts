@@ -1,46 +1,52 @@
-import {IEvent} from "@shared/AbstractEvent";
 import {Driver} from "@domain/testDrive/entities/Driver";
 import {DriverCreatedEvent} from "@domain/testDrive/Events/DriverCreatedEvent";
 import {DriverUpdatedEvent} from "@domain/testDrive/Events/DriverUpdatedEvent";
 import {DriverRepository} from "../repositories/DriverRepository";
-import {IProjection} from "@shared/IProjection";
-import {IEventObserver} from "@application/shared/observers/IEventObserver";
+import {AbstractProjection} from "@application/shared/projections/AbstractProjection";
+import {
+    ProjectionJobScheduler
+} from "@application/shared/projections/ProjectionJobScheduler";
+import {Result, VoidResult} from "@shared/Result";
 
-export class DriversProjection implements IProjection {
-    constructor(private _driverRepository: DriverRepository, eventObserver: IEventObserver) {
-        eventObserver.subscribe(DriverCreatedEvent.type, this.receive.bind(this))
-        eventObserver.subscribe(DriverUpdatedEvent.type, this.receive.bind(this))
+export class DriversProjection extends AbstractProjection {
+    constructor(private _driverRepository: DriverRepository) {
+        super()
+
     }
-    async receive(event: IEvent) : Promise<void> {
-        switch (event.constructor) {
-            case DriverCreatedEvent:
-                await this.applyDriverCreatedEvent(event as DriverCreatedEvent)
-                break;
-            case DriverUpdatedEvent:
-                await this.applyDriverUpdatedEvent(event as DriverUpdatedEvent)
-                break;
+
+    init(projectionJobScheduler: ProjectionJobScheduler) {
+        projectionJobScheduler.schedule(DriverCreatedEvent.type, this.constructor.name)
+        projectionJobScheduler.schedule(DriverUpdatedEvent.type, this.constructor.name)
+    }
+
+    bindEvents(){
+        return {
+            [DriverCreatedEvent.type]: this.applyDriverCreatedEvent,
+            [DriverUpdatedEvent.type]: this.applyDriverUpdatedEvent
         }
     }
 
-    async applyDriverCreatedEvent(event: DriverCreatedEvent) {
+    async applyDriverCreatedEvent(event: DriverCreatedEvent) : Promise<VoidResult> {
         const driver = Driver.fromObject(event.payload)
-        if(driver instanceof Error) return console.error(driver)
+        if(driver instanceof Error) return Result.Failure(driver)
         await this._driverRepository.store(driver)
+        return Result.SuccessVoid()
     }
 
-    async applyDriverUpdatedEvent(event : DriverUpdatedEvent) {
+    async applyDriverUpdatedEvent(event : DriverUpdatedEvent) : Promise<VoidResult> {
         const driverResponse = await  this._driverRepository.getByLicenseId(event.payload.driverLicenseId)
-        if(!driverResponse.success) return console.error(driverResponse.error)
+        if(!driverResponse.success) return Result.Failure(driverResponse.error)
         const driver = Driver.fromObject({
             driverLicenseId: driverResponse.value.driverLicenseId.getValue(),
             firstName: event.payload.firstName || driverResponse.value.firstName,
             lastName: event.payload.lastName || driverResponse.value.lastName,
             email: event.payload.email || driverResponse.value.email,
-            driverLicensedAt: new Date(driverResponse.value.driverLicensedAt),
+            driverLicensedAt: driverResponse.value.driverLicensedAt,
             documents: []
         })
-        if(driver instanceof Error) return console.error(driver)
+        if(driver instanceof Error) return Result.Failure(driver)
         await this._driverRepository.store(driver)
+        return Result.SuccessVoid()
     }
 }
 

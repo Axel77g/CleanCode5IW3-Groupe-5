@@ -32,12 +32,12 @@ async function main(){
     const eventObserver = new EventObserver()
 
     const driverRepository = new MongoDriverRepository(client)
-    new DriversProjection(driverRepository, eventObserver)
+    new DriversProjection(driverRepository)
     const testDriveRepository = new MongoTestDriveRepository(client)
-    new TestsDrivesProjection(testDriveRepository, eventObserver)
+    new TestsDrivesProjection(testDriveRepository)
 
     const incidentRepository = new MongoIncidentRepository(client)
-    new IncidentsProjection(incidentRepository,eventObserver)
+    new IncidentsProjection(incidentRepository)
 
     const testDriveEventRepository = new MongoTestDriveEventRepository(client,eventObserver)
     const rDriverUseCase = createRegisterDriverUseCase(testDriveEventRepository)

@@ -1,26 +1,30 @@
-import {IProjection} from "@shared/IProjection";
+import {AbstractProjection} from "@application/shared/projections/AbstractProjection";
 import {IEvent} from "@shared/AbstractEvent";
 import {RegisterIncidentEvent} from "@domain/testDrive/Events/RegisterIncidentEvent";
 import {IncidentRepository} from "../repositories/IncidentRepository";
 import {Incident} from "@domain/testDrive/entities/Incident";
-import {IEventObserver} from "@application/shared/observers/IEventObserver";
+import {ProjectionJobScheduler} from "@application/shared/projections/ProjectionJobScheduler";
+import {Result, VoidResult} from "@shared/Result";
 
-export class IncidentsProjection implements IProjection{
-    constructor(private _incidentRepository: IncidentRepository, _eventObserver : IEventObserver) {
-        _eventObserver.subscribe(RegisterIncidentEvent.type, this.receive.bind(this))
+export class IncidentsProjection extends AbstractProjection{
+    constructor(private _incidentRepository: IncidentRepository) {
+        super()
     }
 
-    async receive(event: IEvent) : Promise<void> {
-        switch (event.constructor) {
-            case RegisterIncidentEvent:
-                await this.applyIncidentCreatedEvent(event as RegisterIncidentEvent)
-                break;
+    init(projectionJobScheduler: ProjectionJobScheduler) {
+        projectionJobScheduler.schedule(RegisterIncidentEvent.type, this.constructor.name)
+    }
+
+    bindEvents(){
+        return {
+            [RegisterIncidentEvent.type]: this.applyIncidentCreatedEvent
         }
     }
 
-    async applyIncidentCreatedEvent(event: RegisterIncidentEvent) {
+    async applyIncidentCreatedEvent(event: RegisterIncidentEvent) : Promise<VoidResult> {
         const incident = Incident.fromObject(event.payload)
-        if(incident instanceof Error) return console.error(incident)
+        if(incident instanceof Error) return Result.Failure(incident)
         await this._incidentRepository.store(incident);
+        return Result.SuccessVoid()
     }
 }

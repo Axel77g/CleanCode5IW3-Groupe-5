@@ -21,6 +21,7 @@ export abstract class AbstractMongoRepository {
         }catch (e) {
             await onError();
             const message = e instanceof Error ? e.message : defaultMessageError;
+            console.error("[MONGO ERROR]", message);
             return Result.FailureStr(message) as T;
         }
     }
