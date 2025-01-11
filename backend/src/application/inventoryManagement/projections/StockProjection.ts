@@ -24,6 +24,6 @@ export class StockProjection extends AbstractProjection {
         if(!sparePartResponse.success) return sparePartResponse
         const siret = Siret.create(event.payload.siret)
         if(siret instanceof Error) return Result.Failure(siret)
-        await this._stockRepository.update(sparePartResponse.value, siret, event.payload.quantity)
+        return this._stockRepository.update(sparePartResponse.value, siret, event.payload.quantity)
     }
 }

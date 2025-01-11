@@ -45,7 +45,7 @@ export class ProjectionsWorker {
             return console.error(pendingJobsResult.error)
         }
         const pendingJobs = pendingJobsResult.value
-        pendingJobs.sort((a,b) => a.createdAt - b.createdAt)
+        pendingJobs.sort((a,b) => a.createdAt.getTime() - b.createdAt.getTime())
 
         const events = await this.fetchAllEvents(pendingJobs.map(job => job.eventId))
         if(!events.success){
