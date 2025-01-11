@@ -1,11 +1,10 @@
-import { DealerAddress } from "../../maintenance/value-object/DealerAddress";
+import { AddressDTO, DealerAddress } from "@domain/shared/value-object/DealerAddress";
 import { Siret } from "../../shared/value-object/Siret";
-import {AddressDTO, DealerAddress} from "../value-object/DealerAddress";
 
 export interface DealerDTO {
     siret: string,
     name: string,
-    address : AddressDTO
+    address: AddressDTO
     phoneNumber: string
 }
 
@@ -17,15 +16,15 @@ export class Dealer {
         public readonly address: DealerAddress,
         public readonly phoneNumber: string,
     ) { }
-    
 
-    static fromObject(object : DealerDTO) : Dealer | Error {
+
+    static fromObject(object: DealerDTO): Dealer | Error {
         const siret = Siret.create(object.siret);
-        if(siret instanceof Error){
+        if (siret instanceof Error) {
             return siret;
         }
         const address = DealerAddress.create(object.address);
-        if(address instanceof Error){
+        if (address instanceof Error) {
             return address;
         }
 

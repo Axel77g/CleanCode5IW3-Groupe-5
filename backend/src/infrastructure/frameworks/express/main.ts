@@ -1,5 +1,5 @@
 import {server} from "./server";
-import {get, patch, post} from "./core/registerRoute";
+import {get, patch, post, del} from "./core/registerRoute";
 import {registerDriverRequest} from "./requests/registerDriverRequest";
 import {registerDriverController} from "./controllers/testDrive/registerDriverController";
 import "./projections/setupProjection";
@@ -16,6 +16,11 @@ import {registerTestDriveController} from "@expressApp/controllers/testDrive/reg
 import {registerTestDriveRequest} from "@expressApp/requests/registerTestDriveRequest";
 import {registerIncidentController} from "@expressApp/controllers/testDrive/registerIncidentController";
 import {registerIncidentRequest} from "@expressApp/requests/registerIncidentRequest";
+import { registerCustomerController } from "./controllers/maintenance/registerCustomerController";
+import { registerCustomerRequest } from "./requests/maintenance/registerCustomerRequest";
+import { unregisterCustomerController } from "./controllers/maintenance/unregisterCustomerController";
+import { showCustomerController } from "./controllers/maintenance/showCustomerController";
+import { customerIdRequest } from "./requests/maintenance/customerIdRequest";
 
 
 const port = process.env.PORT || 3000;
@@ -35,3 +40,7 @@ post('/incidents', registerIncidentController, registerIncidentRequest);
 get('/drivers/:driverLicenseId/tests-drives', listDriverTestsDrivesController, paginatedWithDriverLicenseIdRequest);
 get('/tests-drives', listDriverTestsDrivesController, paginatedWithDriverLicenseIdRequest);
 post('/tests-drives', registerTestDriveController, registerTestDriveRequest);
+
+get('/customers/:customerId', showCustomerController, customerIdRequest);
+post('/customers', registerCustomerController, registerCustomerRequest);
+del('/customers/:customerId', unregisterCustomerController, customerIdRequest);

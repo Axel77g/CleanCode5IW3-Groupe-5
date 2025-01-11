@@ -1,11 +1,9 @@
-import { Dealer } from "@domain/inventoryManagement/entities/Dealer";
-import { DealerAddress } from "@domain/inventoryManagement/value-object/DealerAddress";
+import { RegisterDealerEvent } from "@domain/inventoryManagement/events/RegisterDealerEvent";
+import { DealerAddress } from "@domain/shared/value-object/DealerAddress";
 import { Siret } from '@domain/shared/value-object/Siret';
 import { IInputUseCase, IUseCase } from "@shared/IUseCase";
 import { Result } from "@shared/Result";
-import { DealerRepository } from "../../repositories/DealerRepository";
-import {EventRepository} from "../../../shared/repositories/EventRepository";
-import {RegisterDealerEvent} from "@domain/inventoryManagement/events/RegisterDealerEvent";
+import { EventRepository } from "../../../shared/repositories/EventRepository";
 
 interface RegisterDealerInput extends IInputUseCase {
     siret: Siret,
@@ -15,7 +13,7 @@ interface RegisterDealerInput extends IInputUseCase {
 }
 
 export type RegisterDealerUseCase = IUseCase<RegisterDealerInput, Result>
-export const registerOrderUseCase = (_eventRepository : EventRepository) : RegisterDealerUseCase => {
+export const registerOrderUseCase = (_eventRepository: EventRepository): RegisterDealerUseCase => {
     return async (input: RegisterDealerInput) => {
         const registerDealerEvent = new RegisterDealerEvent({
             siret: input.siret.getValue(),

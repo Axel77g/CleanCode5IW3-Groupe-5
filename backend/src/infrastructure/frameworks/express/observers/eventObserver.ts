@@ -1,3 +1,3 @@
-import {EventObserver} from "../../../common/observers/EventObserver";
+import { EventObserver } from "../../../common/observers/EventObserver";
 
 export const eventObserver = new EventObserver();

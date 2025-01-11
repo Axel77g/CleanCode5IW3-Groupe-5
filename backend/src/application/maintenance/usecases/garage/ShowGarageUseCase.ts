@@ -1,8 +1,8 @@
-import { Garage } from "../../../../domain/maintenance/entities/Garage";
-import { Siret } from '../../../../domain/shared/value-object/Siret';
-import { IInputUseCase, IUseCase } from "../../../../shared/IUseCase";
-import { Result } from "../../../../shared/Result";
-import { GarageRepository } from "../../maintenance/GarageRepository";
+import { GarageRepository } from "@application/maintenance/repositories/GarageRepository";
+import { Garage } from "@domain/maintenance/entities/Garage";
+import { Siret } from '@domain/shared/value-object/Siret';
+import { IInputUseCase, IUseCase } from "@shared/IUseCase";
+import { Result } from "@shared/Result";
 
 interface ShowGarageInput extends IInputUseCase {
     siret: Siret
