@@ -11,32 +11,29 @@ export class MongoTestDriveRepository extends AbstractMongoRepository implements
 
     async listDriverTestDrives(driverLicenseId: DriverLicenseId, pagination: PaginatedInput): Promise<PaginatedResult<TestDrive>> {
         const {page, limit} = pagination;
-        try{
-            const testDrivesDocuments = await this.getQuery().find({driverLicenseId: driverLicenseId.getValue()})
-                .skip((page - 1) * limit)
-                .limit(limit)
-            const total = await this.getQuery().countDocuments({driverLicenseId: driverLicenseId.getValue()});
-            const testDrives = TestDriveMapper.toDomainList(await testDrivesDocuments.toArray());
-            return Result.SuccessPaginated<TestDrive>(testDrives, total, page, limit);
-        }catch (e){
-            const message = e instanceof Error ? e.message : "An error occurred while fetching test drives";
-            return Result.FailureStr(message);
-        }
+        return this.catchError(
+            async () => {
+                const testDrivesDocuments = await this.getQuery().find({driverLicenseId: driverLicenseId.getValue()})
+                    .skip((page - 1) * limit)
+                    .limit(limit)
+                const total = await this.getQuery().countDocuments({driverLicenseId: driverLicenseId.getValue()});
+                const testDrives = TestDriveMapper.toDomainList(await testDrivesDocuments.toArray());
+                return Result.SuccessPaginated<TestDrive>(testDrives, total, page, limit);
+            },
+        )
     }
 
     async store(testDrive: TestDrive): Promise<VoidResult> {
         const session = this.getSessionTransaction();
-        try{
-            session.startTransaction();
-            await this.getQuery().updateOne({testDriveId: testDrive.testDriveId}, {$set: TestDriveMapper.toPersistence(testDrive)}, {upsert: true});
-            await session.commitTransaction();
-            return Result.SuccessVoid();
-        }catch (e){
-            console.error(e);
-            await session.abortTransaction();
-            const message = e instanceof Error ? e.message : "An error occurred while storing test drive";
-            return Result.FailureStr(message);
-        }
+        return this.catchError(
+            async () => {
+                session.startTransaction();
+                await this.getQuery().updateOne({testDriveId: testDrive.testDriveId}, {$set: TestDriveMapper.toPersistence(testDrive)}, {upsert: true});
+                await session.commitTransaction();
+                return Result.SuccessVoid();
+            },
+            session.abortTransaction.bind(session)
+        )
     }
 
 }

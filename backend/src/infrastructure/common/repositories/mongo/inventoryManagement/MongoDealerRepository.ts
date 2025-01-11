@@ -1,9 +1,10 @@
 import {AbstractMongoRepository} from "../AbstractMongoRepository";
 import {DealerRepository} from "@application/inventoryManagement/repositories/DealerRepository";
 import {Siret} from "@domain/shared/value-object/Siret";
-import {Result, VoidResult} from "@shared/Result";
+import {PaginatedResult, Result, VoidResult} from "@shared/Result";
 import {Dealer} from "@domain/inventoryManagement/entities/Dealer";
 import {DealerMapper} from "@infrastructure/common/entityMappers/DealerMapper";
+import {PaginatedInput} from "@shared/PaginatedInput";
 
 
 export class MongoDealerRepository extends AbstractMongoRepository implements DealerRepository{
@@ -43,6 +44,18 @@ export class MongoDealerRepository extends AbstractMongoRepository implements De
                 return Result.SuccessVoid();
             },
             session.abortTransaction.bind(session)
+        )
+    }
+
+    list(pagination: PaginatedInput): Promise<PaginatedResult<Dealer>> {
+        const {page, limit} = pagination;
+        return this.catchError(
+            async () => {
+                const dealersDocuments = await this.getQuery().find().skip((page - 1) * limit).limit(limit).toArray();
+                const dealersTotal = await this.getQuery().countDocuments();
+                const dealers = DealerMapper.toDomainList(dealersDocuments);
+                return Result.SuccessPaginated<Dealer>(dealers, dealersTotal, page, limit);
+            }
         )
     }
 

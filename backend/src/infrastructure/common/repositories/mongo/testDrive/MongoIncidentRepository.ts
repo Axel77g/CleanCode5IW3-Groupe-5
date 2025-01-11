@@ -10,30 +10,28 @@ export class MongoIncidentRepository extends AbstractMongoRepository implements 
     protected collectionName: string = 'incidents';
     async listDriverIncidents(driverLicenseId: DriverLicenseId, pagination: PaginatedInput): Promise<PaginatedResult<Incident>> {
         const {page, limit} = pagination;
-        try{
-            const incidentsDocuments = await this.getQuery().find({driverLicenseId: driverLicenseId.getValue()})
-                .skip((page - 1) * limit)
-                .limit(limit)
-                .toArray();
-            const total = await this.getQuery().countDocuments({driverLicenseId: driverLicenseId.getValue()})
-            const incidents = IncidentMapper.toDomainList(incidentsDocuments);
-            return Result.SuccessPaginated<Incident>(incidents,total, page, limit);
-        }catch (e) {
-            const message = e instanceof Error ? e.message : "An error occurred while fetching incidents";
-            return Result.FailureStr(message);
-        }
+        return this.catchError(
+            async () => {
+                const incidentsDocuments = await this.getQuery().find({driverLicenseId: driverLicenseId.getValue()})
+                    .skip((page - 1) * limit)
+                    .limit(limit)
+                    .toArray();
+                const total = await this.getQuery().countDocuments({driverLicenseId: driverLicenseId.getValue()})
+                const incidents = IncidentMapper.toDomainList(incidentsDocuments);
+                return Result.SuccessPaginated<Incident>(incidents,total, page, limit);
+            }
+        )
     }
     async store(incident: Incident): Promise<VoidResult> {
         const session = this.getSessionTransaction();
-        try{
-            session.startTransaction();
-            await this.getQuery().updateOne({incidentId: incident.incidentId}, {$set: IncidentMapper.toPersistence(incident)}, {upsert: true});
-            await session.commitTransaction();
-            return Result.SuccessVoid();
-        }catch (e){
-            await session.abortTransaction();
-            const message = e instanceof Error ? e.message : "An error occurred while storing incident";
-            return Result.FailureStr(message);
-        }
+        return this.catchError(
+            async () => {
+                session.startTransaction();
+                await this.getQuery().updateOne({incidentId: incident.incidentId}, {$set: IncidentMapper.toPersistence(incident)}, {upsert: true});
+                await session.commitTransaction();
+                return Result.SuccessVoid();
+            },
+            session.abortTransaction.bind(session)
+        )
     }
 }

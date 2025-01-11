@@ -4,8 +4,10 @@ import {Result} from "@shared/Result";
 import {ProjectionJob, ProjectionJobWithEvent} from "@application/shared/projections/ProjectionJob";
 import {EventRepository} from "@application/shared/repositories/EventRepository";
 import {IEvent} from "@shared/AbstractEvent";
+import {randomUUID} from "node:crypto";
 
 export class ProjectionsWorker {
+    private readonly identifier : string = randomUUID()
     private readonly interval : number = 1000
     constructor(
         protected _projectionJobRepository : ProjectionJobRepository,
@@ -13,8 +15,8 @@ export class ProjectionsWorker {
         private projections : AbstractProjection[]
     ){
         console.log('[ProjectionsWorker] Starting worker')
-        this.work().then()
-        this.watchForNewJobs().then()
+        this.work().then(() => this.watchForNewJobs().then())
+
     }
 
     async getPendingJobs() : Promise<Result<ProjectionJob[]>> {
@@ -43,6 +45,7 @@ export class ProjectionsWorker {
             return console.error(pendingJobsResult.error)
         }
         const pendingJobs = pendingJobsResult.value
+        pendingJobs.sort((a,b) => a.createdAt - b.createdAt)
 
         const events = await this.fetchAllEvents(pendingJobs.map(job => job.eventId))
         if(!events.success){
@@ -52,7 +55,8 @@ export class ProjectionsWorker {
         const jobsWithEvents : ProjectionJobWithEvent[] = pendingJobs.map((job) => {
             const event = events.value.find(event => event.eventId === job.eventId)
             if(!event){
-                console.error("Event not found")
+                console.error("[Projection Worker] - Critical Error - Try to process an event that do not exist ! deleting the job...")
+                this._projectionJobRepository.terminateJob(job)
                 return;
             }
             return {

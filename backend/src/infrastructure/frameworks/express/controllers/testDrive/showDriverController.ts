@@ -2,7 +2,7 @@ import {Controller} from "@expressApp/types/Controller";
 import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
 import {Response} from "@expressApp/core/Response";
 import {createShowDriverUseCase} from "@application/testDrive/usecases/driver/ShowDriverUseCase";
-import {showDriverRequest} from "@expressApp/requests/showDriverRequest";
+import {showDriverRequest} from "@expressApp/requests/testDrive/showDriverRequest";
 import {driverRepository} from "@expressApp/repositories/testDrive/driverRepository";
 
 export const showDriverController : Controller<typeof showDriverRequest> = async (payload) => {

@@ -3,9 +3,24 @@ import {RegisterOrderEvent} from "@domain/inventoryManagement/events/RegisterOrd
 import {UpdateOrderStatusEvent} from "@domain/inventoryManagement/events/UpdateOrderStatusEvent";
 import {Order} from "@domain/inventoryManagement/entities/Order";
 import {IEvent} from "@shared/AbstractEvent";
+import {AbstractProjection} from "@application/shared/projections/AbstractProjection";
+import {ProjectionJobScheduler} from "@application/shared/projections/ProjectionJobScheduler";
+import {Result, VoidResult} from "@shared/Result";
 
-export class OrderProjection {
-    constructor(private _orderRepository: OrderRepository) {}
+export class OrderProjection extends AbstractProjection {
+    constructor(private _orderRepository: OrderRepository) { super() }
+
+    init(projectionJobScheduler : ProjectionJobScheduler){
+        projectionJobScheduler.schedule(RegisterOrderEvent.type, this.constructor.name)
+        projectionJobScheduler.schedule(UpdateOrderStatusEvent.type, this.constructor.name)
+    }
+
+    bindEvents() {
+        return {
+            [RegisterOrderEvent.type] : this.applyRegisterEvent,
+            [UpdateOrderStatusEvent.type] : this.applyUpdateStatusEvent
+        }
+    }
 
     async receive(event: IEvent): Promise<void> {
         switch (event.constructor) {
@@ -18,18 +33,18 @@ export class OrderProjection {
         }
     }
 
-    async applyRegisterEvent(event: RegisterOrderEvent) {
+    async applyRegisterEvent(event: RegisterOrderEvent) : Promise<VoidResult> {
         const order = Order.fromObject(event.payload)
-        if(order instanceof Error) return console.error(order)
-        await this._orderRepository.store(order)
+        if(order instanceof Error) return Result.Failure(order)
+        return this._orderRepository.store(order)
     }
 
-    async applyUpdateStatusEvent(event: UpdateOrderStatusEvent) {
+    async applyUpdateStatusEvent(event: UpdateOrderStatusEvent) : Promise<VoidResult> {
         const orderResponse = await this._orderRepository.findOrderById(event.payload.orderId)
-        if(!orderResponse.success) return console.error(orderResponse)
+        if(!orderResponse.success) return orderResponse
         const order = orderResponse.value.applyStatus(event.payload.status)
-        if(order instanceof Error) return console.error(order)
-        await this._orderRepository.store(order)
+        if(order instanceof Error) return Result.Failure(order)
+        return this._orderRepository.store(order)
     }
 
 }

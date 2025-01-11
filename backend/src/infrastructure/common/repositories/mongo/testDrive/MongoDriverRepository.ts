@@ -8,46 +8,40 @@ import {DriverMapper} from "@infrastructure/common/entityMappers/DriverMapper";
 export class MongoDriverRepository extends AbstractMongoRepository implements DriverRepository {
     protected collectionName = "drivers";
 
-    async store(driver: Driver): Promise<VoidResult> {
+    store(driver: Driver): Promise<VoidResult> {
         const session = this.getSessionTransaction()
-        try{
-            session.startTransaction()
-            await this.getQuery()
-                .updateOne( { driverLicenseId: driver.driverLicenseId.getValue() }, { $set: DriverMapper.toPersistence(driver) }, { upsert: true } );
-            await session.commitTransaction()
-            return Result.SuccessVoid()
-        }catch (e){
-            console.error(e)
-            await session.abortTransaction()
-            const message = e instanceof Error ? e.message : 'An error occurred'
-            return Result.FailureStr(message)
-        }
+        return this.catchError(
+            async () =>{
+                session.startTransaction()
+                await this.getQuery()
+                    .updateOne( { driverLicenseId: driver.driverLicenseId.getValue() }, { $set: DriverMapper.toPersistence(driver) }, { upsert: true } );
+                await session.commitTransaction()
+                return Result.SuccessVoid()
+            },
+            session.abortTransaction.bind(session)
+        )
     }
-    async getByLicenseId(driverLicenseId: string): Promise<Result<Driver>> {
-        try{
-            const driverDocument = await this.getQuery().findOne({ driverLicenseId: driverLicenseId })
-            if(!driverDocument) return Result.FailureStr("Driver not found")
-            const driver = DriverMapper.toDomain(driverDocument)
-            if(driver instanceof Error) return Result.Failure(driver)
-            return Result.Success<Driver>(driver)
-        }catch (e){
-            const message = e instanceof Error ? e.message : "An error occurred"
-            console.error(e)
-            return Result.FailureStr(message)
-        }
+    getByLicenseId(driverLicenseId: string): Promise<Result<Driver>> {
+        return this.catchError(
+            async () => {
+                const driverDocument = await this.getQuery().findOne({ driverLicenseId: driverLicenseId })
+                if(!driverDocument) return Result.FailureStr("Driver not found")
+                const driver = DriverMapper.toDomain(driverDocument)
+                if(driver instanceof Error) return Result.Failure(driver)
+                return Result.Success<Driver>(driver)
+            }
+        )
     }
 
     async listDrivers(pagination: PaginatedInput): Promise<PaginatedResult<Driver>> {
         const {limit, page}  = pagination
-         try{
-             const driversDocuments = await this.getQuery().find().skip((page - 1) * limit).limit(limit)
-             const total = await this.getQuery().countDocuments({})
-             const drivers = DriverMapper.toDomainList(await driversDocuments.toArray())
-             return Result.SuccessPaginated<Driver>(drivers, total, page, limit)
-         }catch (e){
-             const message = e instanceof Error ? e.message : "An error occurred"
-             console.error(e)
-             return Result.FailureStr(message)
-         }
+        return this.catchError(
+            async () => {
+                const driversDocuments = await this.getQuery().find().skip((page - 1) * limit).limit(limit)
+                const total = await this.getQuery().countDocuments({})
+                const drivers = DriverMapper.toDomainList(await driversDocuments.toArray())
+                return Result.SuccessPaginated<Driver>(drivers, total, page, limit)
+            }
+        )
     }
 }

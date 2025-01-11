@@ -7,7 +7,8 @@ export class ApplicationException extends Error{
         return error instanceof ApplicationException;
     }
 
-    static equals(error1 : ApplicationException, error2 : ApplicationException) : boolean {
-        return error1.identifier === error2.identifier;
+
+    is(identifier : string) : boolean {
+        return this.identifier === identifier;
     }
 }

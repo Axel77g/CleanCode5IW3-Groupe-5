@@ -1,5 +1,5 @@
 import {Controller} from "@expressApp/types/Controller";
-import {registerTestDriveRequest} from "@expressApp/requests/registerTestDriveRequest";
+import {registerTestDriveRequest} from "@expressApp/requests/testDrive/registerTestDriveRequest";
 import {Response} from "@expressApp/core/Response";
 import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
 import {VehicleImmatriculation} from "@domain/shared/value-object/VehicleImmatriculation";

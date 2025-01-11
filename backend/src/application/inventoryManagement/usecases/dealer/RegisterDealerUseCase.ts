@@ -15,7 +15,7 @@ interface RegisterDealerInput extends IInputUseCase {
 }
 
 export type RegisterDealerUseCase = IUseCase<RegisterDealerInput, Result>
-export const registerOrderUseCase = (_eventRepository : EventRepository) : RegisterDealerUseCase => {
+export const createRegisterDealerUseCase = (_eventRepository : EventRepository) : RegisterDealerUseCase => {
     return async (input: RegisterDealerInput) => {
         const registerDealerEvent = new RegisterDealerEvent({
             siret: input.siret.getValue(),

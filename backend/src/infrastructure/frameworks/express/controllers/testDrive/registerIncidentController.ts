@@ -1,5 +1,5 @@
 import {Controller} from "@expressApp/types/Controller";
-import {registerIncidentRequest} from "@expressApp/requests/registerIncidentRequest";
+import {registerIncidentRequest} from "@expressApp/requests/testDrive/registerIncidentRequest";
 import {Response} from "@expressApp/core/Response";
 import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
 import {createRegisterIncidentUseCase} from "@application/testDrive/usecases/incident/RegisterIncidentUseCase";

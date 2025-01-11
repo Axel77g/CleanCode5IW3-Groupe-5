@@ -1,5 +1,5 @@
 import {Controller} from "@expressApp/types/Controller";
-import {paginatedWithDriverLicenseIdRequest} from "@expressApp/requests/paginatedWithDriverLicenseIdRequest";
+import {paginatedWithDriverLicenseIdRequest} from "@expressApp/requests/testDrive/paginatedWithDriverLicenseIdRequest";
 import {testDriveRepository} from "@expressApp/repositories/testDrive/testDriveRepository";
 import {driverRepository} from "@expressApp/repositories/testDrive/driverRepository";
 import {createListDriverTestDrivesUseCase} from "@application/testDrive/usecases/testDrive/ListDriverTestDrivesUseCase";
