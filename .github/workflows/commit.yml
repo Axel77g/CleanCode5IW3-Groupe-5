@@ -20,9 +20,10 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
-    - run: cd backend
     - run: npm install
+      working-directory: backend
     - run: npm run build
+      working-directory: backend
 
   test:
     needs: build
@@ -38,6 +39,7 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
-    - run: cd backend
     - run: npm install
+      working-directory: backend
     - run: npm run test
+      working-directory: backend
