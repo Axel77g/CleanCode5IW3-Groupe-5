@@ -1,7 +1,7 @@
-import { Order } from "../../../../domain/inventoryManagement/entities/Order";
-import { Siret } from '../../../../domain/shared/value-object/Siret';
-import { IInputUseCase, IUseCase } from "../../../../shared/IUseCase";
-import { Result } from "../../../../shared/Result";
+import { Order } from "@domain/inventoryManagement/entities/Order";
+import { Siret } from '@domain/shared/value-object/Siret';
+import { IInputUseCase, IUseCase } from "@shared/IUseCase";
+import { Result } from "@shared/Result";
 import { OrderRepository } from "../../repositories/OrderRepository";
 import { ShowDealerUseCase } from "../dealer/ShowDealerUseCase";
 

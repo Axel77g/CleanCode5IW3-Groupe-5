@@ -1,13 +1,16 @@
-import {InventorySparePart} from "../entities/InventorySparePart";
 
 export class StockInventorySparePart {
-    constructor(
-        public readonly sparePart: InventorySparePart,
+    private constructor(
+        public readonly sparePartReference: string,
         public quantity: number,
     ) {}
 
 
     add(quantity: number): void {
         this.quantity += quantity;
+    }
+
+    static create(object : {sparePartReference: string, quantity: number}) : StockInventorySparePart {
+        return new StockInventorySparePart(object.sparePartReference, object.quantity);
     }
 }

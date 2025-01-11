@@ -1,31 +1,24 @@
-import {Result} from "../../../../shared/Result";
-import {Driver} from "../../../../domain/testDrive/entities/Driver";
-import {IInputUseCase, IUseCase} from "../../../../shared/IUseCase";
-import {DriverLicenseId} from "../../../../domain/testDrive/value-object/DriverLicenseId";
+import {Result} from "@shared/Result";
+import {Driver} from "@domain/testDrive/entities/Driver";
+import {IInputUseCase, IUseCase} from "@shared/IUseCase";
+import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
 import {DriverRepository} from "../../repositories/DriverRepository";
-import {DriverDocumentsRepository} from "../../repositories/DriverDocumentsRepository";
-import {DriverDocuments} from "../../../../domain/testDrive/entities/DriverDocuments";
+import {ApplicationException} from "@shared/ApplicationException";
 
-interface ShowDriverInput extends IInputUseCase{
+export interface ShowDriverInput extends IInputUseCase{
     driverLicenseId: DriverLicenseId
 }
 
-interface ShowDriverOutput {
-    driver: Driver
-    documents: DriverDocuments[]
+export type ShowDriverUseCase =  IUseCase<ShowDriverInput, Result<Driver>>
+
+const ShowDriverErrors = {
+    DRIVER_NOT_FOUND : new ApplicationException("ShowDriver.DriverNotFound", "Driver not found")
 }
 
-export type ShowDriverUseCase =  IUseCase<ShowDriverInput, Result<ShowDriverOutput>>
-
-export const showDriverUseCase = (_driverRepository: DriverRepository, _driverDocumentRepository : DriverDocumentsRepository): ShowDriverUseCase => {
+export const createShowDriverUseCase = (_driverRepository : DriverRepository) : ShowDriverUseCase => {
     return async (input: ShowDriverInput) => {
-        const findResponse = await _driverRepository.getByLicenseId(input.driverLicenseId)
-        if(!findResponse.success) return Result.FailureStr("Driver not found")
-        const findDocumentsResponse = await _driverDocumentRepository.showDriverDocuments(input.driverLicenseId)
-        if(!findDocumentsResponse.success) return Result.FailureStr("Driver documents not found")
-        return Result.Success<ShowDriverOutput>({
-            driver: findResponse.value,
-            documents: findDocumentsResponse.value
-        })
+        const findResponse = await _driverRepository.getByLicenseId(input.driverLicenseId.getValue())
+        if(!findResponse.success) return Result.Failure(ShowDriverErrors.DRIVER_NOT_FOUND)
+        return findResponse
     }
 }

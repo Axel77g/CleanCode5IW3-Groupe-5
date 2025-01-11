@@ -1,11 +1,12 @@
-import { IInputUseCase, IUseCase} from "../../../../shared/IUseCase";
-import {Result} from "../../../../shared/Result";
-import {DriverLicenseId} from "../../../../domain/testDrive/value-object/DriverLicenseId";
-import {Driver} from "../../../../domain/testDrive/entities/Driver";
-import {DriverRepository} from "../../repositories/DriverRepository";
+import { IInputUseCase, IUseCase} from "@shared/IUseCase";
+import {Result} from "@shared/Result";
+import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
+import {EventRepository} from "../../../shared/repositories/EventRepository";
+import {DriverCreatedEvent} from "@domain/testDrive/Events/DriverCreatedEvent";
+import {ApplicationException} from "@shared/ApplicationException";
 
-interface RegisterDriverInput extends IInputUseCase{
-    driverLicenceId: DriverLicenseId,
+export interface RegisterDriverInput extends IInputUseCase{
+    driverLicenseId: DriverLicenseId,
     firstName : string ,
     lastName: string,
     email: string,
@@ -14,19 +15,24 @@ interface RegisterDriverInput extends IInputUseCase{
 
 export type RegisterDriverUseCase = IUseCase<RegisterDriverInput, Result>
 
-export const registerDriverUseCase = (_driverRepository: DriverRepository): RegisterDriverUseCase => {
+const registerDriverErrors = {
+    INVALID_DRIVER_LICENSE_DATE: new ApplicationException("RegisterDriver.INVALID_DRIVER_LICENSE_DATE", "Invalid driver license date"),
+    CANNOT_REGISTER_DRIVER: new ApplicationException("RegisterDriver.CannotRegisterDriver", "Cannot register driver")
+}
+
+export const createRegisterDriverUseCase = (_eventRepository: EventRepository): RegisterDriverUseCase => {
     return async (input: RegisterDriverInput) => {
-        if(!input.driverLicenceId.isValid()) return Result.FailureStr("Invalid driver license id")
-        if(input.driverLicensedAt > new Date()) return Result.FailureStr("Invalid driver license date")
-        const driver = new Driver(
-            input.driverLicenceId,
-            input.firstName,
-            input.lastName,
-            input.email,
-            input.driverLicensedAt
-        )
-        const storeResponse = await _driverRepository.store(driver);
-        if(!storeResponse.success) return Result.FailureStr("Cannot register driver")
+        if(input.driverLicensedAt > new Date()) return Result.Failure(registerDriverErrors.INVALID_DRIVER_LICENSE_DATE)
+        const driverCreatedEvent = new DriverCreatedEvent({
+            driverLicenseId: input.driverLicenseId.getValue(),
+            firstName: input.firstName,
+            lastName: input.lastName,
+            email: input.email,
+            driverLicensedAt: input.driverLicensedAt,
+            documents: []
+        })
+        const storeResponse = await _eventRepository.storeEvent(driverCreatedEvent);
+        if(!storeResponse.success) return Result.Failure(registerDriverErrors.CANNOT_REGISTER_DRIVER)
         return Result.Success("driver registered")
     }
 }

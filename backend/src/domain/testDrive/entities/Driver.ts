@@ -1,28 +1,37 @@
 import {DriverLicenseId} from "../value-object/DriverLicenseId";
+import {DriverDocuments} from "../value-object/DriverDocuments";
+
+export interface DriverDTO{
+    driverLicenseId: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    driverLicensedAt: Date;
+    documents : DriverDocuments[];
+}
 
 export class Driver{
     constructor(
-        public readonly driverLicenceId: DriverLicenseId,
+        public readonly driverLicenseId: DriverLicenseId,
         public readonly firstName: string,
         public readonly lastName: string,
         public readonly email: string,
         public readonly driverLicensedAt: Date,
+        public readonly documents : DriverDocuments[]
     ) {}
 
-    patch(partialDriver: Partial<Driver>){
-        const updatedProperties = {
-            firstName: this.firstName,
-            lastName: this.lastName,
-            email: this.email,
-            ...partialDriver
-        };
 
+    static fromObject(object: DriverDTO) : Driver | Error {
+        const driverLicenseId = DriverLicenseId.create(object.driverLicenseId);
+        if(driverLicenseId instanceof Error) return driverLicenseId;
         return new Driver(
-            this.driverLicenceId,
-            updatedProperties.firstName,
-            updatedProperties.lastName,
-            updatedProperties.email,
-            this.driverLicensedAt
-        );
+            driverLicenseId,
+            object.firstName,
+            object.lastName,
+            object.email,
+            object.driverLicensedAt,
+            object.documents
+        )
     }
+
 }

@@ -1,32 +1,24 @@
-import { IInputUseCase, IUseCase} from "../../../../shared/IUseCase";
-import {InventorySparePartRepository} from "../../repositories/InventorySparePartRepository";
-import {InventorySparePart} from "../../../../domain/inventoryManagement/entities/InventorySparePart";
-import {GetInventorySparePartUseCase} from "./GetInventorySparePartUseCase";
-import {Result} from "../../../../shared/Result";
+import { IInputUseCase, IUseCase} from "@shared/IUseCase";
+import {
+        InventorySparePartDTO
+} from "@domain/inventoryManagement/entities/InventorySparePart";
+import {Result} from "@shared/Result";
+import {
+    UpsertInventorySparePartEvent
+} from "@domain/inventoryManagement/events/UpsertInventorySparePartEvent";
+import {EventRepository} from "../../../shared/repositories/EventRepository";
 
-interface UpsertInventorySparePartInput extends IInputUseCase{
-    reference: string,
-    name: string
-}
+interface UpsertInventorySparePartInput extends IInputUseCase, InventorySparePartDTO{}
 
 export type UpsertInventorySparePartUseCase = IUseCase<UpsertInventorySparePartInput, Result>
 export const upsertInventorySparePartUseCase = (
-    _sparePartRepository: InventorySparePartRepository,
-    _getInventorySparePartUseCase: GetInventorySparePartUseCase
+    _eventRepository: EventRepository,
 ): UpsertInventorySparePartUseCase => {
 
     return async (input: UpsertInventorySparePartInput) => {
-        const spartResponse = await _getInventorySparePartUseCase({reference: input.reference});
-        if(spartResponse.success){
-            const updatedSparePart = spartResponse.value.setName(input.name);
-            const updateResponse = await _sparePartRepository.update(updatedSparePart);
-            if(!updateResponse.success) return Result.FailureStr("Cannot update spare part, an error occurred while updating")
-        }else{
-            const sparePart = new InventorySparePart(input.reference, input.name);
-            const createResponse = await _sparePartRepository.create(sparePart);
-            if(!createResponse.success) return Result.FailureStr("Cannot create spare part, an error occurred while creating")
-        }
+        const upsertSparePartEvent = new UpsertInventorySparePartEvent(input)
+        const storeResponse = await _eventRepository.storeEvent(upsertSparePartEvent)
+        if (!storeResponse.success) return storeResponse
         return Result.Success("Spare part upserted successfully")
     }
-
 }

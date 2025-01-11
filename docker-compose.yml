@@ -1,16 +1,17 @@
 services:
-  db:
-    image: mysql:5.7
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: clean_code
-      MYSQL_USER: clean_code
-      MYSQL_PASSWORD: clean_code
+  mongo:
+    image: mongo
+    container_name: mongo
     ports:
-      - "3306:3306"
+      - "27017:27017"
+
     volumes:
-      - db:/var/lib/mysql
+      - ./data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: cleanCode
+    restart: always
 
 volumes:
-    db:
+  data:

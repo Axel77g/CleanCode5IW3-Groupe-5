@@ -1,0 +1,12 @@
+- [ ] APP & DOMAIN - Implementer use case et domain, event, projection, repository du  sous domaine maintenance
+- [ ] APP - Améliorer les projections pour savoir a quel event il s'est arrêté pour reprendre en cas d'arret
+- [ ] INFRA EXPRESS - Implementer les controllers des sous domaines
+  - [ ] register les routes pour les controllers
+  - [ ] Implementer les requests pour les controllers
+  - [ ] Créer les controllers et utiliser les use case (prefixé les useCase par createUSECASE())
+- [ ] INFRA NEXT - setup une app next js (front et back)
+- [ ] INFRA Vue - setup une app vue js qui utilise l'api Express
+- [ ] INFRA InMemory - Implementer les repository inMemory
+- [ ] TEST - Implementer les tests pour les use case et les repository (si temps restant)
+- [ ] Exception - Peut ajouter des property pour savoir si c'est du not found dans le domaine 
+- [ ] Driver - empêcher de créer un driver avec un licenseId déjà existant et un email déjà existant
