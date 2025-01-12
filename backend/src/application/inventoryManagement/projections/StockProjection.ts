@@ -1,25 +1,29 @@
 import {StockRepository} from "../repositories/StockRepository";
-import {IEvent} from "@shared/AbstractEvent";
 import {DealerStockUpdatedEvent} from "@domain/inventoryManagement/events/DealerStockUpdatedEvent";
 import {InventorySparePartRepository} from "../repositories/InventorySparePartRepository";
 import {Siret} from "@domain/shared/value-object/Siret";
+import {AbstractProjection} from "@application/shared/projections/AbstractProjection";
+import {ProjectionJobScheduler} from "@application/shared/projections/ProjectionJobScheduler";
+import {Result, VoidResult} from "@shared/Result";
 
-export class StockProjection {
-    constructor(private _stockRepository: StockRepository, private _inventorySparePartRepository : InventorySparePartRepository) {}
+export class StockProjection extends AbstractProjection {
+    constructor(private _stockRepository: StockRepository, private _inventorySparePartRepository : InventorySparePartRepository) { super() }
 
-    async receive(event: IEvent): Promise<void> {
-        switch (event.constructor) {
-            case DealerStockUpdatedEvent:
-                await this.applyDealerStockUpdatedEvent(event as DealerStockUpdatedEvent)
-                break;
+    init(projectionJobScheduler : ProjectionJobScheduler){
+        projectionJobScheduler.schedule(DealerStockUpdatedEvent.type, this.constructor.name)
+    }
+
+    bindEvents(){
+        return {
+            [DealerStockUpdatedEvent.type] : this.applyDealerStockUpdatedEvent
         }
     }
 
-    async applyDealerStockUpdatedEvent(event: DealerStockUpdatedEvent) {
-        const sparePart = await this._inventorySparePartRepository.find(event.payload.sparePartReference)
-        if(!sparePart.success) return console.error(sparePart)
+    async applyDealerStockUpdatedEvent(event: DealerStockUpdatedEvent) : Promise<VoidResult> {
+        const sparePartResponse = await this._inventorySparePartRepository.find(event.payload.sparePartReference)
+        if(!sparePartResponse.success) return sparePartResponse
         const siret = Siret.create(event.payload.siret)
-        if(siret instanceof Error) return console.error(siret)
-        await this._stockRepository.update(sparePart.value, siret, event.payload.quantity)
+        if(siret instanceof Error) return Result.Failure(siret)
+        return this._stockRepository.update(sparePartResponse.value, siret, event.payload.quantity)
     }
 }

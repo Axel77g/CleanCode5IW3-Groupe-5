@@ -7,7 +7,7 @@ export interface DealerStockUpdatedEventPayload {
 }
 
 export class DealerStockUpdatedEvent extends AbstractEvent{
-    static type = "SPARE_PART_ADDED"
+    static type = "DEALER_STOCK_UPDATED"
     readonly type = DealerStockUpdatedEvent.type
 
     readonly streamId :  string;

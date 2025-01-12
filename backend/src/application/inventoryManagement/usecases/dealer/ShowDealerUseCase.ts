@@ -10,7 +10,7 @@ interface ShowDealerInput extends IInputUseCase {
 
 type ShowDealerResult = Result<Dealer>
 export type ShowDealerUseCase = IUseCase<ShowDealerInput, ShowDealerResult>
-export const showDealerUseCase = (_dealerRepository: DealerRepository): ShowDealerUseCase => {
+export const createShowDealerUseCase = (_dealerRepository: DealerRepository): ShowDealerUseCase => {
     return async (input: ShowDealerInput) => {
         const findResponse = await _dealerRepository.getBySiret(input.siret);
         if (!findResponse.success) return Result.FailureStr("Dealer not found")

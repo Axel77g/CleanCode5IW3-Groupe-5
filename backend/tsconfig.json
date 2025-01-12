@@ -15,6 +15,7 @@
         "@application/*": ["application/*"],
         "@shared/*": ["shared/*"],
         "@expressApp/*": ["infrastructure/frameworks/express/*"],
+        "@infrastructureCore/*": ["infrastructure/frameworks/core/*"],
     }
   },
   "include": ["src/**/*.ts"],

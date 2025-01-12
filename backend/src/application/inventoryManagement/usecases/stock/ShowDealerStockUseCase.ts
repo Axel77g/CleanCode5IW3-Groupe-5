@@ -10,7 +10,7 @@ interface ShowDealerStockInput extends IInputUseCase {
 
 type ShowDealerStockResult = Result<StockInventorySparePart[]>
 export type ShowDealerStockUseCase = IUseCase<ShowDealerStockInput, ShowDealerStockResult>
-export const showDealerStockUseCase = (_stockRepository: StockRepository): ShowDealerStockUseCase => {
+export const createShowDealerStockUseCase = (_stockRepository: StockRepository): ShowDealerStockUseCase => {
     return async (input: ShowDealerStockInput) => {
         const getStockResponse = await _stockRepository.getStock(input.siret);
         if (!getStockResponse.success) return Result.FailureStr("Cannot get dealer stock")

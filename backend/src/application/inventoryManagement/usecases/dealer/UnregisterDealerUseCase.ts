@@ -10,7 +10,7 @@ interface UnregisterDealerInput extends IInputUseCase {
 }
 
 export type UnregisterDealerUseCase = IUseCase<UnregisterDealerInput, Result>
-export const unregisterDealerUseCase = (_eventRepository : EventRepository): UnregisterDealerUseCase => {
+export const createUnregisterDealerUseCase = (_eventRepository : EventRepository): UnregisterDealerUseCase => {
     return async (input: UnregisterDealerInput) => {
         const unregisterDealerEvent = new UnregisterDealerEvent({
             siret: input.siret.getValue()

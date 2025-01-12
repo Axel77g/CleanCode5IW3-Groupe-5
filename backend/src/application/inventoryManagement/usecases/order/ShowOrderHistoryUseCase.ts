@@ -10,7 +10,7 @@ interface ShowOrderHistoryInput extends IInputUseCase {
 }
 type ShowOrderHistoryResult = Result<Order[]>
 export type ShowOrderHistoryUseCase = IUseCase<ShowOrderHistoryInput, ShowOrderHistoryResult>
-export const showOrderHistoryUseCase = (_showDealerUseCase: ShowDealerUseCase, _orderRepository: OrderRepository): ShowOrderHistoryUseCase => {
+export const createShowOrderHistoryUseCase = (_showDealerUseCase: ShowDealerUseCase, _orderRepository: OrderRepository): ShowOrderHistoryUseCase => {
     return async (input: ShowOrderHistoryInput) => {
         const dealerResponse = await _showDealerUseCase({ siret: input.siret })
         if (!dealerResponse.success) return Result.FailureStr("Dealer not found")

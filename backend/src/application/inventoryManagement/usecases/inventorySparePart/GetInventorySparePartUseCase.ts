@@ -10,7 +10,7 @@ interface GetInventorySparePartInput extends IInputUseCase{
 type GetInventorySparePartResult = Result<InventorySparePart>
 
 export type GetInventorySparePartUseCase = IUseCase<GetInventorySparePartInput, GetInventorySparePartResult>
-export const getInventorySparePartUseCase = (_sparePartRepository: InventorySparePartRepository): GetInventorySparePartUseCase => {
+export const createGetInventorySparePartUseCase = (_sparePartRepository: InventorySparePartRepository): GetInventorySparePartUseCase => {
     return async (input: GetInventorySparePartInput) => {
         const findSparePartResponse = await _sparePartRepository.find(input.reference);
         if(!findSparePartResponse.success) return Result.FailureStr("An error occurred while finding spare part")

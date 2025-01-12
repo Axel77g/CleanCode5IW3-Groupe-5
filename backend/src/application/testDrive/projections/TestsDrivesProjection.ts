@@ -1,5 +1,4 @@
 import {AbstractProjection} from "@application/shared/projections/AbstractProjection";
-import {IEvent} from "@shared/AbstractEvent";
 import {TestDriveRepository} from "../repositories/TestDriveRepository";
 import {RegisterTestDriveEvent} from "@domain/testDrive/Events/RegisterTestDriveEvent";
 import {TestDrive} from "@domain/testDrive/entities/TestDrive";
