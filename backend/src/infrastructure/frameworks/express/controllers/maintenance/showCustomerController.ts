@@ -1,7 +1,7 @@
 import { createShowCustomerUseCase } from "@application/maintenance/usecases/customer/ShowCustomerUseCase";
 import { Response } from "../../core/Response";
-import { customerRepository } from "../../repositories/maintenance/customerRepository";
-import { customerIdRequest } from "../../requests/maintenance/customerIdRequest";
+import { customerRepository } from "@infrastructureCore/repositories/maintenance/customerRepository";
+import { customerIdRequest } from "@infrastructureCore/requests/maintenance/customerIdRequest";
 import { Controller } from "../../types/Controller";
 
 export const showCustomerController: Controller<typeof customerIdRequest> = async (payload) => {

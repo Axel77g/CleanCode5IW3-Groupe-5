@@ -1,12 +1,12 @@
 import { createRegisterCustomerUseCase } from "@application/maintenance/usecases/customer/RegisterCustomerUseCase";
-import { DealerAddress } from "@domain/shared/value-object/DealerAddress";
-import { registerCustomerRequest } from "../../requests/maintenance/registerCustomerRequest";
+import { Address } from "@domain/shared/value-object/Address";
+import { registerCustomerRequest } from "@infrastructureCore/requests/maintenance/registerCustomerRequest";
 import { Controller } from "../../types/Controller";
-import { maintenanceEventRepository } from "../../repositories/maintenance/maintenanceEventRepository";
+import { maintenanceEventRepository } from "@infrastructureCore/repositories/maintenance/maintenanceEventRepository";
 import { Response } from "../../core/Response";
 
 export const registerCustomerController: Controller<typeof registerCustomerRequest> = async (payload) => {
-    const address = DealerAddress.create(payload.address)
+    const address = Address.create(payload.address)
     if (address instanceof Error) return Response.Fail(400, address.message)
 
     const registerUseCase = createRegisterCustomerUseCase(maintenanceEventRepository)

@@ -1,5 +1,5 @@
 import { RegisterDealerEvent } from "@domain/inventoryManagement/events/RegisterDealerEvent";
-import { DealerAddress } from "@domain/shared/value-object/DealerAddress";
+import { Address } from "@domain/shared/value-object/Address";
 import { Siret } from '@domain/shared/value-object/Siret';
 import { IInputUseCase, IUseCase } from "@shared/IUseCase";
 import { Result } from "@shared/Result";
@@ -8,7 +8,7 @@ import { EventRepository } from "../../../shared/repositories/EventRepository";
 interface RegisterDealerInput extends IInputUseCase {
     siret: Siret,
     name: string,
-    address: DealerAddress,
+    address: Address,
     phoneNumber: string
 }
 

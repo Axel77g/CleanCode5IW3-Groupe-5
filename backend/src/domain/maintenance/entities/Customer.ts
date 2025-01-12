@@ -1,4 +1,4 @@
-import { AddressDTO, DealerAddress } from "@domain/shared/value-object/DealerAddress";
+import { AddressDTO, Address } from "@domain/shared/value-object/Address";
 
 export interface CustomerDTO {
     customerId: string;
@@ -14,11 +14,11 @@ export class Customer {
         public readonly name: string,
         public readonly phoneNumber: string,
         public readonly email: string,
-        public readonly address: DealerAddress,
+        public readonly address: Address,
     ) { }
 
     static fromObject(object: CustomerDTO): Customer | Error {
-        const address = DealerAddress.create(object.address);
+        const address = Address.create(object.address);
         if (address instanceof Error) return address;
         return new Customer(
             object.customerId,

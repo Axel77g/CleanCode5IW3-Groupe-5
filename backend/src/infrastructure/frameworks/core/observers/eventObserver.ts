@@ -8,6 +8,7 @@ import {EventObserver} from "../../../common/observers/EventObserver";
 
 //@ts-ignore
 if(!globalThis.eventObserver){
+    //@ts-ignore
     globalThis.eventObserver = new EventObserver()
 }
 //@ts-ignore

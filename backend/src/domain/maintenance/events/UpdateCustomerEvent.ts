@@ -1,4 +1,4 @@
-import { AddressDTO } from "@domain/shared/value-object/DealerAddress";
+import { AddressDTO } from "@domain/shared/value-object/Address";
 import { AbstractEvent } from "@shared/AbstractEvent";
 
 interface CustomerUpdatedPayload {

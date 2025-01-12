@@ -7,7 +7,7 @@ export interface AddressDTO {
     country: string
 }
 
-export class DealerAddress {
+export class Address {
 
     static errors = {
         COUNTRY_CODE_NOT_VALID: new ApplicationException("DealerAddress.notValidCountryCode", "The country code n'est pas valide")
@@ -23,10 +23,10 @@ export class DealerAddress {
         return countryCode.length === 2;
     }
 
-    static create(payload: AddressDTO): DealerAddress | Error {
-        const address = new DealerAddress(payload.street, payload.city, payload.postalCode, payload.country);
+    static create(payload: AddressDTO): Address | Error {
+        const address = new Address(payload.street, payload.city, payload.postalCode, payload.country);
         if (!address.isValidCountryCode(payload.country)) {
-            return DealerAddress.errors.COUNTRY_CODE_NOT_VALID;
+            return Address.errors.COUNTRY_CODE_NOT_VALID;
         }
         return address;
     }

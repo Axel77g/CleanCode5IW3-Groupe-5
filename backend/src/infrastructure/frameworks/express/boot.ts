@@ -40,6 +40,11 @@ import {
     upsertInventorySparePartController
 } from "@expressApp/controllers/inventoryManagement/upsertInventorySparePartController";
 import {sparePartRequest} from "@infrastructureCore/requests/inventoryManagement/sparePartRequest";
+import {showCustomerController} from "@expressApp/controllers/maintenance/showCustomerController";
+import {customerIdRequest} from "@infrastructureCore/requests/maintenance/customerIdRequest";
+import {registerCustomerController} from "@expressApp/controllers/maintenance/registerCustomerController";
+import {registerCustomerRequest} from "@infrastructureCore/requests/maintenance/registerCustomerRequest";
+import {unregisterCustomerController} from "@expressApp/controllers/maintenance/unregisterCustomerController";
 
 export const boot = () => {
     // Inventory Management Subdomain
@@ -72,6 +77,10 @@ export const boot = () => {
     get('/drivers/:driverLicenseId/tests-drives', listDriverTestsDrivesController, paginatedWithDriverLicenseIdRequest);
     get('/tests-drives', listDriverTestsDrivesController, paginatedWithDriverLicenseIdRequest);
     post('/tests-drives', registerTestDriveController, registerTestDriveRequest);
+
+    get('/customers/:customerId', showCustomerController, customerIdRequest);
+    post('/customers', registerCustomerController, registerCustomerRequest);
+    del('/customers/:customerId', unregisterCustomerController, customerIdRequest);
 
     savePostManCollection({
         baseUrl: 'http://localhost:3000',

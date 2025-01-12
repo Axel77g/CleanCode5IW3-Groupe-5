@@ -1,11 +1,11 @@
 import { Dealer, DealerDTO } from "@domain/inventoryManagement/entities/Dealer";
-import { DealerAddress } from "@domain/shared/value-object/DealerAddress";
+import { Address } from "@domain/shared/value-object/Address";
 import { Siret } from "@domain/shared/value-object/Siret";
 import { MappedEntities, MappedEntity } from "./MappedEntity";
 
 export class DealerMapper {
     static toDomain(dealerRaw: any): Dealer | Error {
-        const dealerAddress = DealerAddress.create({
+        const dealerAddress = Address.create({
             street: dealerRaw.address.street,
             city: dealerRaw.address.city,
             postalCode: dealerRaw.address.postalCode,

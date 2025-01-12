@@ -1,8 +1,8 @@
 import { createDeleteCustomerUseCase } from "@application/maintenance/usecases/customer/DeleteCustomerUseCase";
 import { Response } from "../../core/Response";
-import { customerRepository } from "../../repositories/maintenance/customerRepository";
-import { maintenanceEventRepository } from "../../repositories/maintenance/maintenanceEventRepository";
-import { customerIdRequest } from "../../requests/maintenance/customerIdRequest";
+import { customerRepository } from "@infrastructureCore/repositories/maintenance/customerRepository";
+import { maintenanceEventRepository } from "@infrastructureCore/repositories/maintenance/maintenanceEventRepository";
+import { customerIdRequest } from "@infrastructureCore/requests/maintenance/customerIdRequest";
 import { Controller } from "../../types/Controller";
 
 export const unregisterCustomerController: Controller<typeof customerIdRequest> = async (payload) => {

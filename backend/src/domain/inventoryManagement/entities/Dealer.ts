@@ -1,4 +1,4 @@
-import { AddressDTO, DealerAddress } from "@domain/shared/value-object/DealerAddress";
+import { AddressDTO, Address } from "@domain/shared/value-object/Address";
 import { Siret } from "../../shared/value-object/Siret";
 
 export interface DealerDTO {
@@ -13,7 +13,7 @@ export class Dealer {
     constructor(
         public readonly siret: Siret,
         public readonly name: string,
-        public readonly address: DealerAddress,
+        public readonly address: Address,
         public readonly phoneNumber: string,
     ) { }
 
@@ -23,7 +23,7 @@ export class Dealer {
         if (siret instanceof Error) {
             return siret;
         }
-        const address = DealerAddress.create(object.address);
+        const address = Address.create(object.address);
         if (address instanceof Error) {
             return address;
         }
