@@ -9,17 +9,17 @@ import {EventRepository} from "../../../shared/repositories/EventRepository";
 
 interface AddSparePartInStockInput extends IInputUseCase {
     siret: Siret,
-    sparePart: InventorySparePart,
+    sparePartReference: string,
     quantity: number
 }
 
 export type AddSparePartInStockUseCase = IUseCase<AddSparePartInStockInput, Result>
-export const addSparePartInStockUseCase = (_eventRepository: EventRepository, _getInventorySparePartUseCase: GetInventorySparePartUseCase): AddSparePartInStockUseCase => {
+export const createAddSparePartInStockUseCase = (_eventRepository: EventRepository, _getInventorySparePartUseCase: GetInventorySparePartUseCase): AddSparePartInStockUseCase => {
     return async (input: AddSparePartInStockInput) => {
-        const sparePartResponse = await _getInventorySparePartUseCase({ reference: input.sparePart.reference });
+        const sparePartResponse = await _getInventorySparePartUseCase({ reference: input.sparePartReference });
         if (!sparePartResponse.success) return Result.FailureStr("Spare part not found");
         const addEvent = new DealerStockUpdatedEvent({
-            sparePartReference: input.sparePart.reference,
+            sparePartReference: input.sparePartReference,
             siret: input.siret.getValue(),
             quantity: input.quantity
         })

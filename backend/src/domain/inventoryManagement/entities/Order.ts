@@ -11,6 +11,7 @@ export interface OrderDTO {
     deliveredAt: Date,
     siret: string,
     lines: OrderLineDTO[]
+    status ?: OrderStatusEnum
 }
 
 export class Order {
@@ -78,6 +79,9 @@ export class Order {
         if (error) {
           return error
         }
-        return new Order(object.orderId, object.orderedAt, object.deliveredAt, siret, lines as OrderLine[]);
+
+
+
+        return new Order(object.orderId, object.orderedAt, object.deliveredAt, siret, lines as OrderLine[], object?.status);
     }
 }

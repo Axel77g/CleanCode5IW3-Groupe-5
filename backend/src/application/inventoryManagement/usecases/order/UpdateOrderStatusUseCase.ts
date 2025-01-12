@@ -22,7 +22,7 @@ const registerOrderErrors = {
 
 }
 
-export const updateOrderStatusUseCase = (_eventRepository : EventRepository, _orderRepository: OrderRepository) : RegisterOrderUseCase => {
+export const createUpdateOrderStatusUseCase = (_eventRepository : EventRepository, _orderRepository: OrderRepository) : RegisterOrderUseCase => {
     return async (input: UpdateOrderInput) => {
         const orderResponse = await _orderRepository.findOrderById(input.orderId);
         if(!orderResponse.success) return Result.Failure(registerOrderErrors.NOT_FOUND_DEALER)

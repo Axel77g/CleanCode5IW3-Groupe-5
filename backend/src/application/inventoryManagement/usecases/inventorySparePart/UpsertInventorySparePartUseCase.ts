@@ -11,7 +11,7 @@ import {EventRepository} from "../../../shared/repositories/EventRepository";
 interface UpsertInventorySparePartInput extends IInputUseCase, InventorySparePartDTO{}
 
 export type UpsertInventorySparePartUseCase = IUseCase<UpsertInventorySparePartInput, Result>
-export const upsertInventorySparePartUseCase = (
+export const createUpsertInventorySparePartUseCase = (
     _eventRepository: EventRepository,
 ): UpsertInventorySparePartUseCase => {
 

@@ -22,7 +22,7 @@ export class MongoStockRepository extends AbstractMongoRepository implements Sto
         return this.catchError(
             async () => {
                 const stockDocument = await this.getQuery().findOne({siret: siret.getValue(), sparePartReference: sparePart.reference});
-                if(!stockDocument) return Result.FailureStr("Stock not found");
+                if(!stockDocument) return Result.Success<number>(0);
                 return Result.Success<number>(stockDocument.quantity);
             }
         )

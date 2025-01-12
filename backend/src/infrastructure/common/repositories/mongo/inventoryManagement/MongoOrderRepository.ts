@@ -36,7 +36,10 @@ export class MongoOrderRepository extends AbstractMongoRepository implements Ord
         return this.catchError<VoidResult>(
             async () => {
                 session.startTransaction();
-                await this.getQuery().updateOne({orderId: order.orderId}, {$set: order}, {upsert: true});
+                await this.getQuery().updateOne({orderId: order.orderId}, {$set: {
+                        ...order,
+                        siret: order.siret.getValue(),
+                    }}, {upsert: true});
                 await session.commitTransaction();
                 return Result.SuccessVoid();
             },
