@@ -1,5 +1,5 @@
-import {paginatedRequest} from "@expressApp/requests/paginatedRequest";
-import {dealerRepository} from "@expressApp/repositories/inventoryManagement/dealerRepository";
+import {paginatedRequest} from "@infrastructureCore/requests/paginatedRequest";
+import {dealerRepository} from "@infrastructureCore/repositories/inventoryManagement/dealerRepository";
 import {createListDealerUseCase} from "@application/inventoryManagement/usecases/dealer/listDealerUseCase";
 import {Controller} from "@expressApp/types/Controller";
 import {Response} from "@expressApp/core/Response";

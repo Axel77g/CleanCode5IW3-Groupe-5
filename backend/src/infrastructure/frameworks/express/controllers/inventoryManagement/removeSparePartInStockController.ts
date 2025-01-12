@@ -1,14 +1,14 @@
 import {Controller} from "@expressApp/types/Controller";
-import {updateStockRequest} from "@expressApp/requests/inventoryManagement/updateStockRequest";
+import {updateStockRequest} from "@infrastructureCore/requests/inventoryManagement/updateStockRequest";
 import {
     createRemoveSparePartInStockUseCase
 } from "@application/inventoryManagement/usecases/stock/RemoveSparePartInStockUseCase";
 import {
     inventoryManagementEventRepository
-} from "@expressApp/repositories/inventoryManagement/inventoryManagementEventRepository";
-import {stockRepository} from "@expressApp/repositories/inventoryManagement/stockRepository";
-import {inventorySparePartRepository} from "@expressApp/repositories/inventoryManagement/inventorySparePartRepository";
-import {notificationServices} from "@expressApp/services/notificationServices";
+} from "@infrastructureCore/repositories/inventoryManagement/inventoryManagementEventRepository";
+import {stockRepository} from "@infrastructureCore/repositories/inventoryManagement/stockRepository";
+import {inventorySparePartRepository} from "@infrastructureCore/repositories/inventoryManagement/inventorySparePartRepository";
+import {notificationServices} from "@infrastructureCore/services/notificationServices";
 import {Siret} from "@domain/shared/value-object/Siret";
 import {Response} from "@expressApp/core/Response";
 

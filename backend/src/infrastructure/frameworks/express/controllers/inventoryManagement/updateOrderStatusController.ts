@@ -1,9 +1,9 @@
 import {Controller} from "@expressApp/types/Controller";
-import {updateOrderStatusRequest} from "@expressApp/requests/inventoryManagement/updateOrderStatusRequest";
+import {updateOrderStatusRequest} from "@infrastructureCore/requests/inventoryManagement/updateOrderStatusRequest";
 import {
     inventoryManagementEventRepository
-} from "@expressApp/repositories/inventoryManagement/inventoryManagementEventRepository";
-import {orderRepository} from "@expressApp/repositories/inventoryManagement/orderRepository";
+} from "@infrastructureCore/repositories/inventoryManagement/inventoryManagementEventRepository";
+import {orderRepository} from "@infrastructureCore/repositories/inventoryManagement/orderRepository";
 import {createUpdateOrderStatusUseCase} from "@application/inventoryManagement/usecases/order/UpdateOrderStatusUseCase";
 import {Response} from "@expressApp/core/Response";
 

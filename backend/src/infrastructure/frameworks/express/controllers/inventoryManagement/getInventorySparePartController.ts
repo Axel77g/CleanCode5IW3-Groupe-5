@@ -1,9 +1,9 @@
-import {sparePartReferenceRequest} from "@expressApp/requests/inventoryManagement/sparePartReferenceRequest";
+import {sparePartReferenceRequest} from "@infrastructureCore/requests/inventoryManagement/sparePartReferenceRequest";
 import {Controller} from "@expressApp/types/Controller";
 import {
     createGetInventorySparePartUseCase
 } from "@application/inventoryManagement/usecases/inventorySparePart/GetInventorySparePartUseCase";
-import {inventorySparePartRepository} from "@expressApp/repositories/inventoryManagement/inventorySparePartRepository";
+import {inventorySparePartRepository} from "@infrastructureCore/repositories/inventoryManagement/inventorySparePartRepository";
 import {Response} from "@expressApp/core/Response";
 
 export const getInventorySparePartController : Controller<typeof sparePartReferenceRequest> = async (payload) => {

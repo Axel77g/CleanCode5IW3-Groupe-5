@@ -1,14 +1,14 @@
 import {Controller} from "@expressApp/types/Controller";
-import {registerOrderRequest} from "@expressApp/requests/inventoryManagement/registerOrderRequest";
+import {registerOrderRequest} from "@infrastructureCore/requests/inventoryManagement/registerOrderRequest";
 import {
     inventoryManagementEventRepository
-} from "@expressApp/repositories/inventoryManagement/inventoryManagementEventRepository";
+} from "@infrastructureCore/repositories/inventoryManagement/inventoryManagementEventRepository";
 import {createRegisterOrderUseCase} from "@application/inventoryManagement/usecases/order/RegisterOrderUseCase";
-import {dealerRepository} from "@expressApp/repositories/inventoryManagement/dealerRepository";
+import {dealerRepository} from "@infrastructureCore/repositories/inventoryManagement/dealerRepository";
 import {Response} from "@expressApp/core/Response";
 import {Siret} from "@domain/shared/value-object/Siret";
 import {OrderLine} from "@domain/inventoryManagement/value-object/OrderLine";
-import {inventorySparePartRepository} from "@expressApp/repositories/inventoryManagement/inventorySparePartRepository";
+import {inventorySparePartRepository} from "@infrastructureCore/repositories/inventoryManagement/inventorySparePartRepository";
 
 export const registerOrderController : Controller<typeof registerOrderRequest> = async (payload) => {
     const dealerSiret = Siret.create(payload.dealer)

@@ -5,8 +5,8 @@ import {
 } from "@application/testDrive/usecases/driver/RegisterDriverUseCase";
 import {Controller} from "../../types/Controller";
 import {Response} from "../../core/Response";
-import {registerDriverRequest} from "@expressApp/requests/testDrive/registerDriverRequest";
-import {testDriveEventRepository} from "@expressApp/repositories/testDrive/testDriveEventRepository";
+import {registerDriverRequest} from "@infrastructureCore/requests/testDrive/registerDriverRequest";
+import {testDriveEventRepository} from "@infrastructureCore/repositories/testDrive/testDriveEventRepository";
 
 export const registerDriverController : Controller<typeof registerDriverRequest> = async (payload) => {
     const driverLicenseId = DriverLicenseId.create(payload.driverLicenseId)

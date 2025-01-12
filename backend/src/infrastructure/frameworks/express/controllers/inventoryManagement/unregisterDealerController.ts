@@ -2,10 +2,10 @@ import {Controller} from "@expressApp/types/Controller";
 import {Response} from "@expressApp/core/Response";
 import {
     inventoryManagementEventRepository
-} from "@expressApp/repositories/inventoryManagement/inventoryManagementEventRepository";
+} from "@infrastructureCore/repositories/inventoryManagement/inventoryManagementEventRepository";
 import {Siret} from "@domain/shared/value-object/Siret";
 import {createUnregisterDealerUseCase} from "@application/inventoryManagement/usecases/dealer/UnregisterDealerUseCase";
-import {siretRequest} from "@expressApp/requests/inventoryManagement/siretRequest";
+import {siretRequest} from "@infrastructureCore/requests/inventoryManagement/siretRequest";
 
 export const unregisterDealerController : Controller<typeof siretRequest> = async (payload) => {
     const siret = Siret.create(payload.siret)

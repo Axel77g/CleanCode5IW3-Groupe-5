@@ -1,9 +1,9 @@
 import {Controller} from "@expressApp/types/Controller";
-import {siretRequest} from "@expressApp/requests/inventoryManagement/siretRequest";
+import {siretRequest} from "@infrastructureCore/requests/inventoryManagement/siretRequest";
 import {Siret} from "@domain/shared/value-object/Siret";
 import {Response} from "@expressApp/core/Response";
 import {createShowDealerStockUseCase} from "@application/inventoryManagement/usecases/stock/ShowDealerStockUseCase";
-import {stockRepository} from "@expressApp/repositories/inventoryManagement/stockRepository";
+import {stockRepository} from "@infrastructureCore/repositories/inventoryManagement/stockRepository";
 
 export const showDealerStockController : Controller<typeof siretRequest> = async (payload) => {
     const siret = Siret.create(payload.siret)

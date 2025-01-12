@@ -1,10 +1,10 @@
 import {Controller} from "@expressApp/types/Controller";
-import {paginatedWithDriverLicenseIdRequest} from "@expressApp/requests/testDrive/paginatedWithDriverLicenseIdRequest";
+import {paginatedWithDriverLicenseIdRequest} from "@infrastructureCore/requests/testDrive/paginatedWithDriverLicenseIdRequest";
 import {Response} from "@expressApp/core/Response";
 import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
 import {createListDriverIncidentsUseCase} from "@application/testDrive/usecases/incident/ListDriverIncidentsUseCase";
-import {incidentRepository} from "@expressApp/repositories/testDrive/incidentRepository";
-import {driverRepository} from "@expressApp/repositories/testDrive/driverRepository";
+import {incidentRepository} from "@infrastructureCore/repositories/testDrive/incidentRepository";
+import {driverRepository} from "@infrastructureCore/repositories/testDrive/driverRepository";
 
 export const listDriversIncidentsController : Controller<typeof paginatedWithDriverLicenseIdRequest> = async (payload) => {
     const driverLicenseId = DriverLicenseId.create(payload.driverLicenseId)

@@ -1,8 +1,8 @@
 import {Controller} from "@expressApp/types/Controller";
 import {Response} from "@expressApp/core/Response";
 import {createListDriversUseCase} from "@application/testDrive/usecases/driver/ListDriversUseCase";
-import {driverRepository} from "@expressApp/repositories/testDrive/driverRepository";
-import {paginatedRequest} from "@expressApp/requests/paginatedRequest";
+import {driverRepository} from "@infrastructureCore/repositories/testDrive/driverRepository";
+import {paginatedRequest} from "@infrastructureCore/requests/paginatedRequest";
 export const listDriversController : Controller<typeof paginatedRequest> = async (input) => {
     const listDriversUseCase = createListDriversUseCase(driverRepository)
     const result = await listDriversUseCase(input)

@@ -1,11 +1,11 @@
 import {Controller} from "@expressApp/types/Controller";
-import {registerDealerRequest} from "@expressApp/requests/inventoryManagement/registerDealerRequest";
+import {registerDealerRequest} from "@infrastructureCore/requests/inventoryManagement/registerDealerRequest";
 import {Response} from "@expressApp/core/Response";
 import {DealerAddress} from "@domain/inventoryManagement/value-object/DealerAddress";
 import {createRegisterDealerUseCase} from "@application/inventoryManagement/usecases/dealer/RegisterDealerUseCase";
 import {
     inventoryManagementEventRepository
-} from "@expressApp/repositories/inventoryManagement/inventoryManagementEventRepository";
+} from "@infrastructureCore/repositories/inventoryManagement/inventoryManagementEventRepository";
 import {Siret} from "@domain/shared/value-object/Siret";
 
 export const registerDealerController : Controller<typeof registerDealerRequest> = async (payload) => {

@@ -1,11 +1,11 @@
-import {siretRequest} from "@expressApp/requests/inventoryManagement/siretRequest";
+import {siretRequest} from "@infrastructureCore/requests/inventoryManagement/siretRequest";
 import {Controller} from "@expressApp/types/Controller";
 import {Siret} from "@domain/shared/value-object/Siret";
 import {Response} from "@expressApp/core/Response";
 import {createShowOrderHistoryUseCase} from "@application/inventoryManagement/usecases/order/ShowOrderHistoryUseCase";
 import {createShowDealerUseCase} from "@application/inventoryManagement/usecases/dealer/ShowDealerUseCase";
-import {dealerRepository} from "@expressApp/repositories/inventoryManagement/dealerRepository";
-import {orderRepository} from "@expressApp/repositories/inventoryManagement/orderRepository";
+import {dealerRepository} from "@infrastructureCore/repositories/inventoryManagement/dealerRepository";
+import {orderRepository} from "@infrastructureCore/repositories/inventoryManagement/orderRepository";
 
 
 export const showOrderHistoryController : Controller<typeof siretRequest> = async (payload) => {

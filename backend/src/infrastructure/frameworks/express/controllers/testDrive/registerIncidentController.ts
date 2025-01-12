@@ -1,10 +1,10 @@
 import {Controller} from "@expressApp/types/Controller";
-import {registerIncidentRequest} from "@expressApp/requests/testDrive/registerIncidentRequest";
+import {registerIncidentRequest} from "@infrastructureCore/requests/testDrive/registerIncidentRequest";
 import {Response} from "@expressApp/core/Response";
 import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
 import {createRegisterIncidentUseCase} from "@application/testDrive/usecases/incident/RegisterIncidentUseCase";
-import {testDriveEventRepository} from "@expressApp/repositories/testDrive/testDriveEventRepository";
-import {driverRepository} from "@expressApp/repositories/testDrive/driverRepository";
+import {testDriveEventRepository} from "@infrastructureCore/repositories/testDrive/testDriveEventRepository";
+import {driverRepository} from "@infrastructureCore/repositories/testDrive/driverRepository";
 
 export const registerIncidentController : Controller<typeof registerIncidentRequest> = async (payload) => {
     const driverLicenseId = DriverLicenseId.create(payload.driverLicenseId)

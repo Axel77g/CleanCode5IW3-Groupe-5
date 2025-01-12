@@ -1,37 +1,37 @@
 
-import {del, get, patch, post, put, routes, savePostManCollection} from "./core/registerRoute";
-import {registerDriverRequest} from "./requests/testDrive/registerDriverRequest";
+import {del, get, patch, post, put, savePostManCollection} from "./core/registerRoute";
+import {registerDriverRequest} from "@infrastructureCore/requests/testDrive/registerDriverRequest";
 import {registerDriverController} from "./controllers/testDrive/registerDriverController";
-import "./projections/setupProjection";
+import "@infrastructureCore/projections/setupProjection";
 import {showDriverController} from "@expressApp/controllers/testDrive/showDriverController";
-import {showDriverRequest} from "@expressApp/requests/testDrive/showDriverRequest";
+import {showDriverRequest} from "@infrastructureCore/requests/testDrive/showDriverRequest";
 import {listDriversController} from "@expressApp/controllers/testDrive/listDriversController";
-import {paginatedRequest} from "@expressApp/requests/paginatedRequest";
+import {paginatedRequest} from "@infrastructureCore/requests/paginatedRequest";
 import {patchDriverController} from "@expressApp/controllers/testDrive/patchDriverController";
-import {patchDriverRequest} from "@expressApp/requests/testDrive/patchDriverRequest";
+import {patchDriverRequest} from "@infrastructureCore/requests/testDrive/patchDriverRequest";
 import {listDriversIncidentsController} from "@expressApp/controllers/testDrive/listDriversIncidentsController";
-import {paginatedWithDriverLicenseIdRequest} from "@expressApp/requests/testDrive/paginatedWithDriverLicenseIdRequest";
+import {paginatedWithDriverLicenseIdRequest} from "@infrastructureCore/requests/testDrive/paginatedWithDriverLicenseIdRequest";
 import {listDriverTestsDrivesController} from "@expressApp/controllers/testDrive/listDriverTestsDrivesController";
 import {registerTestDriveController} from "@expressApp/controllers/testDrive/registerTestDriveController";
-import {registerTestDriveRequest} from "@expressApp/requests/testDrive/registerTestDriveRequest";
+import {registerTestDriveRequest} from "@infrastructureCore/requests/testDrive/registerTestDriveRequest";
 import {registerIncidentController} from "@expressApp/controllers/testDrive/registerIncidentController";
-import {registerIncidentRequest} from "@expressApp/requests/testDrive/registerIncidentRequest";
+import {registerIncidentRequest} from "@infrastructureCore/requests/testDrive/registerIncidentRequest";
 import {showDealerController} from "@expressApp/controllers/inventoryManagement/showDealerController";
-import {siretRequest} from "@expressApp/requests/inventoryManagement/siretRequest";
+import {siretRequest} from "@infrastructureCore/requests/inventoryManagement/siretRequest";
 import {unregisterDealerController} from "@expressApp/controllers/inventoryManagement/unregisterDealerController";
 import {registerDealerController} from "@expressApp/controllers/inventoryManagement/registerDealerController";
-import {registerDealerRequest} from "@expressApp/requests/inventoryManagement/registerDealerRequest";
+import {registerDealerRequest} from "@infrastructureCore/requests/inventoryManagement/registerDealerRequest";
 import {listDealerController} from "@expressApp/controllers/inventoryManagement/listDealerController";
 import {showDealerStockController} from "@expressApp/controllers/inventoryManagement/showDealerStockController";
 import {addSparePartInStockController} from "@expressApp/controllers/inventoryManagement/addSparePartInStockController";
-import {updateStockRequest} from "@expressApp/requests/inventoryManagement/updateStockRequest";
+import {updateStockRequest} from "@infrastructureCore/requests/inventoryManagement/updateStockRequest";
 import {registerOrderController} from "@expressApp/controllers/inventoryManagement/registerOrderController";
-import {registerOrderRequest} from "@expressApp/requests/inventoryManagement/registerOrderRequest";
+import {registerOrderRequest} from "@infrastructureCore/requests/inventoryManagement/registerOrderRequest";
 import {
     removeSparePartInStockController
 } from "@expressApp/controllers/inventoryManagement/removeSparePartInStockController";
 import {showOrderHistoryController} from "@expressApp/controllers/inventoryManagement/showOrderHistoryController";
-import {updateOrderStatusRequest} from "@expressApp/requests/inventoryManagement/updateOrderStatusRequest";
+import {updateOrderStatusRequest} from "@infrastructureCore/requests/inventoryManagement/updateOrderStatusRequest";
 import {updateOrderStatusController} from "@expressApp/controllers/inventoryManagement/updateOrderStatusController";
 import {
     listInventorySparePartController
@@ -39,7 +39,7 @@ import {
 import {
     upsertInventorySparePartController
 } from "@expressApp/controllers/inventoryManagement/upsertInventorySparePartController";
-import {sparePartRequest} from "@expressApp/requests/inventoryManagement/sparePartRequest";
+import {sparePartRequest} from "@infrastructureCore/requests/inventoryManagement/sparePartRequest";
 
 export const boot = () => {
     // Inventory Management Subdomain

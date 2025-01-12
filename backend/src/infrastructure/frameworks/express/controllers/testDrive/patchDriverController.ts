@@ -1,9 +1,9 @@
 import {Controller} from "@expressApp/types/Controller";
-import {patchDriverRequest} from "@expressApp/requests/testDrive/patchDriverRequest";
+import {patchDriverRequest} from "@infrastructureCore/requests/testDrive/patchDriverRequest";
 import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
 import {Response} from "@expressApp/core/Response";
 import {createPatchDriverUseCase} from "@application/testDrive/usecases/driver/PatchDriverUseCase";
-import {testDriveEventRepository} from "@expressApp/repositories/testDrive/testDriveEventRepository";
+import {testDriveEventRepository} from "@infrastructureCore/repositories/testDrive/testDriveEventRepository";
 
 export const patchDriverController : Controller<typeof patchDriverRequest> = async (payload) => {
     const driverLicenseId = DriverLicenseId.create(payload.driverLicenseId)

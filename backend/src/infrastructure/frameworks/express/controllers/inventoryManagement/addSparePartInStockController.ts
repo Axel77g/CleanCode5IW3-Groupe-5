@@ -1,4 +1,4 @@
-import {updateStockRequest} from "@expressApp/requests/inventoryManagement/updateStockRequest";
+import {updateStockRequest} from "@infrastructureCore/requests/inventoryManagement/updateStockRequest";
 import {Controller} from "@expressApp/types/Controller";
 import {Siret} from "@domain/shared/value-object/Siret";
 import {Response} from "@expressApp/core/Response";
@@ -7,11 +7,11 @@ import {
 } from "@application/inventoryManagement/usecases/stock/AddSparePartInStockUseCase";
 import {
     inventoryManagementEventRepository
-} from "@expressApp/repositories/inventoryManagement/inventoryManagementEventRepository";
+} from "@infrastructureCore/repositories/inventoryManagement/inventoryManagementEventRepository";
 import {
     createGetInventorySparePartUseCase
 } from "@application/inventoryManagement/usecases/inventorySparePart/GetInventorySparePartUseCase";
-import {inventorySparePartRepository} from "@expressApp/repositories/inventoryManagement/inventorySparePartRepository";
+import {inventorySparePartRepository} from "@infrastructureCore/repositories/inventoryManagement/inventorySparePartRepository";
 
 export const  addSparePartInStockController : Controller<typeof updateStockRequest> = async (payload) => {
     const siret = Siret.create(payload.siret)

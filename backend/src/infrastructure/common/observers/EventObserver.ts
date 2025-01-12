@@ -3,8 +3,7 @@ import {EventCallbackHandler, IEventObserver} from "@application/shared/observer
 
 export class EventObserver implements IEventObserver{
     private subscribers : Record<string, EventCallbackHandler[]> = {}
-    constructor() {
-    }
+    constructor() {}
     subscribe(eventType: string, callback : EventCallbackHandler): void {
         console.log("[EventObserver] New subscription to event", eventType)
         if(!(eventType in this.subscribers)) this.subscribers[eventType] = []
