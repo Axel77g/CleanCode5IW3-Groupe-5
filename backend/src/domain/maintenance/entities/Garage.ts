@@ -1,30 +1,30 @@
 import { AddressDTO, Address } from "@domain/shared/value-object/Address";
+import { Siret } from "@domain/shared/value-object/Siret";
 
-export interface CustomerDTO {
-    customerId: string;
+export interface GarageDTO {
+    siret: string;
     name: string;
     phoneNumber: string;
-    email: string;
     address: AddressDTO;
 }
 
-export class Customer {
+export class Garage {
     private constructor(
-        public readonly customerId: string,
+        public readonly siret: Siret,
         public readonly name: string,
         public readonly phoneNumber: string,
-        public readonly email: string,
         public readonly address: Address,
     ) { }
 
-    static fromObject(object: CustomerDTO): Customer | Error {
+    static fromObject(object: GarageDTO): Garage | Error {
         const address = Address.create(object.address);
         if (address instanceof Error) return address;
-        return new Customer(
-            object.customerId,
+        const siret = Siret.create(object.siret);
+        if (siret instanceof Error) return siret;
+        return new Garage(
+            siret,
             object.name,
             object.phoneNumber,
-            object.email,
             address,
         )
     }

@@ -19,7 +19,11 @@ import {
 import {
     inventoryManagementProjectionJobRepository
 } from "@infrastructureCore/repositories/inventoryManagement/inventoryManagementProjectionJobRepository";
-import * as process from "node:process";
+import {customerProjection} from "@infrastructureCore/projections/maintenance/customerProjection";
+import {
+    maintenanceProjectionJobRepository
+} from "@infrastructureCore/repositories/maintenance/maintenanceProjectionJobRepository";
+import {maintenanceEventRepository} from "@infrastructureCore/repositories/maintenance/maintenanceEventRepository";
 
 function initProjection(scheduler: ProjectionJobScheduler, ...projections: AbstractProjection[]) {
     projections.forEach(projection => projection.init(scheduler));
@@ -37,4 +41,9 @@ const testDriveProjectionScheduler = new ProjectionJobScheduler(testDriveProject
 const projectionWorker = new ProjectionsWorker(testDriveProjectionJobRepository, testDriveEventRepository, testDriveProjections)
 initProjection(testDriveProjectionScheduler, ...testDriveProjections)
 
-console.log(eventObserver.uid, process.pid)
+
+/** Schedule the projection for maintenance subdomain */
+const maintenanceProjections = [customerProjection]
+const maintenanceProjectionScheduler = new ProjectionJobScheduler(maintenanceProjectionJobRepository, eventObserver)
+const maintenanceProjectionWorker = new ProjectionsWorker(maintenanceProjectionJobRepository, maintenanceEventRepository, maintenanceProjections)
+initProjection(maintenanceProjectionScheduler, ...maintenanceProjections)

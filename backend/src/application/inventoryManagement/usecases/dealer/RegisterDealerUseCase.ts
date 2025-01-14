@@ -1,16 +1,14 @@
-import { Dealer } from "@domain/inventoryManagement/entities/Dealer";
-import { DealerAddress } from "@domain/inventoryManagement/value-object/DealerAddress";
+import { RegisterDealerEvent } from "@domain/inventoryManagement/events/RegisterDealerEvent";
+import { Address } from "@domain/shared/value-object/Address";
 import { Siret } from '@domain/shared/value-object/Siret';
 import { IInputUseCase, IUseCase } from "@shared/IUseCase";
 import { Result } from "@shared/Result";
-import { DealerRepository } from "../../repositories/DealerRepository";
-import {EventRepository} from "../../../shared/repositories/EventRepository";
-import {RegisterDealerEvent} from "@domain/inventoryManagement/events/RegisterDealerEvent";
+import { EventRepository } from "../../../shared/repositories/EventRepository";
 
 interface RegisterDealerInput extends IInputUseCase {
     siret: Siret,
     name: string,
-    address: DealerAddress,
+    address: Address,
     phoneNumber: string
 }
 
