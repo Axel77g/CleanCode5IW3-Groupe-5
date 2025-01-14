@@ -1,13 +1,13 @@
-import {AbstractMongoRepository} from "../AbstractMongoRepository";
-import {DealerRepository} from "@application/inventoryManagement/repositories/DealerRepository";
-import {Siret} from "@domain/shared/value-object/Siret";
-import {PaginatedResult, Result, VoidResult} from "@shared/Result";
-import {Dealer} from "@domain/inventoryManagement/entities/Dealer";
-import {DealerMapper} from "@infrastructure/common/entityMappers/DealerMapper";
-import {PaginatedInput} from "@shared/PaginatedInput";
+import { DealerRepository } from "@application/inventoryManagement/repositories/DealerRepository";
+import { Dealer } from "@domain/inventoryManagement/entities/Dealer";
+import { Siret } from "@domain/shared/value-object/Siret";
+import { DealerMapper } from "@infrastructure/common/entityMappers/DealerMapper";
+import { PaginatedInput } from "@shared/PaginatedInput";
+import { PaginatedResult, Result, VoidResult } from "@shared/Result";
+import { AbstractMongoRepository } from "../AbstractMongoRepository";
 
 
-export class MongoDealerRepository extends AbstractMongoRepository implements DealerRepository{
+export class MongoDealerRepository extends AbstractMongoRepository implements DealerRepository {
     protected collectionName: string = "dealers";
 
     delete(siret: Siret): Promise<VoidResult> {
@@ -15,7 +15,7 @@ export class MongoDealerRepository extends AbstractMongoRepository implements De
         return this.catchError<VoidResult>(
             async () => {
                 session.startTransaction();
-                await this.getQuery().deleteOne({siret: siret.getValue()});
+                await this.getCollection().deleteOne({ siret: siret.getValue() });
                 await session.commitTransaction();
                 return Result.SuccessVoid();
             },
@@ -25,10 +25,10 @@ export class MongoDealerRepository extends AbstractMongoRepository implements De
 
     getBySiret(siret: Siret): Promise<Result<Dealer>> {
         return this.catchError<Result<Dealer>>(
-            async () =>{
-                const dealerDocument = await this.getQuery().findOne({siret: siret.getValue()});
+            async () => {
+                const dealerDocument = await this.getCollection().findOne({ siret: siret.getValue() });
                 const dealer = DealerMapper.toDomain(dealerDocument);
-                if(dealer instanceof Error) return Result.Failure(dealer);
+                if (dealer instanceof Error) return Result.Failure(dealer);
                 return Result.Success<Dealer>(dealer);
             }
         )
@@ -39,7 +39,7 @@ export class MongoDealerRepository extends AbstractMongoRepository implements De
         return this.catchError(
             async () => {
                 session.startTransaction();
-                await this.getQuery().updateOne({siret: dealer.siret.getValue()}, {$set: DealerMapper.toPersistence(dealer)}, {upsert: true});
+                await this.getCollection().updateOne({ siret: dealer.siret.getValue() }, { $set: DealerMapper.toPersistence(dealer) }, { upsert: true });
                 await session.commitTransaction();
                 return Result.SuccessVoid();
             },
@@ -48,11 +48,11 @@ export class MongoDealerRepository extends AbstractMongoRepository implements De
     }
 
     list(pagination: PaginatedInput): Promise<PaginatedResult<Dealer>> {
-        const {page, limit} = pagination;
+        const { page, limit } = pagination;
         return this.catchError(
             async () => {
-                const dealersDocuments = await this.getQuery().find().skip((page - 1) * limit).limit(limit).toArray();
-                const dealersTotal = await this.getQuery().countDocuments();
+                const dealersDocuments = await this.getCollection().find().skip((page - 1) * limit).limit(limit).toArray();
+                const dealersTotal = await this.getCollection().countDocuments();
                 const dealers = DealerMapper.toDomainList(dealersDocuments);
                 return Result.SuccessPaginated<Dealer>(dealers, dealersTotal, page, limit);
             }

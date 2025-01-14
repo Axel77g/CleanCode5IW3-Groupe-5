@@ -1,4 +1,4 @@
-import { AddressDTO, Address } from "@domain/shared/value-object/Address";
+import { Address, AddressDTO } from "@domain/shared/value-object/Address";
 import { Siret } from "@domain/shared/value-object/Siret";
 
 export interface GarageDTO {

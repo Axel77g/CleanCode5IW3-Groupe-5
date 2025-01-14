@@ -1,26 +1,26 @@
-import {IInputUseCase, IUseCase} from "@shared/IUseCase";
-import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
-import {IncidentType} from "@domain/testDrive/enums/IncidentType";
-import {Result} from "@shared/Result";
-import {DriverRepository} from "../../repositories/DriverRepository";
-import {RegisterIncidentEvent} from "@domain/testDrive/Events/RegisterIncidentEvent";
-import {randomUUID} from "node:crypto";
-import {EventRepository} from "../../../shared/repositories/EventRepository";
+import { IncidentType } from "@domain/testDrive/enums/IncidentType";
+import { RegisterIncidentEvent } from "@domain/testDrive/Events/RegisterIncidentEvent";
+import { DriverLicenseId } from "@domain/testDrive/value-object/DriverLicenseId";
+import { IInputUseCase, IUseCase } from "@shared/IUseCase";
+import { Result } from "@shared/Result";
+import { randomUUID } from "node:crypto";
+import { EventRepository } from "../../../shared/repositories/EventRepository";
+import { DriverRepository } from "../../repositories/DriverRepository";
 
 interface RegisterIncidentInput extends IInputUseCase {
     driverLicenseId: DriverLicenseId;
     description: string;
     date: Date;
-    type : IncidentType;
+    type: IncidentType;
 }
 
 export type RegisterIncidentUseCase = IUseCase<RegisterIncidentInput, Result>
 
-export const createRegisterIncidentUseCase = (_eventRepository: EventRepository, _driverRepository : DriverRepository): RegisterIncidentUseCase => {
+export const createRegisterIncidentUseCase = (_eventRepository: EventRepository, _driverRepository: DriverRepository): RegisterIncidentUseCase => {
     return async (input: RegisterIncidentInput) => {
         console.log(input)
         const driverResponse = await _driverRepository.getByLicenseId(input.driverLicenseId.getValue())
-        if(!driverResponse.success) return driverResponse
+        if (!driverResponse.success) return driverResponse
         const registerIncidentEvent = new RegisterIncidentEvent({
             incidentId: randomUUID(),
             driverLicenseId: input.driverLicenseId.getValue(),

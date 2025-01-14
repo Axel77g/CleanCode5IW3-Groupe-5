@@ -1,4 +1,6 @@
-import { GarageRepository } from '@application/maintenance/repositories/GarageRepository';
+import { EventRepository } from '@application/shared/repositories/EventRepository';
+import { RegisterGarageEvent } from '@domain/maintenance/events/RegisterGarageEvent';
+import { Address } from '@domain/shared/value-object/Address';
 import { Siret } from '@domain/shared/value-object/Siret';
 import { IInputUseCase, IUseCase } from '@shared/IUseCase';
 import { Result } from '@shared/Result';
@@ -7,18 +9,20 @@ interface RegisterGarageInput extends IInputUseCase {
     siret: Siret,
     name: string,
     phoneNumber: string,
+    address: Address,
 }
 
 export type RegisterGarageUseCase = IUseCase<RegisterGarageInput, Result>
-export const registerGarageUseCAse = (_garageRepository: GarageRepository): RegisterGarageUseCase => {
+export const createRegisterGarageUseCase = (_eventRepository: EventRepository): RegisterGarageUseCase => {
     return async (input: RegisterGarageInput) => {
-        // const garage = new Garage(
-        //     input.siret,
-        //     input.name,
-        //     input.phoneNumber,
-        // );
-        // const storeResponse = await _garageRepository.store(garage);
-        // if (!storeResponse.success) return Result.FailureStr("Cannot register garage");
-        return Result.Success("Garage Registered");
+        const registerGarageEvent = new RegisterGarageEvent({
+            siret: input.siret.getValue(),
+            name: input.name,
+            phoneNumber: input.phoneNumber,
+            address: input.address
+        })
+        const storeResponse = await _eventRepository.storeEvent(registerGarageEvent);
+        if (!storeResponse.success) return Result.FailureStr("Cannot register garage")
+        return Result.Success('Garage registered')
     }
 }

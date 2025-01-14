@@ -1,15 +1,15 @@
 import { EventRepository } from "@application/shared/repositories/EventRepository";
 import { RegisterCustomerEvent } from "@domain/maintenance/events/RegisterCustomerEvent";
-import { randomUUID } from "crypto";
-import { CustomerAddress } from "@domain/maintenance/value-object/CustomerAddress";
+import { Address } from "@domain/shared/value-object/Address";
 import { IInputUseCase, IUseCase } from "@shared/IUseCase";
 import { Result } from "@shared/Result";
+import { randomUUID } from "crypto";
 
 interface RegisterCustomerInput extends IInputUseCase {
     name: string,
     phoneNumber: string,
     email: string
-    address: CustomerAddress
+    address: Address
 }
 
 export type RegisterCustomerUseCase = IUseCase<RegisterCustomerInput, Result>

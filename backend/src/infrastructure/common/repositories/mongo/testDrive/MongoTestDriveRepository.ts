@@ -1,22 +1,22 @@
-import {AbstractMongoRepository} from "../AbstractMongoRepository";
-import {TestDriveRepository} from "@application/testDrive/repositories/TestDriveRepository";
-import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
-import {PaginatedInput} from "@shared/PaginatedInput";
-import {PaginatedResult, Result, VoidResult} from "@shared/Result";
-import {TestDrive} from "@domain/testDrive/entities/TestDrive";
-import {TestDriveMapper} from "@infrastructure/common/entityMappers/TestDriveMapper";
+import { TestDriveRepository } from "@application/testDrive/repositories/TestDriveRepository";
+import { TestDrive } from "@domain/testDrive/entities/TestDrive";
+import { DriverLicenseId } from "@domain/testDrive/value-object/DriverLicenseId";
+import { TestDriveMapper } from "@infrastructure/common/entityMappers/TestDriveMapper";
+import { PaginatedInput } from "@shared/PaginatedInput";
+import { PaginatedResult, Result, VoidResult } from "@shared/Result";
+import { AbstractMongoRepository } from "../AbstractMongoRepository";
 
-export class MongoTestDriveRepository extends AbstractMongoRepository implements TestDriveRepository{
+export class MongoTestDriveRepository extends AbstractMongoRepository implements TestDriveRepository {
     protected collectionName: string = 'testDrives';
 
     async listDriverTestDrives(driverLicenseId: DriverLicenseId, pagination: PaginatedInput): Promise<PaginatedResult<TestDrive>> {
-        const {page, limit} = pagination;
+        const { page, limit } = pagination;
         return this.catchError(
             async () => {
-                const testDrivesDocuments = await this.getQuery().find({driverLicenseId: driverLicenseId.getValue()})
+                const testDrivesDocuments = await this.getCollection().find({ driverLicenseId: driverLicenseId.getValue() })
                     .skip((page - 1) * limit)
                     .limit(limit)
-                const total = await this.getQuery().countDocuments({driverLicenseId: driverLicenseId.getValue()});
+                const total = await this.getCollection().countDocuments({ driverLicenseId: driverLicenseId.getValue() });
                 const testDrives = TestDriveMapper.toDomainList(await testDrivesDocuments.toArray());
                 return Result.SuccessPaginated<TestDrive>(testDrives, total, page, limit);
             },
@@ -28,7 +28,7 @@ export class MongoTestDriveRepository extends AbstractMongoRepository implements
         return this.catchError(
             async () => {
                 session.startTransaction();
-                await this.getQuery().updateOne({testDriveId: testDrive.testDriveId}, {$set: TestDriveMapper.toPersistence(testDrive)}, {upsert: true});
+                await this.getCollection().updateOne({ testDriveId: testDrive.testDriveId }, { $set: TestDriveMapper.toPersistence(testDrive) }, { upsert: true });
                 await session.commitTransaction();
                 return Result.SuccessVoid();
             },

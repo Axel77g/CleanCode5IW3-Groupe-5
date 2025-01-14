@@ -1,8 +1,6 @@
-import {AbstractMongoRepository} from "../AbstractMongoRepository";
 import {
     InventorySparePartRepository
 } from "@application/inventoryManagement/repositories/InventorySparePartRepository";
-import {PaginatedResult, Result, VoidResult} from "@shared/Result";
 import {
     InventorySparePart,
     InventorySparePartDTO
@@ -10,8 +8,10 @@ import {
 import {
     ListInventorySparePartInput
 } from "@application/inventoryManagement/usecases/inventorySparePart/ListInventorySparePartUseCase";
+import { AbstractMongoRepository } from "../AbstractMongoRepository";
+import { PaginatedResult, Result, VoidResult } from "@shared/Result";
 
-export class MongoInventorySparePartRepository extends AbstractMongoRepository implements InventorySparePartRepository{
+export class MongoInventorySparePartRepository extends AbstractMongoRepository implements InventorySparePartRepository {
     protected collectionName: string = 'inventorySpareParts';
 
     constructor(...args: [any]){
@@ -20,14 +20,14 @@ export class MongoInventorySparePartRepository extends AbstractMongoRepository i
     }
 
     private async createTextIndex() {
-        await this.getQuery().createIndex({ name: "text", reference: "text" });
+        await this.getCollection().createIndex({ name: "text", reference: "text" });
     }
 
 
     find(reference: string): Promise<Result<InventorySparePart>> {
         return this.catchError<Result<InventorySparePart>>(
             async () => {
-                const inventorySparePartDocument = await this.getQuery().findOne({
+                const inventorySparePartDocument = await this.getCollection().findOne({
                     reference: reference
                 });
                 const inventorySparePart = InventorySparePart.fromObject(inventorySparePartDocument as any);
@@ -41,7 +41,7 @@ export class MongoInventorySparePartRepository extends AbstractMongoRepository i
         return this.catchError<VoidResult>(
             async () => {
                 session.startTransaction();
-                await this.getQuery().updateOne(
+                await this.getCollection().updateOne(
                     { reference: inventorySparePart.reference },
                     {
                         $set: {
@@ -67,8 +67,8 @@ export class MongoInventorySparePartRepository extends AbstractMongoRepository i
                         $search: search
                     }
                 } : {}
-                const inventorySparePartDocuments = await this.getQuery().find(filters).skip((page - 1) * limit).limit(limit).toArray();
-                const inventorySparePartTotal = await this.getQuery().countDocuments(filters);
+                const inventorySparePartDocuments = await this.getCollection().find(filters).skip((page - 1) * limit).limit(limit).toArray();
+                const inventorySparePartTotal = await this.getCollection().countDocuments(filters);
                 const inventorySpareParts = inventorySparePartDocuments.map((document : any) => InventorySparePart.fromObject(document as InventorySparePartDTO));
                 return Result.SuccessPaginated<InventorySparePart>(inventorySpareParts, inventorySparePartTotal, page, limit);
             }

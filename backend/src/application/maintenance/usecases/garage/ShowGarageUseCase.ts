@@ -10,9 +10,9 @@ interface ShowGarageInput extends IInputUseCase {
 
 type ShowGarageResult = Result<Garage>
 export type ShowGarageUseCase = IUseCase<ShowGarageInput, ShowGarageResult>
-export const showGarageUseCase = (_garageRepository: GarageRepository): ShowGarageUseCase => {
+export const createShowGarageUseCase = (_garageRepository: GarageRepository): ShowGarageUseCase => {
     return async (input: ShowGarageInput) => {
-        const findResponse = await _garageRepository.getBySiret(input.siret);
+        const findResponse = await _garageRepository.show(input.siret);
         if (!findResponse.success) return Result.FailureStr("Garage not found")
         return findResponse
     }

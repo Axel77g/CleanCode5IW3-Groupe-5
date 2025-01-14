@@ -11,14 +11,6 @@ export class GarageMapper {
         })
     }
 
-    public static toPersistenceList(garages: Garage[]): MappedEntities<GarageDTO> {
-        return new MappedEntities<GarageDTO>(
-            garages.map(garage => {
-                return GarageMapper.toPersistence(garage);
-            })
-        )
-    }
-
     public static toDomain(garage: any): Garage | Error {
         return Garage.fromObject({
             siret: garage.siret,
@@ -26,6 +18,12 @@ export class GarageMapper {
             phoneNumber: garage.phoneNumber,
             address: garage.address
         })
+    }
+
+    public static toPersistenceList(garages: Garage[]): MappedEntities<GarageDTO>[] {
+        return new MappedEntities(garages.map(garage => {
+            return GarageMapper.toPersistence(garage);
+        }))
     }
 
     public static toDomainList(garages: any[]): Garage[] {

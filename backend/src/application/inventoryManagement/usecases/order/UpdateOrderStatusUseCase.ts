@@ -6,9 +6,9 @@ import {OrderRepository} from "../../repositories/OrderRepository";
 import {OrderStatusEnum} from "@domain/inventoryManagement/enums/OrderStatusEnum";
 import {UpdateOrderStatusEvent} from "@domain/inventoryManagement/events/UpdateOrderStatusEvent";
 
-interface UpdateOrderInput extends IInputUseCase{
+interface UpdateOrderInput extends IInputUseCase {
     orderId: string,
-    status : OrderStatusEnum
+    status: OrderStatusEnum
 }
 export type RegisterOrderUseCase = IUseCase<UpdateOrderInput, Result>
 
@@ -17,18 +17,18 @@ const registerOrderErrors = {
 
 }
 
-export const createUpdateOrderStatusUseCase = (_eventRepository : EventRepository, _orderRepository: OrderRepository) : RegisterOrderUseCase => {
+export const createUpdateOrderStatusUseCase = (_eventRepository: EventRepository, _orderRepository: OrderRepository): RegisterOrderUseCase => {
     return async (input: UpdateOrderInput) => {
         const orderResponse = await _orderRepository.findOrderById(input.orderId);
-        if(!orderResponse.success) return Result.Failure(registerOrderErrors.NOT_FOUND_DEALER)
+        if (!orderResponse.success) return Result.Failure(registerOrderErrors.NOT_FOUND_DEALER)
         const order = orderResponse.value.applyStatus(input.status)
-        if(order instanceof Error) return Result.Failure(order)
+        if (order instanceof Error) return Result.Failure(order)
         const updateOrderStatusEvent = new UpdateOrderStatusEvent({
             orderId: input.orderId,
             status: input.status
         })
         const repositoryResponse = await _eventRepository.storeEvent(updateOrderStatusEvent);
-        if(!repositoryResponse.success) return repositoryResponse
+        if (!repositoryResponse.success) return repositoryResponse
         return Result.Success("Order updated successfully")
     }
 }

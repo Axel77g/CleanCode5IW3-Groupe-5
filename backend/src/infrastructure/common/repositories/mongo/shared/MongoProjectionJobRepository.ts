@@ -1,18 +1,18 @@
-import {AbstractMongoRepository} from "@infrastructure/common/repositories/mongo/AbstractMongoRepository";
-import {ProjectionJobRepository} from "@application/shared/repositories/ProjectionJobRepository";
-import {ProjectionJob} from "@application/shared/projections/ProjectionJob";
-import {Result, VoidResult} from "@shared/Result";
+import { ProjectionJob } from "@application/shared/projections/ProjectionJob";
+import { ProjectionJobRepository } from "@application/shared/repositories/ProjectionJobRepository";
+import { AbstractMongoRepository } from "@infrastructure/common/repositories/mongo/AbstractMongoRepository";
+import { Result, VoidResult } from "@shared/Result";
 
-export abstract class MongoProjectionJobRepository extends AbstractMongoRepository implements ProjectionJobRepository{
+export abstract class MongoProjectionJobRepository extends AbstractMongoRepository implements ProjectionJobRepository {
     protected abstract collectionName: string;
 
     async failJob(job: ProjectionJob): Promise<VoidResult> {
         return Result.SuccessVoid();
         const session = this.getSessionTransaction()
         return this.catchError(
-            async()=> {
+            async () => {
                 session.startTransaction();
-                await this.getQuery().deleteOne({jobId: job.jobId});
+                await this.getCollection().deleteOne({ jobId: job.jobId });
                 await session.commitTransaction();
                 return Result.SuccessVoid();
             },
@@ -22,8 +22,8 @@ export abstract class MongoProjectionJobRepository extends AbstractMongoReposito
 
     getPendingJobs(): Promise<Result<ProjectionJob[]>> {
         return this.catchError(
-            async()=>{
-                const projectionJobsDocuments = await this.getQuery().find();
+            async () => {
+                const projectionJobsDocuments = await this.getCollection().find();
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-expect-error
                 const projectionJobs = await projectionJobsDocuments.toArray() as ProjectionJob[];
@@ -35,9 +35,9 @@ export abstract class MongoProjectionJobRepository extends AbstractMongoReposito
     storeJob(job: ProjectionJob): Promise<VoidResult> {
         const session = this.getSessionTransaction();
         return this.catchError(
-            async()=> {
+            async () => {
                 session.startTransaction();
-                await this.getQuery().insertOne(job);
+                await this.getCollection().insertOne(job);
 
                 await session.commitTransaction();
                 return Result.SuccessVoid();
@@ -49,9 +49,9 @@ export abstract class MongoProjectionJobRepository extends AbstractMongoReposito
     terminateJob(job: ProjectionJob): Promise<VoidResult> {
         const session = this.getSessionTransaction()
         return this.catchError(
-            async()=> {
+            async () => {
                 session.startTransaction();
-                await this.getQuery().deleteOne({jobId: job.jobId});
+                await this.getCollection().deleteOne({ jobId: job.jobId });
                 await session.commitTransaction();
                 return Result.SuccessVoid();
             },
@@ -59,10 +59,10 @@ export abstract class MongoProjectionJobRepository extends AbstractMongoReposito
         )
     }
 
-    watchJob(onJob: () => void, interval : number = 1000): Promise<VoidResult> {
+    watchJob(onJob: () => void, interval: number = 1000): Promise<VoidResult> {
         return this.catchError(
-             async ()=> {
-                setInterval(()=>{
+            async () => {
+                setInterval(() => {
                     onJob();
                 }, interval)
                 return Result.SuccessVoid();

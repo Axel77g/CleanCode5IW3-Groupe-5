@@ -1,12 +1,12 @@
 import { Siret } from '@domain/shared/value-object/Siret';
+import { ApplicationException } from "@shared/ApplicationException";
 import { IInputUseCase, IUseCase } from "@shared/IUseCase";
 import { Result } from "@shared/Result";
+import { EventRepository } from "../../../shared/repositories/EventRepository";
 import { StockRepository } from "../../repositories/StockRepository";
 import { NotificationServices } from "../../services/NotificationServices";
-import {EventRepository} from "../../../shared/repositories/EventRepository";
-import {DealerStockUpdatedEvent} from "@domain/inventoryManagement/events/DealerStockUpdatedEvent";
-import {ApplicationException} from "@shared/ApplicationException";
-import {InventorySparePartRepository} from "@application/inventoryManagement/repositories/InventorySparePartRepository";
+import { InventorySparePartRepository } from '@application/inventoryManagement/repositories/InventorySparePartRepository';
+import { DealerStockUpdatedEvent } from '@domain/inventoryManagement/events/DealerStockUpdatedEvent';
 
 interface RemoveSparePartInStockInput extends IInputUseCase {
     siret: Siret,
@@ -21,14 +21,14 @@ const removeSparePartInStockErrors = {
     STOCK_RUN_OUT: new ApplicationException("RemoveSparePartInStockUseCase.StockRunOut", "Stock run out"),
 }
 export const createRemoveSparePartInStockUseCase = (
-    _eventRepository : EventRepository,
+    _eventRepository: EventRepository,
     _stockRepository: StockRepository,
-    _inventorySparePartRepository : InventorySparePartRepository ,
+    _inventorySparePartRepository: InventorySparePartRepository,
     _notificationService: NotificationServices
 ): RemoveSparePartInStockUseCase => {
     return async (input: RemoveSparePartInStockInput) => {
         const sparePartResponse = await _inventorySparePartRepository.find(input.sparePartReference);
-        if(!sparePartResponse.success) return Result.Failure(removeSparePartInStockErrors.DEALER_STOCK_NOT_FOUND)
+        if (!sparePartResponse.success) return Result.Failure(removeSparePartInStockErrors.DEALER_STOCK_NOT_FOUND)
 
         const stockQuantityResponse = await _stockRepository.getStockQuantity(sparePartResponse.value, input.siret);
         if (!stockQuantityResponse.success) return Result.Failure(removeSparePartInStockErrors.DEALER_STOCK_NOT_FOUND)
