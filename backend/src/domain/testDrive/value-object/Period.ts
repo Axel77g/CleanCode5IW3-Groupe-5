@@ -1,8 +1,18 @@
+import {ApplicationException} from "@shared/ApplicationException";
+
 export class Period{
-    constructor(
+    static errors = {
+        INVALID_PERIOD : new ApplicationException("Period.invalidPeriod","The start date must be before the end date")
+    }
+    private constructor(
         public readonly startDate: Date,
         public readonly endDate: Date
     ) {}
+
+    static create(startDate : Date, endDate : Date){
+        if(endDate > startDate) return Period.errors.INVALID_PERIOD
+        return new Period(startDate,endDate)
+    }
 
     setStartDate(startDate: Date): Period {
         return new Period(startDate, this.endDate);

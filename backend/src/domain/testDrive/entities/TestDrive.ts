@@ -25,14 +25,14 @@ export class TestDrive{
         const vehicleImmatriculation = VehicleImmatriculation.create(testDrive.vehicleImmatriculation)
         if(vehicleImmatriculation instanceof Error) return vehicleImmatriculation
 
+        const period = Period.create(testDrive.periodStart,testDrive.periodEnd)
+        if(period instanceof Error) return period
+
         return new TestDrive(
             testDrive.testDriveId,
             driverLicenseId,
             vehicleImmatriculation,
-            new Period(
-                testDrive.periodStart,
-                testDrive.periodEnd
-            )
+            period
         )
     }
 }

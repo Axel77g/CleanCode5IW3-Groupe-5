@@ -3,8 +3,11 @@ import {driverRepository} from "@infrastructure/frameworks/core/repositories/tes
 import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
 import DriverPatchForm from "@/app/drivers/[driverLicenseId]/DriverPatchForm";
 import {DriverDTO} from "@domain/testDrive/entities/Driver";
-export default async function DriverDetailPage({params}) {
-    const {driverLicenseId : driverLicenseIdString} = await params
+import {useServerPagination} from "@/hooks/useServerPagination";
+import DriverIncidentsList from "@/app/drivers/[driverLicenseId]/DriverIncidentsList";
+export default async function DriverDetailPage(pageProps: {params: any, searchParams:any}) {
+    const {driverLicenseId : driverLicenseIdString} = await pageProps.params
+    const pagination = await useServerPagination(pageProps)
     const driverLicenseId = DriverLicenseId.create(driverLicenseIdString)
     if(driverLicenseId instanceof Error) return <div>{driverLicenseId.message}</div>
     const showDriverUseCase = createShowDriverUseCase(driverRepository)
@@ -23,6 +26,7 @@ export default async function DriverDetailPage({params}) {
         <div>
             <h1 className={"text-xl font-semibold"}>DriverDetailPage {driverLicenseId.getValue()}</h1>
             <DriverPatchForm driver={driver}/>
+            <DriverIncidentsList driver={result.value} pagination={pagination} />
         </div>
     );
 }

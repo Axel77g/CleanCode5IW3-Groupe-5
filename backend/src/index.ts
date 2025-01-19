@@ -73,11 +73,14 @@ async function main(){
     const immatriculation = VehicleImmatriculation.create("AA-123-AA")
     if(immatriculation instanceof Error) return console.error(immatriculation)
 
+    const period = Period.create(new Date(), new Date())
+    if(period instanceof Error) return period
+
     const rTestDriveUseCase = createRegisterTestDriveUseCase(testDriveEventRepository, driverRepository)
     const resultRegisterTestDrive = await rTestDriveUseCase({
         driverLicenseId,
         vehicleImmatriculation: immatriculation,
-        period: new Period(new Date(), new Date())
+        period,
     })
 
     if(!resultRegisterTestDrive.success) return console.error(resultRegisterTestDrive)

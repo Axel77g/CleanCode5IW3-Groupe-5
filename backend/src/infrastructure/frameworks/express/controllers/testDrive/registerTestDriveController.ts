@@ -13,7 +13,8 @@ export const registerTestDriveController : Controller<typeof registerTestDriveRe
     if(driverLicenseId instanceof Error) return Response.Fail(400, driverLicenseId.message)
     const vehicleImmatriculation = VehicleImmatriculation.create(payload.vehicleImmatriculation)
     if(vehicleImmatriculation instanceof Error) return Response.Fail(400, vehicleImmatriculation.message)
-    const period = new Period(payload.period.startDate, payload.period.endDate)
+    const period = Period.create(payload.period.startDate, payload.period.endDate)
+    if(period instanceof Error) return Response.Fail(400, period.message)
     const registerTestDriveUseCase = createRegisterTestDriveUseCase(testDriveEventRepository,driverRepository)
     const result = await registerTestDriveUseCase({
         driverLicenseId,
