@@ -18,6 +18,7 @@ export type RegisterIncidentUseCase = IUseCase<RegisterIncidentInput, Result>
 
 export const createRegisterIncidentUseCase = (_eventRepository: EventRepository, _driverRepository : DriverRepository): RegisterIncidentUseCase => {
     return async (input: RegisterIncidentInput) => {
+        console.log(input)
         const driverResponse = await _driverRepository.getByLicenseId(input.driverLicenseId.getValue())
         if(!driverResponse.success) return driverResponse
         const registerIncidentEvent = new RegisterIncidentEvent({

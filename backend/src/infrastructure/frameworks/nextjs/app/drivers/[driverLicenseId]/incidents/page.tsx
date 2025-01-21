@@ -25,8 +25,8 @@ export default async function DriverIncidentsListPage(pageProps : {params : any,
     return <div>
         <List>
             {result.value.map(incident => (
-                <ListItem link={`${location.href}`}>
-                    <Chip>#{incident.incidentId}</Chip> {incident.date}
+                <ListItem link={`test`} key={incident.incidentId}>
+                    <Chip>{incident.type}</Chip> {incident.date.toISOString()}
                 </ListItem>
             ))
             }

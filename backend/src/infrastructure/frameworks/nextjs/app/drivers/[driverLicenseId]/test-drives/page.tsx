@@ -7,6 +7,7 @@ import {driverRepository} from "@infrastructureCore/repositories/testDrive/drive
 import List from "@/components/List";
 import ListItem from "@/components/ListItem";
 import Chip from "@/components/Chip";
+import DriverTestDriveForm from "@/app/drivers/[driverLicenseId]/test-drives/DriverTestDriveForm";
 
 export default async function DriverTestDrivesPage(pageProps : {searchParams: any, params: any}){
     const {driverLicenseId: driverLicenseString} = await pageProps.params;
@@ -21,11 +22,15 @@ export default async function DriverTestDrivesPage(pageProps : {searchParams: an
         <List>
             {
                 value.map(testDrive => (
-                    <ListItem link={location.href} >
-                        <Chip>#{testDrive.testDriveId}</Chip> {testDrive.period.startDate} - {testDrive.period.endDate}
+                    <ListItem link="test" key={testDrive.testDriveId}>
+                        <Chip>#{testDrive.vehicleImmatriculation.getValue()}</Chip> {testDrive.period.startDate.toISOString()} - {testDrive.period.endDate.toISOString()}
                     </ListItem>
                 ))
             }
         </List>
+
+        <hr/>
+
+        <DriverTestDriveForm driverLicenseId={driverLicenseId.getValue()}/>
     </div>
 }

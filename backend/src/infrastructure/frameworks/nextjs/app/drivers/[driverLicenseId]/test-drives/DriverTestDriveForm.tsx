@@ -7,8 +7,10 @@ import {Button} from "@/components/Button";
 export interface DriverTestDrivePayload {
     driverLicenseId ?: string,
     vehicleImmatriculation?: string,
-    startDate?: string ,
-    endDate?: string
+    period:{
+        startDate?: string ,
+        endDate?: string
+    }
 }
 
 export interface ActionState extends DriverTestDrivePayload{
@@ -22,13 +24,13 @@ const initialState: ActionState = {
 }
 
 
-export default function DriverIncidentsForm(props : {driverLicenseId : string}){
+export default function DriverTestDriveForm(props : {driverLicenseId : string}){
     const [formState, formAction] = useActionState<ActionState>(registerDriverTestDrive,initialState)
     return <form action={formAction}>
         <input type="hidden" name={"driverLicenseId"} value={props.driverLicenseId}/>
         <Input placeholder={"Imatriculation du véhicule"} label={"Immatriculation"} name={"vehicleImmatriculation"} type={"text"} value={formState.vehicleImmatriculation} />
-        <Input type="datetime-local" name="startDate" placeholder={"Date de l'incident"} value={formState.startDate}/>
-        <Input type="datetime-local" name="endDate" placeholder={"Date de l'incident"} value={formState.endDate}/>
+        <Input type="datetime-local" name="period.startDate" placeholder={"Date début du test"} value={formState?.period?.startDate} label={"Date début du test"}/>
+        <Input type="datetime-local" name="period.endDate" placeholder={"Date début du test"} value={formState?.period?.endDate} label={"Date debut du test"}/>
         <Button>Ajouter le test de conduite</Button>
         <small className={["block",formState.success ? "" : "text-red-500"].join(' ')}>
             {formState.message || ""}

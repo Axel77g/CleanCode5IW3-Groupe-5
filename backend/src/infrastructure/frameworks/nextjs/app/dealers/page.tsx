@@ -5,6 +5,7 @@ import List from "@/components/List";
 import ListItem from "@/components/ListItem";
 import Chip from "@/components/Chip";
 import Pagination from "@/components/Pagination";
+import DealerRegisterForm from "@/app/dealers/DealerRegisterForm";
 
 export default async function DealersListPage(pageProps: {searchParams: any}) {
     const paginationQuery = await useServerPagination(pageProps);
@@ -27,6 +28,13 @@ export default async function DealersListPage(pageProps: {searchParams: any}) {
                 }
             </List>
             <Pagination {...pagination} />
+
+
+            <br/>
+            <hr/>
+            <br/>
+
+            <DealerRegisterForm/>
         </>
     )
 }

@@ -7,7 +7,7 @@ import {getFirstZodError} from "@/utils/getFirstZodError";
 import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
 import {createPatchDriverUseCase} from "@application/testDrive/usecases/driver/PatchDriverUseCase";
 import {testDriveEventRepository} from "@infrastructureCore/repositories/testDrive/testDriveEventRepository";
-import {FormResponse, useServerForm} from "@/hooks/useServerForm";
+import {ActionResponse, useServerForm} from "@/hooks/useServerForm";
 import {registerIncidentRequest} from "@infrastructureCore/requests/testDrive/registerIncidentRequest";
 import {Driver} from "@domain/testDrive/entities/Driver";
 import {createRegisterIncidentUseCase} from "@application/testDrive/usecases/incident/RegisterIncidentUseCase";
@@ -17,10 +17,13 @@ import {VehicleImmatriculation} from "@domain/shared/value-object/VehicleImmatri
 import {createRegisterTestDriveUseCase} from "@application/testDrive/usecases/testDrive/RegisterTestDriveUseCase";
 import {Period} from "@domain/testDrive/value-object/Period";
 
-export function patchDriverAction(prevState: any, formData : FormData){
+export async function patchDriverAction(prevState: any, formData : FormData){
     return useServerForm(formData, patchDriverRequest, async (payload, success,abort)=>{
         const driverLicenseId = DriverLicenseId.create(payload.driverLicenseId)
         if(driverLicenseId instanceof Error) return abort(driverLicenseId.message)
+
+        console.log(payload)
+
         const patchDriverUseCase = createPatchDriverUseCase(testDriveEventRepository)
         const result = await patchDriverUseCase({
             driverLicenseId,
@@ -35,28 +38,28 @@ export function patchDriverAction(prevState: any, formData : FormData){
     })
 }
 
-export async function registerDriverIncident(prevState: FormResponse, formData : FormData){
+export async function registerDriverIncident(prevState: ActionResponse, formData : FormData){
     return useServerForm(formData, registerIncidentRequest, async (payload, success, abort)=> {
         const driverLicenseId = DriverLicenseId.create(payload.driverLicenseId)
         if(driverLicenseId instanceof Error) return abort(driverLicenseId.message)
         const registerDriverIncidentUseCase = createRegisterIncidentUseCase(testDriveEventRepository,driverRepository)
         const result = await registerDriverIncidentUseCase({
-            driverLicenseId,
-            ...payload
+            ...payload,
+            driverLicenseId: driverLicenseId,
         })
         if(!result.success) return abort(result.error.message)
         return success(result.value)
     })
 }
 
-export async function registerDriverTestDrive(prevState : FormResponse, formData: FormData){
+export async function registerDriverTestDrive(prevState : ActionResponse, formData: FormData){
     return useServerForm(formData, registerTestDriveRequest, async (payload, success, abort)=> {
         const driverLicenseId  = DriverLicenseId.create(payload.driverLicenseId)
         if(driverLicenseId instanceof Error) return abort(driverLicenseId.message)
         const vehicleImmatriculation = VehicleImmatriculation.create(payload.vehicleImmatriculation)
         if(vehicleImmatriculation instanceof Error) return abort(vehicleImmatriculation.message)
         const registerDriverTestDriveUseCase = createRegisterTestDriveUseCase(testDriveEventRepository,driverRepository)
-        const period = Period.create(payload.startDate, payload.endDate)
+        const period = Period.create(payload.period.startDate, payload.period.endDate)
         if(period instanceof Error) return abort(period.message)
         const result = await registerDriverTestDriveUseCase({
             vehicleImmatriculation,

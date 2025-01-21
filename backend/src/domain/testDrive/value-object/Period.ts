@@ -10,7 +10,10 @@ export class Period{
     ) {}
 
     static create(startDate : Date, endDate : Date){
-        if(endDate > startDate) return Period.errors.INVALID_PERIOD
+        if(endDate < startDate) {
+            console.log(startDate,endDate)
+            return Period.errors.INVALID_PERIOD
+        }
         return new Period(startDate,endDate)
     }
 

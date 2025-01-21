@@ -1,32 +1,46 @@
 import {ZodSchema} from "zod";
 import {formDataToObject} from "@/utils/FormDataToObject";
-import {patchDriverRequest} from "@infrastructureCore/requests/testDrive/patchDriverRequest";
 import {getFirstZodError} from "@/utils/getFirstZodError";
 
-export interface FormResponse {
+export interface ActionResponse {
     success : boolean,
     message: string,
 }
 
 
-export type HandlerFunctionCallable = (object : any, succes : (message: string) =>  Promise<FormResponse>, abort : (message: string) =>  Promise<FormResponse>) =>  Promise<FormResponse>
-export function useServerForm(formData: FormData, schema: ZodSchema, handler : HandlerFunctionCallable) : Promise<FormResponse> {
+export function abort(message: string) : Promise<ActionResponse>{
+    return Promise.resolve({
+        message,
+        success:false
+    })
+}
+
+export function success(message: string) : Promise<ActionResponse>{
+    return Promise.resolve({
+        message,
+        success:false,
+    })
+}
+
+export type HandlerFunctionCallable = (object : any, success : (message: string) =>  Promise<ActionResponse>, abort : (message: string) =>  Promise<ActionResponse>) =>  Promise<ActionResponse>
+export function useServerForm(formData: FormData, schema: ZodSchema, handler : HandlerFunctionCallable) : Promise<ActionResponse> {
     let rawPayload = formDataToObject(formData)
-    function abort(message : string) : Promise<FormResponse>{
+    function abort(message : string) : Promise<ActionResponse>{
         return Promise.resolve({
             message,
             success : false,
             ...rawPayload
         })
     }
-    function success(message : string) : Promise<FormResponse> {
+    function success(message : string) : Promise<ActionResponse> {
         return Promise.resolve({
             message,
             success : true,
             ...rawPayload
         })
     }
-    const payloadResponse = patchDriverRequest.safeParse(rawPayload);
+    console.log(rawPayload)
+    const payloadResponse = schema.safeParse(rawPayload);
     if(!payloadResponse.success) return abort(getFirstZodError(payloadResponse.error))
-    return handler(payloadResponse,success,abort)
+    return handler(payloadResponse.data,success,abort)
 }

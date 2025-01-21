@@ -16,11 +16,12 @@ export default async function DriverIncidentsList(props: {driver : Driver, pagin
     const result = await listDriverIncidentsUseCase({driverLicenseId: props.driver.driverLicenseId, ...props.pagination})
     if(!result.success) return Response.Fail(400, result.error.message)
     const {value, ...pagination } = result
+
     return <div>
         <List>
             {result.value.map(incident => (
-                    <ListItem link={`${location.href}`}>
-                        <Chip>#{incident.incidentId}</Chip> {incident.date}
+                    <ListItem link={`test`}>
+                        <Chip>#{incident.incidentId}</Chip> {incident.date.toISOString()}
                     </ListItem>
                 ))
             }
