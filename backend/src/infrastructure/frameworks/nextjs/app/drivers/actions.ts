@@ -1,4 +1,5 @@
 'use server';
+
 import {formDataToObject} from "@/utils/FormDataToObject";
 import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
 import {
@@ -7,8 +8,6 @@ import {
 import {registerDriverRequest} from "@infrastructureCore/requests/testDrive/registerDriverRequest";
 import {createRegisterDriverUseCase} from "@application/testDrive/usecases/driver/RegisterDriverUseCase";
 import {getFirstZodError} from "@/utils/getFirstZodError";
-
-
 
 export async function registerDriverAction(prevState: any, formData : FormData){
     const rawPayload = formDataToObject(formData)

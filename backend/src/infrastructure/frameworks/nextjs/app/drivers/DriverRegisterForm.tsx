@@ -3,6 +3,7 @@ import {useActionState} from "react";
 import {registerDriverAction} from "@/app/drivers/actions";
 import Input from "@/components/Input";
 import {Button} from "@/components/Button";
+import {Form} from "@/components/Form";
 
 interface DriverRegisterFormProps {
     driverLicenseId ?: string,
@@ -23,19 +24,15 @@ const initialState = {
 }
 
 export default function DriverRegisterForm(){
-    const [state, formAction] = useActionState<ActionState>(registerDriverAction,initialState)
+    const [state, formAction] = useActionState<ActionState,FormData>(registerDriverAction,initialState)
     return(
-        <form action={formAction}>
-            <h1 className={"text-xl font-semibold"}>Ajouter un conducteur</h1>
-            <Input type="text" name="firstName" placeholder={"Prénom"} value={state.firstName}/>
-            <Input type="text" name="lastName" placeholder={"Nom de famille"} value={state.lastName}/>
-            <Input type="text" name="email" placeholder={"Email"} value={state.email}/>
-            <Input type="text" name="driverLicenseId" placeholder={"Numéro du permis de conduire"} value={state.driverLicenseId}/>
-            <Input type="datetime-local" name="driverLicensedAt" placeholder={"Obtention du permis de conduire"} value={state.driverLicensedAt}/>
+        <Form state={state} action={formAction} title={"Ajouter un conducteur"}>
+            <Input type="text" name="firstName" value={state.firstName}  label={"Prénom"} placeholder={"Prénom du conducteur"}/>
+            <Input type="text" name="lastName" label={"Nom de famille"} placeholder={"Nom de famille du conduteur"} value={state.lastName}/>
+            <Input type="text" name="email" label={"Email"} value={state.email} placeholder={"email@example.com"}/>
+            <Input type="text" name="driverLicenseId" placeholder={"Numéro du permis de conduire"} label={"Numéro du permis de conduire"} value={state.driverLicenseId}/>
+            <Input type="datetime-local" name="driverLicensedAt" placeholder={"Obtention du permis de conduire"} label={"Obtention du permis de conduire"} value={state.driverLicensedAt}/>
             <Button>Ajouter un conducteur</Button>
-            <small className={["block",state.success ? "" : "text-red-500"].join(' ')}>
-                {state.message || ""}
-            </small>
-        </form>
+        </Form>
     )
 }

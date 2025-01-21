@@ -13,7 +13,7 @@ export default function Pagination({ limit, page, total }: { limit: number, page
     };
 
     return (
-        <div className={"flex gap-3 items-center"}>
+        <div className={"flex gap-3 items-center border-t-[1px] border-solid border-slate-200 pt-4"}>
             {<Button disabled={page == 1} onClick={() => handleNavigation(page - 1)}>Page précédente</Button>}
             {<Button disabled={!(page * limit < total )} onClick={() => handleNavigation(page + 1)}>Page suivante</Button>}
             <span className={'font-medium opacity-50 text-sm'}>

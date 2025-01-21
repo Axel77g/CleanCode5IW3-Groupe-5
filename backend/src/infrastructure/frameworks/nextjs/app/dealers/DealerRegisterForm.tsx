@@ -1,9 +1,9 @@
 "use client";
 import {useActionState} from "react";
-import {registerDriverAction} from "@/app/drivers/actions";
 import Input from "@/components/Input";
 import {Button} from "@/components/Button";
 import {registerDealer} from "@/app/dealers/actions";
+import {Form} from "@/components/Form";
 
 interface DealerRegisterFormProps {
     siret ?: string,
@@ -28,16 +28,14 @@ const initialState = {
 }
 
 export default function DealerRegisterForm(){
-    const [state, formAction] = useActionState<ActionState>(registerDealer,initialState)
+    const [state, formAction] = useActionState<ActionState,FormData>(registerDealer,initialState)
 
 
     return(
-        <form action={formAction}>
-            <h1 className={"text-xl font-semibold"}>Ajouter un conducteur</h1>
+        <Form action={formAction} title={"Ajouter une concession"} state={state}>
             <Input type="text" label={"Siret"} name="siret" placeholder={"Siret de la concession"} value={state.siret}/>
             <Input type="text" label={"Raison social"} name="name" placeholder={"Nom de la concession"} value={state.name}/>
             <Input placeholder={"Téléphone"} label={"Téléphone"} name={"phoneNumber"} type={"phone"} value={state.phoneNumber}/>
-
             <div>
                 <hr/>
                 <br/>
@@ -47,11 +45,7 @@ export default function DealerRegisterForm(){
                 <Input placeholder={"Code postal"} label={"Code Postal"} name={"address.postalCode"} type={"text"} value={state?.address?.postalCode}/>
                 <Input placeholder={"Rue"} label={"Rue"} name={"address.street"} type={"text"} value={state?.address?.street}/>
             </div>
-
             <Button>Ajouter une concession</Button>
-            <small className={["block",state.success ? "" : "text-red-500"].join(' ')}>
-                {state.message || ""}
-            </small>
-        </form>
+        </Form>
     )
 }

@@ -1,6 +1,5 @@
 "use server";
 
-
 import {Siret} from "@domain/shared/value-object/Siret";
 import {createUnregisterDealerUseCase} from "@application/inventoryManagement/usecases/dealer/UnregisterDealerUseCase";
 import {

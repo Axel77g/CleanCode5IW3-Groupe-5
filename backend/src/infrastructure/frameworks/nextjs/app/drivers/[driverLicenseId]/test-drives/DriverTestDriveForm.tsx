@@ -1,13 +1,14 @@
 "use client"
 import {useActionState} from "react";
-import { registerDriverTestDrive} from "@/app/drivers/[driverLicenseId]/actions";
 import Input from "@/components/Input";
 import {Button} from "@/components/Button";
+import {Form} from "@/components/Form";
+import {registerDriverTestDrive} from "@/app/drivers/[driverLicenseId]/test-drives/actions";
 
 export interface DriverTestDrivePayload {
     driverLicenseId ?: string,
     vehicleImmatriculation?: string,
-    period:{
+    period?:{
         startDate?: string ,
         endDate?: string
     }
@@ -25,15 +26,12 @@ const initialState: ActionState = {
 
 
 export default function DriverTestDriveForm(props : {driverLicenseId : string}){
-    const [formState, formAction] = useActionState<ActionState>(registerDriverTestDrive,initialState)
-    return <form action={formAction}>
+    const [formState, formAction] = useActionState<ActionState,FormData>(registerDriverTestDrive,initialState)
+    return <Form state={formState} action={formAction} title={"Ajouter un test de conduite"}>
         <input type="hidden" name={"driverLicenseId"} value={props.driverLicenseId}/>
-        <Input placeholder={"Imatriculation du véhicule"} label={"Immatriculation"} name={"vehicleImmatriculation"} type={"text"} value={formState.vehicleImmatriculation} />
+        <Input placeholder={"Immatriculation du véhicule"} label={"Immatriculation"} name={"vehicleImmatriculation"} type={"text"} value={formState.vehicleImmatriculation} />
         <Input type="datetime-local" name="period.startDate" placeholder={"Date début du test"} value={formState?.period?.startDate} label={"Date début du test"}/>
         <Input type="datetime-local" name="period.endDate" placeholder={"Date début du test"} value={formState?.period?.endDate} label={"Date debut du test"}/>
         <Button>Ajouter le test de conduite</Button>
-        <small className={["block",formState.success ? "" : "text-red-500"].join(' ')}>
-            {formState.message || ""}
-        </small>
-    </form>
+    </Form>
 }

@@ -4,14 +4,17 @@ import {Siret} from "@domain/shared/value-object/Siret";
 import {createShowDealerUseCase} from "@application/inventoryManagement/usecases/dealer/ShowDealerUseCase";
 import {dealerRepository} from "@infrastructureCore/repositories/inventoryManagement/dealerRepository";
 import {UnregisterActionButton} from "@/app/dealers/[siret]/UnregisterActionButton";
+import {ErrorCallout} from "@/components/ErrorCallout";
+import {Button} from "@/components/Button";
+import Link from "next/link";
 
 export default async function DealerShowPage(pageProps : {searchProps: any, params: any}){
     const {siret:siretString} = await pageProps.params
     const siret = Siret.create(siretString)
-    if(siret instanceof Error) return <div>{siret.message}</div>
+    if(siret instanceof Error) return <ErrorCallout>{siret.message}</ErrorCallout>
     const showDealerUseCase = createShowDealerUseCase(dealerRepository);
     const dealerResponse  = await showDealerUseCase({siret})
-    if(!dealerResponse.success) return <div>{dealerResponse.error.message}</div>
+    if(!dealerResponse.success) return <ErrorCallout>{dealerResponse.error.message}</ErrorCallout>
 
 
 
@@ -31,5 +34,11 @@ export default async function DealerShowPage(pageProps : {searchProps: any, para
 
         <UnregisterActionButton siretString={siretString}/>
 
+        <Link href={`/dealers/${siretString}/stock`} >
+            <Button >Voir le stock</Button>
+        </Link>
+        <Link href={`/dealers/${siretString}/orders`} >
+            <Button >Voir les des commandes</Button>
+        </Link>
     </div>
 }

@@ -1,7 +1,8 @@
 import {z} from "zod";
-import {sparePArtReferenceZodObject} from "@infrastructureCore/requests/inventoryManagement/sparePartReferenceRequest";
+import {sparePartReferenceZodObject} from "@infrastructureCore/requests/inventoryManagement/sparePartReferenceRequest";
 
 export const sparePartRequest = z.object({
-    ...sparePArtReferenceZodObject,
-    name: z.string().min(1).max(255)
+    ...sparePartReferenceZodObject,
+    name: z.string().min(2,"Le nom du produit doit être supérieur à 2 caractères"
+    ).max(255,"Le nom du produit doit être compris entre 1 et 255 caractères"),
 })

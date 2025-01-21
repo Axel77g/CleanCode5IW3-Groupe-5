@@ -1,11 +1,12 @@
 "use client"
 import {useActionState} from "react";
 import {IncidentType} from "@domain/testDrive/enums/IncidentType";
-import {registerDriverIncident} from "@/app/drivers/[driverLicenseId]/actions";
 import {ActionResponse} from "@/hooks/useServerForm";
 import Input from "@/components/Input";
 import Select from "@/components/Select";
 import {Button} from "@/components/Button";
+import {Form} from "@/components/Form";
+import {registerDriverIncident} from "@/app/drivers/[driverLicenseId]/incidents/actions";
 
 export interface DriverIncidentsFormPayload {
     driverLicenseId ?: string,
@@ -44,15 +45,12 @@ const incidentTypes = [
 ]
 
 export default function DriverIncidentsForm(props : {driverLicenseId : string}){
-    const [formState, formAction] = useActionState<ActionState>(registerDriverIncident,initialState)
-    return <form action={formAction}>
+    const [formState, formAction] = useActionState<ActionState,FormData>(registerDriverIncident,initialState)
+    return <Form state={formState} title={"Ajouter un incident"} action={formAction}>
         <input type="hidden" name={"driverLicenseId"} value={props.driverLicenseId}/>
         <Input placeholder={"Description de l'incident"} label={"Description"} name={"description"} type={"text"} />
         <Select name={"type"}  options={incidentTypes}  label={"Type de l'incident"}/>
         <Input type="datetime-local" name="date" placeholder={"Date de l'incident"} value={formState.date} label={"Date de l'incident"}/>
         <Button>Ajouter l'incident</Button>
-        <small className={["block",formState.success ? "" : "text-red-500"].join(' ')}>
-            {formState.message || ""}
-        </small>
-    </form>
+    </Form>
 }
