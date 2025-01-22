@@ -11,11 +11,12 @@ import Pagination from "@/components/Pagination";
 import HeadingTile from "@/components/HeadingTitle";
 import ListItem from "@/components/ListItem";
 import {UpsertInventorySparePartForm} from "@/app/inventory-spare-parts/UpsertInventorySparePartForm";
+import {getInventorySpareParts} from "@/app/inventory-spare-parts/actions";
 
 export default async function InventorySparePartListPage(pageProps: {searchParams: any}){
     const pagination = await useServerPagination(pageProps)
-    const listInventorySparePartUseCase = createListInventorySparePartUseCase(inventorySparePartRepository)
-    const result = await listInventorySparePartUseCase(pagination)
+    const search = pageProps.searchParams?.search
+    const result = await getInventorySpareParts(pagination,search)
     if(!result.success) return <ErrorCallout>{result.error.message}</ErrorCallout>
     const {value,...paginationProps} = result
     return <>

@@ -31,7 +31,7 @@ export default function DriverRegisterForm(){
             <Input type="text" name="lastName" label={"Nom de famille"} placeholder={"Nom de famille du conduteur"} value={state.lastName}/>
             <Input type="text" name="email" label={"Email"} value={state.email} placeholder={"email@example.com"}/>
             <Input type="text" name="driverLicenseId" placeholder={"Numéro du permis de conduire"} label={"Numéro du permis de conduire"} value={state.driverLicenseId}/>
-            <Input type="datetime-local" name="driverLicensedAt" placeholder={"Obtention du permis de conduire"} label={"Obtention du permis de conduire"} value={state.driverLicensedAt}/>
+            <Input type="date" name="driverLicensedAt" placeholder={"Obtention du permis de conduire"} label={"Obtention du permis de conduire"} value={state.driverLicensedAt}/>
             <Button>Ajouter un conducteur</Button>
         </Form>
     )

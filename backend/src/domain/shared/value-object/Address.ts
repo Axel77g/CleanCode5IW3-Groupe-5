@@ -10,7 +10,7 @@ export interface AddressDTO {
 export class Address {
 
     static errors = {
-        COUNTRY_CODE_NOT_VALID: new ApplicationException("DealerAddress.notValidCountryCode", "The country code n'est pas valide")
+        COUNTRY_CODE_NOT_VALID: new ApplicationException("Address.notValidCountryCode", "The country code n'est pas valide")
     }
     private constructor(
         public readonly street: string,

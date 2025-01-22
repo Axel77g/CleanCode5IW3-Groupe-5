@@ -6,9 +6,13 @@ import {PaginatedInput} from "@shared/PaginatedInput";
 
 type ListInventorySparePartResult = PaginatedResult<InventorySparePart>
 
-export type ListInventorySparePartUseCase = IUseCase<PaginatedInput, ListInventorySparePartResult>
+export interface ListInventorySparePartInput extends PaginatedInput {
+    search?: string
+}
+
+export type ListInventorySparePartUseCase = IUseCase<ListInventorySparePartInput, ListInventorySparePartResult>
 export const createListInventorySparePartUseCase = (_sparePartRepository: InventorySparePartRepository): ListInventorySparePartUseCase => {
-    return async (input: PaginatedInput) => {
+    return async (input: ListInventorySparePartInput) => {
         const listSparePartResponse = await _sparePartRepository.list(input);
         if(!listSparePartResponse.success) return Result.FailureStr("An error occurred while listing spare part")
         return listSparePartResponse;

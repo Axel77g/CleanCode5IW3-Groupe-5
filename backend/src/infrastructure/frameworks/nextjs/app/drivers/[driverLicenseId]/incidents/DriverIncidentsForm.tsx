@@ -50,7 +50,7 @@ export default function DriverIncidentsForm(props : {driverLicenseId : string}){
         <input type="hidden" name={"driverLicenseId"} value={props.driverLicenseId}/>
         <Input placeholder={"Description de l'incident"} label={"Description"} name={"description"} type={"text"} />
         <Select name={"type"}  options={incidentTypes}  label={"Type de l'incident"}/>
-        <Input type="datetime-local" name="date" placeholder={"Date de l'incident"} value={formState.date} label={"Date de l'incident"}/>
+        <Input type="date" name="date" placeholder={"Date de l'incident"} value={formState.date} label={"Date de l'incident"}/>
         <Button>Ajouter l'incident</Button>
     </Form>
 }

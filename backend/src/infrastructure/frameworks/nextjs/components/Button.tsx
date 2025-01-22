@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function Button(props: { children: React.ReactNode; onClick?: () => void,disabled?:boolean }) {
+export function Button(props: { children: React.ReactNode;  onClick?: (...args : [any]) => void,disabled?:boolean }) {
     return (
         <button
             disabled={props.disabled}

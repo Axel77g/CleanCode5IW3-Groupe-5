@@ -8,6 +8,13 @@ import {
 import {
     inventoryManagementEventRepository
 } from "@infrastructureCore/repositories/inventoryManagement/inventoryManagementEventRepository";
+import {
+    createListInventorySparePartUseCase
+} from "@application/inventoryManagement/usecases/inventorySparePart/ListInventorySparePartUseCase";
+import {
+    inventorySparePartRepository
+} from "@infrastructureCore/repositories/inventoryManagement/inventorySparePartRepository";
+import {PaginatedInput} from "@shared/PaginatedInput";
 
 export async function upsertInventorySparePart(prevState:any, formData: FormData){
     return useServerForm(formData,sparePartRequest,async (data, success,abort)=>{
@@ -16,4 +23,11 @@ export async function upsertInventorySparePart(prevState:any, formData: FormData
         if(!response.success) return abort(response.error.message)
         return success(response.value)
     })
+}
+
+
+export async function getInventorySpareParts(pagination : PaginatedInput, search ?: string){
+    const listInventorySparePartUseCase = createListInventorySparePartUseCase(inventorySparePartRepository)
+    const result = await listInventorySparePartUseCase({...pagination,search})
+    return result
 }

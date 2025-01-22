@@ -7,10 +7,22 @@ import {
     InventorySparePart,
     InventorySparePartDTO
 } from "@domain/inventoryManagement/entities/InventorySparePart";
-import {PaginatedInput} from "@shared/PaginatedInput";
+import {
+    ListInventorySparePartInput
+} from "@application/inventoryManagement/usecases/inventorySparePart/ListInventorySparePartUseCase";
 
 export class MongoInventorySparePartRepository extends AbstractMongoRepository implements InventorySparePartRepository{
     protected collectionName: string = 'inventorySpareParts';
+
+    constructor(...args: [any]){
+        super(...args);
+        this.createTextIndex().then();
+    }
+
+    private async createTextIndex() {
+        await this.getQuery().createIndex({ name: "text", reference: "text" });
+    }
+
 
     find(reference: string): Promise<Result<InventorySparePart>> {
         return this.catchError<Result<InventorySparePart>>(
@@ -46,12 +58,17 @@ export class MongoInventorySparePartRepository extends AbstractMongoRepository i
         );
     }
 
-    list(pagination: PaginatedInput): Promise<PaginatedResult<InventorySparePart>> {
-        const {page, limit} = pagination;
+    list(pagination: ListInventorySparePartInput): Promise<PaginatedResult<InventorySparePart>> {
+        const {page, limit, search} = pagination;
         return this.catchError(
             async () =>{
-                const inventorySparePartDocuments = await this.getQuery().find().skip((page - 1) * limit).limit(limit).toArray();
-                const inventorySparePartTotal = await this.getQuery().countDocuments();
+                const filters = search ? {
+                    $text: {
+                        $search: search
+                    }
+                } : {}
+                const inventorySparePartDocuments = await this.getQuery().find(filters).skip((page - 1) * limit).limit(limit).toArray();
+                const inventorySparePartTotal = await this.getQuery().countDocuments(filters);
                 const inventorySpareParts = inventorySparePartDocuments.map((document : any) => InventorySparePart.fromObject(document as InventorySparePartDTO));
                 return Result.SuccessPaginated<InventorySparePart>(inventorySpareParts, inventorySparePartTotal, page, limit);
             }

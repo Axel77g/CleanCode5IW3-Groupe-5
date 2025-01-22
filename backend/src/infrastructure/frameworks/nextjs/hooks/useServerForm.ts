@@ -1,4 +1,4 @@
-import {ZodSchema} from "zod";
+import {z, ZodSchema} from "zod";
 import {formDataToObject} from "@/utils/FormDataToObject";
 import {getFirstZodError} from "@/utils/getFirstZodError";
 
@@ -22,8 +22,8 @@ export function success(message: string) : Promise<ActionResponse>{
     })
 }
 
-export type HandlerFunctionCallable = (object : any, success : (message: string) =>  Promise<ActionResponse>, abort : (message: string) =>  Promise<ActionResponse>) =>  Promise<ActionResponse>
-export function useServerForm(formData: FormData, schema: ZodSchema, handler : HandlerFunctionCallable) : Promise<ActionResponse> {
+export type HandlerFunctionCallable<T> = (object : T, success : (message: string) =>  Promise<ActionResponse>, abort : (message: string) =>  Promise<ActionResponse>) =>  Promise<ActionResponse>
+export function useServerForm<T extends ZodSchema>(formData: FormData, schema: T, handler : HandlerFunctionCallable<z.infer<T>>) : Promise<ActionResponse> {
     let rawPayload = formDataToObject(formData)
     function abort(message : string) : Promise<ActionResponse>{
         return Promise.resolve({

@@ -11,7 +11,7 @@ import {OrderLine} from "@domain/inventoryManagement/value-object/OrderLine";
 import {inventorySparePartRepository} from "@infrastructureCore/repositories/inventoryManagement/inventorySparePartRepository";
 
 export const registerOrderController : Controller<typeof registerOrderRequest> = async (payload) => {
-    const dealerSiret = Siret.create(payload.dealer)
+    const dealerSiret = Siret.create(payload.dealerSiret)
     if(dealerSiret instanceof Error) return Response.Fail(400, dealerSiret.message)
     const orderLines = payload.orderLines.map((line) => {
         return OrderLine.create(line)

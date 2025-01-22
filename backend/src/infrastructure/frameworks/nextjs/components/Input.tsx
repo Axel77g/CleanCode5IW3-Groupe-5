@@ -2,13 +2,15 @@
 import React from 'react';
 
 const Input = (props : {
+    ref ?: any,
     placeholder: string,
-    label : string, name : string, type : string, value ?:  string, disabled ?: boolean, onChange ?: ()=>void
+    label : string, name : string, type : string, value ?:  string, disabled ?: boolean, onChange ?: (...props : [any])=>void
 }) => {
     return (
         <div className="flex flex-col mb-4">
             <label className="mb-2 text-sm font-semibold text-gray-700" htmlFor={props.name}>{props.label}</label>
             <input
+                ref={props.ref}
                 name={props.name}
                 id={props.name}
                 type={props.type || 'text'}
