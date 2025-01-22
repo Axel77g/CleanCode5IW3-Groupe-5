@@ -1,5 +1,4 @@
 import {z} from "zod";
-import {dateParser} from "@infrastructureCore/requests/dateParser";
 
 export const patchDriverRequest = z.object({
     driverLicenseId : z.string(),

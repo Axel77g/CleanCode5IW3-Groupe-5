@@ -8,6 +8,7 @@ import List from "@/components/List";
 import ListItem from "@/components/ListItem";
 import Chip from "@/components/Chip";
 import DriverTestDriveForm from "@/app/drivers/[driverLicenseId]/test-drives/DriverTestDriveForm";
+import Pagination from "@/components/Pagination";
 
 export default async function DriverTestDrivesPage(pageProps : {searchParams: any, params: any}){
     const {driverLicenseId: driverLicenseString} = await pageProps.params;
@@ -29,8 +30,8 @@ export default async function DriverTestDrivesPage(pageProps : {searchParams: an
             }
         </List>
 
+        <Pagination {...pagination}/>
         <hr/>
-
         <DriverTestDriveForm driverLicenseId={driverLicenseId.getValue()}/>
     </div>
 }

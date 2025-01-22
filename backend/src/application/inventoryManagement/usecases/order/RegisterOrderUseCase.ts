@@ -1,7 +1,6 @@
 import { IInputUseCase, IUseCase} from "@shared/IUseCase";
-import {OrderRepository} from "../../repositories/OrderRepository";
 import {Order} from "@domain/inventoryManagement/entities/Order";
-import {OrderLine, OrderLineDTO} from "@domain/inventoryManagement/value-object/OrderLine";
+import {OrderLine} from "@domain/inventoryManagement/value-object/OrderLine";
 import {Result} from "@shared/Result";
 import { Siret } from '@domain/shared/value-object/Siret';
 import {EventRepository} from "../../../shared/repositories/EventRepository";
@@ -29,7 +28,7 @@ export const createRegisterOrderUseCase = (_eventRepository : EventRepository, _
         if(!dealer.success) return Result.Failure(registerOrderErrors.NOT_FOUND_DEALER)
 
         const sparePartReferences = input.orderLines.map((line) => line.reference)
-        for(let reference of sparePartReferences){
+        for(const reference of sparePartReferences){
             const sparePart = await _inventorySparePartRepository.find(reference)
             if(!sparePart.success) return Result.Failure(registerOrderErrors.CANNOT_CREATE_ORDER_WITH_NOT_FOUND_REFERENCE)
         }

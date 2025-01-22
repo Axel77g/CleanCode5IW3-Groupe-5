@@ -6,10 +6,13 @@ import {EventObserver} from "../../../common/observers/EventObserver";
  * Mais l'identifiant de processus (PID) semble être le même, donc nous utilisons une variable globale pour garder la même instance
  */
 
-//@ts-ignore
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-expect-error
 if(!globalThis.eventObserver){
-    //@ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-expect-error
     globalThis.eventObserver = new EventObserver()
 }
-//@ts-ignore
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-expect-error
 export const eventObserver : EventObserver = globalThis.eventObserver

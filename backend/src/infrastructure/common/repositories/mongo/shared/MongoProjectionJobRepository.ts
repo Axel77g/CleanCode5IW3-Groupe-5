@@ -1,7 +1,6 @@
 import {AbstractMongoRepository} from "@infrastructure/common/repositories/mongo/AbstractMongoRepository";
 import {ProjectionJobRepository} from "@application/shared/repositories/ProjectionJobRepository";
 import {ProjectionJob} from "@application/shared/projections/ProjectionJob";
-import {undefined} from "zod";
 import {Result, VoidResult} from "@shared/Result";
 
 export abstract class MongoProjectionJobRepository extends AbstractMongoRepository implements ProjectionJobRepository{
@@ -25,7 +24,8 @@ export abstract class MongoProjectionJobRepository extends AbstractMongoReposito
         return this.catchError(
             async()=>{
                 const projectionJobsDocuments = await this.getQuery().find();
-                // @ts-ignore
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
                 const projectionJobs = await projectionJobsDocuments.toArray() as ProjectionJob[];
                 return Result.Success<ProjectionJob[]>(projectionJobs);
             },
@@ -64,7 +64,7 @@ export abstract class MongoProjectionJobRepository extends AbstractMongoReposito
              async ()=> {
                 setInterval(()=>{
                     onJob();
-                }, 1000)
+                }, interval)
                 return Result.SuccessVoid();
             },
         )

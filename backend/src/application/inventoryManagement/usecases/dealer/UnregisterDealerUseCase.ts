@@ -1,7 +1,6 @@
 import { Siret } from "@domain/shared/value-object/Siret";
 import { IInputUseCase, IUseCase } from "@shared/IUseCase";
 import { Result } from "@shared/Result";
-import { DealerRepository } from "../../repositories/DealerRepository";
 import {UnregisterDealerEvent} from "@domain/inventoryManagement/events/UnregisterDealerEvent";
 import {EventRepository} from "../../../shared/repositories/EventRepository";
 

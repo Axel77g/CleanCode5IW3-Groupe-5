@@ -17,7 +17,8 @@ export const postManCollection = {
 
 function generatePayload(schema: ZodSchema) {
     const payload: any = {};
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     const shape = schema._def.shape();
 
     const ZodTypeConversion = new Map()
@@ -39,7 +40,7 @@ function generatePayload(schema: ZodSchema) {
             continue;
         }
 
-        let type = ZodTypeConversion.get(field.constructor) || 'any';
+        const type = ZodTypeConversion.get(field.constructor) || 'any';
         payload[key] = type;
         if (field.isOptional()) {
             payload[key] += '?';
@@ -49,19 +50,20 @@ function generatePayload(schema: ZodSchema) {
     return payload;
 }
 function createPostManItem(method : string, path : string, schema: ZodSchema){
-    let pathParams = path.split('/').filter((param) => param.startsWith(':')).map((param) => param.slice(1));
+    const pathParams = path.split('/').filter((param) => param.startsWith(':')).map((param) => param.slice(1));
 
-    let samplePayload = generatePayload(schema);
-    let bodySamplePayload = {}
+    const samplePayload = generatePayload(schema);
+    const bodySamplePayload = {}
     for (const key in samplePayload) {
         if (!pathParams.includes(key)) {
-            // @ts-ignore
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
             bodySamplePayload[key] = samplePayload[key];
         }
     }
 
     const toParameterizedPath = path.replace(/:\w+/g, (match) => `{{${match.slice(1)}}}`);
-    let item = {
+    const item = {
         name: `${method} ${path}`,
         request: {
             method: method.toUpperCase(),
@@ -85,14 +87,16 @@ function createPostManItem(method : string, path : string, schema: ZodSchema){
         },
         response: []
     }
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     postManCollection.item.push(item)
 }
 
 
 export function savePostManCollection(variables : Record<string, any>){
     for(const key in variables){
-        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         postManCollection.variable.push({
             key,
             value: variables[key],

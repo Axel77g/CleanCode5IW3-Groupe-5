@@ -3,14 +3,11 @@ import {driverRepository} from "@infrastructure/frameworks/core/repositories/tes
 import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
 import DriverPatchForm from "@/app/drivers/[driverLicenseId]/DriverPatchForm";
 import {DriverDTO} from "@domain/testDrive/entities/Driver";
-import {useServerPagination} from "@/hooks/useServerPagination";
-import DriverIncidentsList from "@/app/drivers/[driverLicenseId]/DriverIncidentsList";
 import {Button} from "@/components/Button";
 import Link from "next/link";
 import {ErrorCallout} from "@/components/ErrorCallout";
 export default async function DriverDetailPage(pageProps: {params: any, searchParams:any}) {
     const {driverLicenseId : driverLicenseIdString} = await pageProps.params
-    const pagination = await useServerPagination(pageProps)
     const driverLicenseId = DriverLicenseId.create(driverLicenseIdString)
     if(driverLicenseId instanceof Error) return <ErrorCallout>{driverLicenseId.message}</ErrorCallout>
     const showDriverUseCase = createShowDriverUseCase(driverRepository)

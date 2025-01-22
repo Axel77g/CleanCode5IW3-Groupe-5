@@ -1,7 +1,6 @@
 import {Result} from "./Result";
 
-export interface IInputUseCase{
-}
+export type IInputUseCase = object
 
 /*export interface IUseCase<TI extends IInputUseCase, TR extends Result<any>>{
     execute(input : TI): Promise<TR>

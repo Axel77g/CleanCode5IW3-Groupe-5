@@ -21,8 +21,9 @@ export class UpdateCustomerEvent extends AbstractEvent {
     ) {
         super();
         this.streamId = `customer-${payload.customerId}`
-        let cleanPayload = { ...payload }
-        //@ts-ignore
+        const cleanPayload = { ...payload }
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-expect-error
         Object.keys(cleanPayload).forEach((key: string) => cleanPayload[key] === undefined && delete cleanPayload[key]);
         this.payload = cleanPayload;
     }

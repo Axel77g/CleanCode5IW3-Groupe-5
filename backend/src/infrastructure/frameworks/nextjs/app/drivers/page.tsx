@@ -16,7 +16,7 @@ export default async function DriversPage(pageProps : {searchParams: any}){
         <h1 className={'text-xl font-semibold'}>Liste des conducteurs</h1>
         <List>
             {
-                result.value.map((driver :  Driver)=> (
+                value.map((driver :  Driver)=> (
                     <ListItem link={`/drivers/${driver.driverLicenseId.getValue()}`}>
                         <Chip>#{driver.driverLicenseId.getValue()}</Chip> {driver.firstName} {driver.lastName}
                     </ListItem>

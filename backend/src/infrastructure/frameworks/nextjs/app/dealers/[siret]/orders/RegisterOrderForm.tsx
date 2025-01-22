@@ -19,12 +19,11 @@ const initialState = {
 }
 
 export default function RegisterOrderForm(props: { siret : string}){
-    // @ts-ignore
     const [state, action] = useActionState<ActionResponse,FormData>(registerOrder,initialState)
     const [orderLines, setOrderLines] = useState<OrderLineForm[]>([])
     function handleAddOrderLine(e : any){
         e.preventDefault()
-        let temp = [...orderLines]
+        const temp = [...orderLines]
         temp.push({
             reference: "",
             quantity: "1",
@@ -35,7 +34,7 @@ export default function RegisterOrderForm(props: { siret : string}){
 
 
     function handleRemoveOrderLine(index : number){
-        let temp = [...orderLines]
+        const temp = [...orderLines]
         temp.splice(index, 1)
         setOrderLines(temp)
     }
@@ -46,7 +45,7 @@ export default function RegisterOrderForm(props: { siret : string}){
         <Input placeholder={"Date de commande"} label={"Date de commande"} name={"orderedDate"} type={"date"}/>
         {
             orderLines.map((orderLine, index) => <OrderLineForm index={index} key={orderLine.reference + index} orderLine={orderLine} onChange={(orderLine) => {
-                let temp = [...orderLines]
+                const temp = [...orderLines]
                 temp[index] = orderLine
                 setOrderLines(temp)
             } } onDelete={()=>handleRemoveOrderLine(index)}/>)

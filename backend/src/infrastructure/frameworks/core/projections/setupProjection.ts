@@ -32,18 +32,18 @@ function initProjection(scheduler: ProjectionJobScheduler, ...projections: Abstr
 /** Schedule the projection for inventoryManagement subdomain */
 const inventoryManagementProjections = [stockProjection,orderProjection,inventorySparePartProjection,dealerProjection]
 const inventoryManagementProjectionScheduler = new ProjectionJobScheduler(inventoryManagementProjectionJobRepository, eventObserver)
-const inventoryManagementProjectionWorker = new ProjectionsWorker(inventoryManagementProjectionJobRepository, inventoryManagementEventRepository, inventoryManagementProjections)
+new ProjectionsWorker(inventoryManagementProjectionJobRepository, inventoryManagementEventRepository, inventoryManagementProjections)
 initProjection(inventoryManagementProjectionScheduler, ...inventoryManagementProjections)
 
 /** Schedule the projection for testDrive subdomain */
 const testDriveProjections = [driverProjection, incidentsProjection, testsDrivesProjection]
 const testDriveProjectionScheduler = new ProjectionJobScheduler(testDriveProjectionJobRepository, eventObserver)
-const projectionWorker = new ProjectionsWorker(testDriveProjectionJobRepository, testDriveEventRepository, testDriveProjections)
+new ProjectionsWorker(testDriveProjectionJobRepository, testDriveEventRepository, testDriveProjections)
 initProjection(testDriveProjectionScheduler, ...testDriveProjections)
 
 
 /** Schedule the projection for maintenance subdomain */
 const maintenanceProjections = [customerProjection]
 const maintenanceProjectionScheduler = new ProjectionJobScheduler(maintenanceProjectionJobRepository, eventObserver)
-const maintenanceProjectionWorker = new ProjectionsWorker(maintenanceProjectionJobRepository, maintenanceEventRepository, maintenanceProjections)
+new ProjectionsWorker(maintenanceProjectionJobRepository, maintenanceEventRepository, maintenanceProjections)
 initProjection(maintenanceProjectionScheduler, ...maintenanceProjections)

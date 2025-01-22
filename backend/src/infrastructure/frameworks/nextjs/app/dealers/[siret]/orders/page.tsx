@@ -6,7 +6,6 @@ import {dealerRepository} from "@infrastructureCore/repositories/inventoryManage
 import {orderRepository} from "@infrastructureCore/repositories/inventoryManagement/orderRepository";
 import List from "@/components/List";
 import ListItem from "@/components/ListItem";
-import Pagination from "@/components/Pagination";
 import RegisterOrderForm from "@/app/dealers/[siret]/orders/RegisterOrderForm";
 import HeadingTile from "@/components/HeadingTitle";
 
@@ -31,7 +30,4 @@ export default async function DealerOrderPage(pageProps: { params: Promise<{sire
         <br/>
         <RegisterOrderForm siret={siretString}/>
     </div>
-
-
-
 }

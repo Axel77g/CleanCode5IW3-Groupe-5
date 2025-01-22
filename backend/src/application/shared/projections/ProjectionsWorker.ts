@@ -65,15 +65,15 @@ export class ProjectionsWorker {
             }
         }).filter(Boolean) as ProjectionJobWithEvent[]
 
-        for(let projection of this.projections){
+        for(const projection of this.projections){
             const jobs = jobsWithEvents.filter(job => job.projectionName === projection.constructor.name)
             const result = await projection.apply(jobs)
             const [jobIdsSuccess,jobIdsFailed] = result.value
-            for(let jobId of jobIdsSuccess){
+            for(const jobId of jobIdsSuccess){
                 const job = jobs.find(job => job.jobId === jobId) as ProjectionJobWithEvent
                 await this._projectionJobRepository.terminateJob(job)
             }
-            for(let jobId of jobIdsFailed){
+            for(const jobId of jobIdsFailed){
                 const job = jobs.find(job => job.jobId === jobId) as ProjectionJobWithEvent
                 await this._projectionJobRepository.failJob(job)
             }

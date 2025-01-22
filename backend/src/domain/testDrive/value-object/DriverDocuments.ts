@@ -1,5 +1,4 @@
 import {DriverDocumentsTypes} from "../enums/DriverDocumentsTypes";
-import {DriverLicenseId} from "./DriverLicenseId";
 
 export class DriverDocuments{
     constructor(

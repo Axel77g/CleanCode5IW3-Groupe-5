@@ -3,18 +3,18 @@
 - [ ] INFRA EXPRESS - Implementer les controllers des sous domaines
   - [ ] register les routes pour les controllers
   - [ ] Implementer les requests pour les controllers
-  - [ ] Créer les controllers et utiliser les use case (prefixé les useCase par createUSECASE())
-- [ ] INFRA NEXT - setup une app next js (front et back)
+  - [] Créer les controllers et utiliser les use case (prefix les useCase par createUSECASE())
+- [X] INFRA NEXT - setup une app next js (front et back)
 - [ ] INFRA Vue - setup une app vue js qui utilise l'api Express
 - [ ] INFRA InMemory - Implementer les repository inMemory
 - [ ] Améliorer les logiques métiers pour ne pas pouvoir faire des actions selon le state actuel (ajouter du stock a un truc inexistant, supprimer deux fois un dealer etc.)
 - [ ] Améliorer la gestion des erreurs faire en sorte que Result.FailureStr retourne une ApplicationError dans tous les cas, 
       sinon gérer identifiant = internalError dans repo, usecase, et les utiliser dans les controllers pour personaliser l'erreurs, 
       ainsi que dans les projections pour gerer les cas limite (delete un mec deja delete = OK en projection)
-- [ ] TEST - Implementer les tests pour les use case et les repository (si temps restant)
+- [ ] TEST - Implementer les tests pour les use case et les repositories (si temps restant)
 - [ ] Exception - Peut ajouter des property pour savoir si c'est du not found dans le domaine 
 - [ ] Driver - empêcher de créer un driver avec un licenseId déjà existant et un email déjà existant
 
-- [] renmae DealerAddress en Address
-- [] rename getQuery en  getCollection des abstractMongo
+- [X] rename DealerAddress en Address
+- [] rename getQuery en getCollection des abstractMongo
 - [] supprimer le dossier backend et tous mettre a la racine

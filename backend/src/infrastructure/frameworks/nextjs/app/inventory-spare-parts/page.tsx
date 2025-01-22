@@ -1,11 +1,5 @@
 import List from "@/components/List";
 import {useServerPagination} from "@/hooks/useServerPagination";
-import {
-    createListInventorySparePartUseCase
-} from "@application/inventoryManagement/usecases/inventorySparePart/ListInventorySparePartUseCase";
-import {
-    inventorySparePartRepository
-} from "@infrastructureCore/repositories/inventoryManagement/inventorySparePartRepository";
 import {ErrorCallout} from "@/components/ErrorCallout";
 import Pagination from "@/components/Pagination";
 import HeadingTile from "@/components/HeadingTitle";
@@ -25,7 +19,7 @@ export default async function InventorySparePartListPage(pageProps: {searchParam
         </HeadingTile>
         <List>
             {
-                result.value.map((sparePart)=> (
+                value.map((sparePart)=> (
                     <ListItem link={`/inventory-spare-parts/${sparePart.reference}`}>
                         {sparePart.name}
                     </ListItem>

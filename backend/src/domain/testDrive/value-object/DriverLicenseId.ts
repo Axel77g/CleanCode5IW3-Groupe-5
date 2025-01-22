@@ -12,7 +12,7 @@ export class DriverLicenseId{
 
     public static create(driverLicenseId: string): DriverLicenseId | ApplicationException
     {
-        let driver = new DriverLicenseId(driverLicenseId);
+        const driver = new DriverLicenseId(driverLicenseId);
         if(driver.isValid()){
             return driver;
         }

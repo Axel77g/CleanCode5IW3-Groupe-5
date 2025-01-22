@@ -4,7 +4,6 @@ import {Driver} from "@domain/testDrive/entities/Driver";
 import {PaginatedInput} from "@shared/PaginatedInput";
 import {DriverRepository} from "../../repositories/DriverRepository";
 import {ApplicationException} from "@shared/ApplicationException";
-//@ts-ignore
 
 export type ListDriversUseCase = IUseCase<PaginatedInput, PaginatedResult<Driver>>
 

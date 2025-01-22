@@ -30,7 +30,8 @@ export class Response{
 
     toObject(){
         if(this.isFailure) return {error: this.data, code: this.code};
-        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         return {data: this.data, ...this, code: undefined};
     }
 }

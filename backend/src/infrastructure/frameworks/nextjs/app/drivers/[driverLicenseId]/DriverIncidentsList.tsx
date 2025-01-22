@@ -19,7 +19,7 @@ export default async function DriverIncidentsList(props: {driver : Driver, pagin
 
     return <div>
         <List>
-            {result.value.map(incident => (
+            {value.map(incident => (
                     <ListItem link={`test`}>
                         <Chip>#{incident.incidentId}</Chip> {incident.date.toISOString()}
                     </ListItem>

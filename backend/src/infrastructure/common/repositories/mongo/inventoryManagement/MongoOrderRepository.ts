@@ -1,7 +1,7 @@
 import {AbstractMongoRepository} from "../AbstractMongoRepository";
 import {OrderRepository} from "@application/inventoryManagement/repositories/OrderRepository";
 import {Result, VoidResult} from "@shared/Result";
-import {Order, OrderDTO} from "@domain/inventoryManagement/entities/Order";
+import {Order} from "@domain/inventoryManagement/entities/Order";
 import {Siret} from "@domain/shared/value-object/Siret";
 
 export class MongoOrderRepository extends AbstractMongoRepository implements OrderRepository{

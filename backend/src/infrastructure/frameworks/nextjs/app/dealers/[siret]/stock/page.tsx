@@ -5,10 +5,6 @@ import {Siret} from "@domain/shared/value-object/Siret";
 import List from "@/components/List";
 import ListItem from "@/components/ListItem";
 import {AddOrRemoveSpareFromStockForm} from "@/app/dealers/[siret]/stock/AddOrRemoveSpareFromStockForm";
-import {createShowOrderHistoryUseCase} from "@application/inventoryManagement/usecases/order/ShowOrderHistoryUseCase";
-import {createShowDealerUseCase} from "@application/inventoryManagement/usecases/dealer/ShowDealerUseCase";
-import {dealerRepository} from "@infrastructureCore/repositories/inventoryManagement/dealerRepository";
-import {orderRepository} from "@infrastructureCore/repositories/inventoryManagement/orderRepository";
 
 export default async function StockPage(pageProps: {params: Promise<{siret: string}>}){
     const {siret : siretString} = await pageProps.params

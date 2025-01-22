@@ -1,5 +1,4 @@
 import {AbstractEvent} from "@shared/AbstractEvent";
-import {DriverLicenseId} from "../value-object/DriverLicenseId";
 
 interface DriverUpdatedEventPayload {
     driverLicenseId: string;
@@ -18,8 +17,9 @@ export class DriverUpdatedEvent extends AbstractEvent{
     ) {
         super();
         this.streamId = `driver-${payload.driverLicenseId}`
-        let cleanedPayload = {...payload}
-        //@ts-ignore
+        const cleanedPayload = {...payload}
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-expect-error
         Object.keys(cleanedPayload).forEach((key:string) => cleanedPayload[key] === undefined && delete cleanedPayload[key]);
         this.payload = cleanedPayload;
     }

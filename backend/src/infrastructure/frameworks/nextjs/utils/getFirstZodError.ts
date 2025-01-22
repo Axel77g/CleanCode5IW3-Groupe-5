@@ -1,4 +1,4 @@
-import {SafeParseError, ZodError} from "zod";
+import {ZodError} from "zod";
 
 export function getFirstZodError(error: ZodError<unknown>){
     const firstError = error.errors[0]
