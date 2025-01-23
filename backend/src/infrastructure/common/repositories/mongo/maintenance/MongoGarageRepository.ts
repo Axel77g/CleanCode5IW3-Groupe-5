@@ -1,10 +1,8 @@
+import { GarageRepository } from '@application/maintenance/repositories/GarageRepository';
 import { Garage } from "@domain/maintenance/entities/Garage";
 import { Siret } from "@domain/shared/value-object/Siret";
 import { GarageMapper } from "@infrastructure/common/entityMappers/GarageMapper";
 import { Result, VoidResult } from "@shared/Result";
-import {
-    GarageRepository
-} from '../../../../../application/maintenance/repositories/GarageRepository';
 import { AbstractMongoRepository } from "../AbstractMongoRepository";
 
 export class MongoGarageRepository extends AbstractMongoRepository implements GarageRepository {

@@ -1,5 +1,5 @@
 import { EventRepository } from '@application/shared/repositories/EventRepository';
-import { RegisterGarageEvent } from '@domain/maintenance/events/RegisterGarageEvent';
+import { RegisterGarageEvent } from '@domain/maintenance/events/garage/RegisterGarageEvent';
 import { Address } from '@domain/shared/value-object/Address';
 import { Siret } from '@domain/shared/value-object/Siret';
 import { IInputUseCase, IUseCase } from '@shared/IUseCase';

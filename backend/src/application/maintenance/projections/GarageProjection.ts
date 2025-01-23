@@ -1,9 +1,9 @@
 import { AbstractProjection } from "@application/shared/projections/AbstractProjection";
 import { ProjectionJobScheduler } from "@application/shared/projections/ProjectionJobScheduler";
 import { Garage } from "@domain/maintenance/entities/Garage";
-import { RegisterGarageEvent } from "@domain/maintenance/events/RegisterGarageEvent";
-import { UnregisterGarageEvent } from "@domain/maintenance/events/UnregisterGarageEvent";
-import { UpdateGarageEvent } from "@domain/maintenance/events/UpdateGarageEvent";
+import { RegisterGarageEvent } from "@domain/maintenance/events/garage/RegisterGarageEvent";
+import { UnregisterGarageEvent } from "@domain/maintenance/events/garage/UnregisterGarageEvent";
+import { UpdateGarageEvent } from "@domain/maintenance/events/garage/UpdateGarageEvent";
 import { Result, VoidResult } from "@shared/Result";
 
 export class GarageProjection extends AbstractProjection {

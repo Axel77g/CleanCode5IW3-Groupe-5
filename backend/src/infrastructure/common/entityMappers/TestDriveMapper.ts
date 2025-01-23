@@ -1,20 +1,20 @@
-import {TestDrive, TestDriveDTO} from "@domain/testDrive/entities/TestDrive";
-import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
-import {VehicleImmatriculation} from "@domain/shared/value-object/VehicleImmatriculation";
-import {Period} from "@domain/testDrive/value-object/Period";
-import {MappedEntities, MappedEntity} from "./MappedEntity";
+import { VehiculeImmatriculation } from "@domain/maintenance/value-object/VehiculeImmatriculation";
+import { TestDrive, TestDriveDTO } from "@domain/testDrive/entities/TestDrive";
+import { DriverLicenseId } from "@domain/testDrive/value-object/DriverLicenseId";
+import { Period } from "@domain/testDrive/value-object/Period";
+import { MappedEntities, MappedEntity } from "./MappedEntity";
 
-export class TestDriveMapper{
-    static toDomain(testDrive: any) : TestDrive | Error{
+export class TestDriveMapper {
+    static toDomain(testDrive: any): TestDrive | Error {
 
         const driverLicenseId = DriverLicenseId.create(testDrive.driverLicenseId)
-        if(driverLicenseId instanceof Error) return driverLicenseId
+        if (driverLicenseId instanceof Error) return driverLicenseId
 
-        const vehicleImmatriculation = VehicleImmatriculation.create(testDrive.vehicleImmatriculation)
-        if(vehicleImmatriculation instanceof Error) return vehicleImmatriculation
+        const vehicleImmatriculation = VehiculeImmatriculation.create(testDrive.vehicleImmatriculation)
+        if (vehicleImmatriculation instanceof Error) return vehicleImmatriculation
 
-        const period = Period.create(testDrive.periodStart,testDrive.periodEnd)
-        if(period instanceof Error) return period
+        const period = Period.create(testDrive.periodStart, testDrive.periodEnd)
+        if (period instanceof Error) return period
 
         return new TestDrive(
             testDrive.testDriveId,
@@ -24,7 +24,7 @@ export class TestDriveMapper{
         )
     }
 
-    static toPersistence(testDrive: TestDrive) : MappedEntity<TestDriveDTO> {
+    static toPersistence(testDrive: TestDrive): MappedEntity<TestDriveDTO> {
         return new MappedEntity<TestDriveDTO>({
             testDriveId: testDrive.testDriveId,
             driverLicenseId: testDrive.driverLicenseId.getValue(),
@@ -34,13 +34,13 @@ export class TestDriveMapper{
         })
     }
 
-    static toPersistenceList(testDrives: TestDrive[]) : MappedEntities<TestDriveDTO> {
+    static toPersistenceList(testDrives: TestDrive[]): MappedEntities<TestDriveDTO> {
         return new MappedEntities(testDrives.map(testDrive => {
             return TestDriveMapper.toPersistence(testDrive);
         }))
     }
 
-    static toDomainList(testDrives: any[]) : TestDrive[] {
+    static toDomainList(testDrives: any[]): TestDrive[] {
         return testDrives.map(testDrive => {
             return TestDriveMapper.toDomain(testDrive);
         }).filter(testDrive => !(testDrive instanceof Error)) as TestDrive[]

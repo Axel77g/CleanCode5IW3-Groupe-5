@@ -1,5 +1,5 @@
 import { EventRepository } from "@application/shared/repositories/EventRepository";
-import { RegisterCustomerEvent } from "@domain/maintenance/events/RegisterCustomerEvent";
+import { RegisterCustomerEvent } from "@domain/maintenance/events/customer/RegisterCustomerEvent";
 import { Address } from "@domain/shared/value-object/Address";
 import { IInputUseCase, IUseCase } from "@shared/IUseCase";
 import { Result } from "@shared/Result";

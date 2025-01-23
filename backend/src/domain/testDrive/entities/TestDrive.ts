@@ -1,8 +1,8 @@
-import {VehicleImmatriculation} from "../../shared/value-object/VehicleImmatriculation";
-import {Period} from "../value-object/Period";
-import {DriverLicenseId} from "../value-object/DriverLicenseId";
+import { VehiculeImmatriculation } from "../../maintenance/value-object/VehiculeImmatriculation";
+import { DriverLicenseId } from "../value-object/DriverLicenseId";
+import { Period } from "../value-object/Period";
 
-export interface TestDriveDTO{
+export interface TestDriveDTO {
     testDriveId: string;
     driverLicenseId: string;
     vehicleImmatriculation: string;
@@ -10,23 +10,23 @@ export interface TestDriveDTO{
     periodEnd: Date;
 }
 
-export class TestDrive{
+export class TestDrive {
     constructor(
         public readonly testDriveId: string,
         public readonly driverLicenseId: DriverLicenseId,
-        public readonly vehicleImmatriculation: VehicleImmatriculation,
-        public readonly period : Period
-    ) {}
+        public readonly vehicleImmatriculation: VehiculeImmatriculation,
+        public readonly period: Period
+    ) { }
 
-    static fromObject(testDrive: TestDriveDTO) : TestDrive | Error {
+    static fromObject(testDrive: TestDriveDTO): TestDrive | Error {
         const driverLicenseId = DriverLicenseId.create(testDrive.driverLicenseId)
-        if(driverLicenseId instanceof Error) return driverLicenseId
+        if (driverLicenseId instanceof Error) return driverLicenseId
 
-        const vehicleImmatriculation = VehicleImmatriculation.create(testDrive.vehicleImmatriculation)
-        if(vehicleImmatriculation instanceof Error) return vehicleImmatriculation
+        const vehicleImmatriculation = VehiculeImmatriculation.create(testDrive.vehicleImmatriculation)
+        if (vehicleImmatriculation instanceof Error) return vehicleImmatriculation
 
-        const period = Period.create(testDrive.periodStart,testDrive.periodEnd)
-        if(period instanceof Error) return period
+        const period = Period.create(testDrive.periodStart, testDrive.periodEnd)
+        if (period instanceof Error) return period
 
         return new TestDrive(
             testDrive.testDriveId,

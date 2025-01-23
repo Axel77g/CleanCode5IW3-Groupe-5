@@ -1,10 +1,10 @@
-import {IInputUseCase, IUseCase} from "@shared/IUseCase";
-import {Result} from "@shared/Result";
-import {ApplicationException} from "@shared/ApplicationException";
-import {EventRepository} from "../../../shared/repositories/EventRepository";
-import {OrderRepository} from "../../repositories/OrderRepository";
-import {OrderStatusEnum} from "@domain/inventoryManagement/enums/OrderStatusEnum";
-import {UpdateOrderStatusEvent} from "@domain/inventoryManagement/events/UpdateOrderStatusEvent";
+import { OrderStatusEnum } from "@domain/inventoryManagement/enums/OrderStatusEnum";
+import { UpdateOrderStatusEvent } from "@domain/inventoryManagement/events/UpdateOrderStatusEvent";
+import { ApplicationException } from "@shared/ApplicationException";
+import { IInputUseCase, IUseCase } from "@shared/IUseCase";
+import { Result } from "@shared/Result";
+import { EventRepository } from "../../../shared/repositories/EventRepository";
+import { OrderRepository } from "../../repositories/OrderRepository";
 
 interface UpdateOrderInput extends IInputUseCase {
     orderId: string,

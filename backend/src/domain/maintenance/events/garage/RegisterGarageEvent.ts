@@ -1,5 +1,5 @@
 import { AbstractEvent } from "@shared/AbstractEvent";
-import { GarageDTO } from "../entities/Garage";
+import { GarageDTO } from "../../entities/Garage";
 
 export class RegisterGarageEvent extends AbstractEvent {
     static type = 'GARAGE_REGISTERED';

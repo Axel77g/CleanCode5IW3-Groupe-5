@@ -1,9 +1,9 @@
 import { AbstractProjection } from "@application/shared/projections/AbstractProjection";
 import { ProjectionJobScheduler } from "@application/shared/projections/ProjectionJobScheduler";
 import { Customer } from "@domain/maintenance/entities/Customer";
-import { RegisterCustomerEvent } from "@domain/maintenance/events/RegisterCustomerEvent";
-import { UnregisterCustomerEvent } from "@domain/maintenance/events/UnregisterCustomerEvent";
-import { UpdateCustomerEvent } from "@domain/maintenance/events/UpdateCustomerEvent";
+import { RegisterCustomerEvent } from "@domain/maintenance/events/customer/RegisterCustomerEvent";
+import { UnregisterCustomerEvent } from "@domain/maintenance/events/customer/UnregisterCustomerEvent";
+import { UpdateCustomerEvent } from "@domain/maintenance/events/customer/UpdateCustomerEvent";
 import { Result, VoidResult } from "@shared/Result";
 import { CustomerRepository } from "../repositories/CustomerRepository";
 

@@ -5,7 +5,7 @@ import { TestsDrivesProjection } from "./application/testDrive/projections/Tests
 import { createRegisterDriverUseCase } from "./application/testDrive/usecases/driver/RegisterDriverUseCase";
 import { createRegisterIncidentUseCase } from "./application/testDrive/usecases/incident/RegisterIncidentUseCase";
 import { createRegisterTestDriveUseCase } from "./application/testDrive/usecases/testDrive/RegisterTestDriveUseCase";
-import { VehicleImmatriculation } from "./domain/shared/value-object/VehicleImmatriculation";
+import { VehiculeImmatriculation } from "./domain/maintenance/value-object/VehiculeImmatriculation";
 import { IncidentType } from "./domain/testDrive/enums/IncidentType";
 import { DriverLicenseId } from "./domain/testDrive/value-object/DriverLicenseId";
 import { Period } from "./domain/testDrive/value-object/Period";
@@ -67,11 +67,11 @@ async function main() {
     if (!resultRegisterIncident.success) return console.error(resultRegisterIncident)
     console.log(resultRegisterIncident)
 
-    const immatriculation = VehicleImmatriculation.create("AA-123-AA")
+    const immatriculation = VehiculeImmatriculation.create("AA-123-AA")
     if (immatriculation instanceof Error) return console.error(immatriculation)
 
     const period = Period.create(new Date(), new Date())
-    if(period instanceof Error) return period
+    if (period instanceof Error) return period
 
     const rTestDriveUseCase = createRegisterTestDriveUseCase(testDriveEventRepository, driverRepository)
     const resultRegisterTestDrive = await rTestDriveUseCase({
