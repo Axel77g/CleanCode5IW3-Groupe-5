@@ -7,7 +7,7 @@ export function Dialog(props: {isOpen: boolean, onClose : (...args : [any]) => a
             e.stopPropagation()
             props.onClose(e)
         }}/>
-        <div className={"dialog-container bg-white rounded relative z-10 p-4 max-w-[600px] min-h-[200px] max-h-[400px]"}>
+        <div className={"dialog-container bg-white rounded relative z-10 p-4 max-w-[600px] min-h-[200px] max-h-[70vh] overflow-y-auto"}>
             {props.children}
         </div>
     </div>

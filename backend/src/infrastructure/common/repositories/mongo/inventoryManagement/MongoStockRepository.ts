@@ -38,7 +38,8 @@ export class MongoStockRepository extends AbstractMongoRepository implements Sto
                 });
                 const actualQuantity = await this.getStockQuantity(sparePart, siret);
                 if(!actualQuantity.success) return actualQuantity;
-                const newQuantity = actualQuantity.value + quantity;
+                const safeActualQuantity = actualQuantity.value || 0;
+                const newQuantity = safeActualQuantity + quantity;
                 await this.getQuery().updateOne({siret: siret.getValue(), sparePartReference: sparePart.reference}, {$set: {quantity: newQuantity}}, {upsert: true});
                 await session.commitTransaction();
                 return Result.SuccessVoid();

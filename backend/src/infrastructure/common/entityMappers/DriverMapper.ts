@@ -1,6 +1,7 @@
 import {Driver, DriverDTO} from "@domain/testDrive/entities/Driver";
 import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
 import {MappedEntities, MappedEntity} from "./MappedEntity";
+import {ApplicationException} from "@shared/ApplicationException";
 
 export class DriverMapper{
     public static toPersistence(driver: Driver) : MappedEntity<DriverDTO> {
@@ -13,9 +14,9 @@ export class DriverMapper{
             documents: driver.documents
         })
     }
-    public static toDomain(driver: any) : Driver | Error {
+    public static toDomain(driver: any) : Driver | ApplicationException {
         const driverLicenceId = DriverLicenseId.create(driver.driverLicenseId)
-        if(driverLicenceId instanceof Error) return driverLicenceId
+        if(driverLicenceId instanceof ApplicationException) return driverLicenceId
         return new Driver(
             driverLicenceId,
             driver.firstName,

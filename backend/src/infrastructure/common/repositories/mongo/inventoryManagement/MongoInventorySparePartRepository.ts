@@ -2,7 +2,7 @@ import {AbstractMongoRepository} from "../AbstractMongoRepository";
 import {
     InventorySparePartRepository
 } from "@application/inventoryManagement/repositories/InventorySparePartRepository";
-import {PaginatedResult, Result, VoidResult} from "@shared/Result";
+import {OptionalResult, PaginatedResult, Result, VoidResult} from "@shared/Result";
 import {
     InventorySparePart,
     InventorySparePartDTO
@@ -27,12 +27,13 @@ export class MongoInventorySparePartRepository extends AbstractMongoRepository i
     }
 
 
-    find(reference: string): Promise<Result<InventorySparePart>> {
-        return this.catchError<Result<InventorySparePart>>(
+    find(reference: string): Promise<OptionalResult<InventorySparePart>> {
+        return this.catchError(
             async () => {
                 const inventorySparePartDocument = await this.getQuery().findOne({
                     reference: reference
                 });
+                if(!inventorySparePartDocument) return Result.SuccessEmpty();
                 const inventorySparePart = InventorySparePart.fromObject(inventorySparePartDocument as any);
                 return Result.Success<InventorySparePart>(inventorySparePart);
             }

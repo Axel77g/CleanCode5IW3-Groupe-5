@@ -1,5 +1,6 @@
 import {DriverLicenseId} from "../value-object/DriverLicenseId";
 import {DriverDocuments} from "../value-object/DriverDocuments";
+import {ApplicationException} from "@shared/ApplicationException";
 
 export interface DriverDTO{
     driverLicenseId: string;
@@ -21,9 +22,9 @@ export class Driver{
     ) {}
 
 
-    static fromObject(object: DriverDTO) : Driver | Error {
+    static fromObject(object: DriverDTO) : Driver | ApplicationException {
         const driverLicenseId = DriverLicenseId.create(object.driverLicenseId);
-        if(driverLicenseId instanceof Error) return driverLicenseId;
+        if(driverLicenseId instanceof ApplicationException) return driverLicenseId;
         return new Driver(
             driverLicenseId,
             object.firstName,

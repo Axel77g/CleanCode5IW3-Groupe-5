@@ -6,6 +6,7 @@ import {Siret} from "@domain/shared/value-object/Siret";
 import {AbstractProjection} from "@application/shared/projections/AbstractProjection";
 import {ProjectionJobScheduler} from "@application/shared/projections/ProjectionJobScheduler";
 import {Result, VoidResult} from "@shared/Result";
+import {NotFoundEntityException} from "@shared/ApplicationException";
 
 export class DealerProjection  extends AbstractProjection{
     constructor(private _dealerRepository: DealerRepository) {
@@ -36,6 +37,7 @@ export class DealerProjection  extends AbstractProjection{
         if(siret instanceof Error) return Result.Failure(siret)
         const dealerFromRepo = await this._dealerRepository.getBySiret(siret)
         if(!dealerFromRepo.success) return dealerFromRepo
+        if(dealerFromRepo.value === null) return Result.Failure(NotFoundEntityException.create("Dealer not found during update projection, this should not happen, please check the event store"))
         return this._dealerRepository.delete(dealerFromRepo.value.siret)
     }
 }

@@ -2,8 +2,9 @@ import {AbstractMongoRepository} from "../AbstractMongoRepository";
 import {DriverRepository} from "@application/testDrive/repositories/DriverRepository";
 import {Driver} from "@domain/testDrive/entities/Driver";
 import { PaginatedInput } from "@shared/PaginatedInput";
-import { VoidResult, Result, PaginatedResult } from "@shared/Result";
+import {VoidResult, Result, PaginatedResult, OptionalResult} from "@shared/Result";
 import {DriverMapper} from "@infrastructure/common/entityMappers/DriverMapper";
+import {ApplicationException} from "@shared/ApplicationException";
 
 export class MongoDriverRepository extends AbstractMongoRepository implements DriverRepository {
     protected collectionName = "drivers";
@@ -21,13 +22,13 @@ export class MongoDriverRepository extends AbstractMongoRepository implements Dr
             session.abortTransaction.bind(session)
         )
     }
-    getByLicenseId(driverLicenseId: string): Promise<Result<Driver>> {
+    getByLicenseId(driverLicenseId: string): Promise<OptionalResult<Driver>> {
         return this.catchError(
             async () => {
                 const driverDocument = await this.getQuery().findOne({ driverLicenseId: driverLicenseId })
-                if(!driverDocument) return Result.FailureStr("Driver not found")
+                if(!driverDocument) return Result.SuccessEmpty()
                 const driver = DriverMapper.toDomain(driverDocument)
-                if(driver instanceof Error) return Result.Failure(driver)
+                if(driver instanceof ApplicationException) return Result.Failure(driver)
                 return Result.Success<Driver>(driver)
             }
         )

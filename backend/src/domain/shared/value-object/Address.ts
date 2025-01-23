@@ -23,7 +23,7 @@ export class Address {
         return countryCode.length === 2;
     }
 
-    static create(payload: AddressDTO): Address | Error {
+    static create(payload: AddressDTO): Address | ApplicationException {
         const address = new Address(payload.street, payload.city, payload.postalCode, payload.country);
         if (!address.isValidCountryCode(payload.country)) {
             return Address.errors.COUNTRY_CODE_NOT_VALID;

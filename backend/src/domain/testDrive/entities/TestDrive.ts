@@ -1,6 +1,7 @@
 import {VehicleImmatriculation} from "../../shared/value-object/VehicleImmatriculation";
 import {Period} from "../value-object/Period";
 import {DriverLicenseId} from "../value-object/DriverLicenseId";
+import {ApplicationException} from "@shared/ApplicationException";
 
 export interface TestDriveDTO{
     testDriveId: string;
@@ -18,15 +19,15 @@ export class TestDrive{
         public readonly period : Period
     ) {}
 
-    static fromObject(testDrive: TestDriveDTO) : TestDrive | Error {
+    static fromObject(testDrive: TestDriveDTO) : TestDrive | ApplicationException {
         const driverLicenseId = DriverLicenseId.create(testDrive.driverLicenseId)
-        if(driverLicenseId instanceof Error) return driverLicenseId
+        if(driverLicenseId instanceof ApplicationException) return driverLicenseId
 
         const vehicleImmatriculation = VehicleImmatriculation.create(testDrive.vehicleImmatriculation)
-        if(vehicleImmatriculation instanceof Error) return vehicleImmatriculation
+        if(vehicleImmatriculation instanceof ApplicationException) return vehicleImmatriculation
 
         const period = Period.create(testDrive.periodStart,testDrive.periodEnd)
-        if(period instanceof Error) return period
+        if(period instanceof ApplicationException) return period
 
         return new TestDrive(
             testDrive.testDriveId,

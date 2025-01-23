@@ -6,11 +6,12 @@ import {
 import {Siret} from "@domain/shared/value-object/Siret";
 import {createUnregisterDealerUseCase} from "@application/inventoryManagement/usecases/dealer/UnregisterDealerUseCase";
 import {siretRequest} from "@infrastructureCore/requests/inventoryManagement/siretRequest";
+import {dealerRepository} from "@infrastructureCore/repositories/inventoryManagement/dealerRepository";
 
 export const unregisterDealerController : Controller<typeof siretRequest> = async (payload) => {
     const siret = Siret.create(payload.siret)
     if(siret instanceof Error) return Response.Fail(400, siret.message)
-    const unregisterDealerUseCase = createUnregisterDealerUseCase(inventoryManagementEventRepository)
+    const unregisterDealerUseCase = createUnregisterDealerUseCase(inventoryManagementEventRepository, dealerRepository)
     const unregisterResponse = await unregisterDealerUseCase({siret})
     if(!unregisterResponse.success) return Response.Fail(400, unregisterResponse.error)
     return Response.Success(unregisterResponse.value)

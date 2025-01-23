@@ -11,7 +11,13 @@ export interface OrderDTO {
     deliveredAt: Date,
     siret: string,
     lines: OrderLineDTO[]
-    status ?: OrderStatusEnum
+    status ?: OrderStatusEnum,
+    statusHistory ?: OrderStatusHistory[]
+}
+
+export interface OrderStatusHistory {
+    status: OrderStatusEnum,
+    date: Date
 }
 
 export class Order {
@@ -28,31 +34,32 @@ export class Order {
         public readonly deliveredAt: Date,
         public readonly siret: Siret,
         public readonly lines: OrderLine[],
-        public readonly status : OrderStatusEnum = OrderStatusEnum.PENDING
+        public readonly status : OrderStatusEnum = OrderStatusEnum.PENDING,
+        public readonly statusHistory : OrderStatusHistory[] = []
     ) { }
 
-    complete() : Order | Error {
+    complete() : Order | ApplicationException {
         if(this.status === OrderStatusEnum.CANCELED){
             return Order.errors.CANNOT_COMPLETE_CANCELED_ORDER;
         }
-        return new Order(this.orderId, this.orderedAt, this.deliveredAt, this.siret, this.lines, OrderStatusEnum.COMPLETED);
+        return new Order(this.orderId, this.orderedAt, this.deliveredAt, this.siret, this.lines, OrderStatusEnum.COMPLETED, this.statusHistory);
     }
 
-    cancel() : Order | Error {
+    cancel() : Order | ApplicationException {
         if(this.status === OrderStatusEnum.COMPLETED){
             return Order.errors.CANNOT_COMPLETE_CANCELED_ORDER;
         }
-        return new Order(this.orderId, this.orderedAt, this.deliveredAt, this.siret, this.lines, OrderStatusEnum.CANCELED);
+        return new Order(this.orderId, this.orderedAt, this.deliveredAt, this.siret, this.lines, OrderStatusEnum.CANCELED, this.statusHistory);
     }
 
-    process() : Order | Error {
+    process() : Order | ApplicationException {
         if(this.status === OrderStatusEnum.CANCELED || this.status === OrderStatusEnum.COMPLETED){
             return Order.errors.CANNOT_PROCESS_ORDER;
         }
-        return new Order(this.orderId, this.orderedAt, this.deliveredAt, this.siret, this.lines, OrderStatusEnum.IN_PROGRESS);
+        return new Order(this.orderId, this.orderedAt, this.deliveredAt, this.siret, this.lines, OrderStatusEnum.IN_PROGRESS, this.statusHistory);
     }
 
-    applyStatus(status : OrderStatusEnum) : Order | Error {
+    applyStatus(status : OrderStatusEnum) : Order | ApplicationException {
         switch (status) {
             case OrderStatusEnum.COMPLETED:
                 return this.complete();
@@ -69,19 +76,21 @@ export class Order {
         return randomUUID();
     }
 
-    static fromObject(object: OrderDTO): Order | Error {
+    static fromObject(object: OrderDTO): Order | ApplicationException {
         const siret = Siret.create(object.siret);
-        if (siret instanceof Error) {
+        if (siret instanceof ApplicationException) {
           return siret
         }
         const lines = object.lines.map(line => OrderLine.create(line));
-        const error = lines.find(line => line instanceof Error) as Error | undefined;
+        const error = lines.find(line => line instanceof ApplicationException) as ApplicationException | undefined;
         if (error) {
           return error
         }
 
+        return new Order(object.orderId, object.orderedAt, object.deliveredAt, siret, lines as OrderLine[], object?.status, object?.statusHistory);
+    }
 
-
-        return new Order(object.orderId, object.orderedAt, object.deliveredAt, siret, lines as OrderLine[], object?.status);
+    setStatusHistory(statusHistory : OrderStatusHistory[]){
+        return new Order(this.orderId, this.orderedAt, this.deliveredAt, this.siret, this.lines, this.status, statusHistory);
     }
 }

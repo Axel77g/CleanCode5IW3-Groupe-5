@@ -5,7 +5,7 @@ import { StockRepository } from "../../repositories/StockRepository";
 import { NotificationServices } from "../../services/NotificationServices";
 import {EventRepository} from "../../../shared/repositories/EventRepository";
 import {DealerStockUpdatedEvent} from "@domain/inventoryManagement/events/DealerStockUpdatedEvent";
-import {ApplicationException} from "@shared/ApplicationException";
+import {ApplicationException, NotFoundEntityException} from "@shared/ApplicationException";
 import {InventorySparePartRepository} from "@application/inventoryManagement/repositories/InventorySparePartRepository";
 
 interface RemoveSparePartInStockInput extends IInputUseCase {
@@ -17,7 +17,7 @@ interface RemoveSparePartInStockInput extends IInputUseCase {
 export type RemoveSparePartInStockUseCase = IUseCase<RemoveSparePartInStockInput, Result>
 
 const removeSparePartInStockErrors = {
-    DEALER_STOCK_NOT_FOUND: new ApplicationException("RemoveSparePartInStockUseCase.StockNotFound", "Dealer stock not found"),
+    DEALER_STOCK_NOT_FOUND: NotFoundEntityException.create("Dealer stock not found"),
     STOCK_RUN_OUT: new ApplicationException("RemoveSparePartInStockUseCase.StockRunOut", "Stock run out"),
 }
 export const createRemoveSparePartInStockUseCase = (
@@ -28,7 +28,8 @@ export const createRemoveSparePartInStockUseCase = (
 ): RemoveSparePartInStockUseCase => {
     return async (input: RemoveSparePartInStockInput) => {
         const sparePartResponse = await _inventorySparePartRepository.find(input.sparePartReference);
-        if(!sparePartResponse.success) return Result.Failure(removeSparePartInStockErrors.DEALER_STOCK_NOT_FOUND)
+        if(!sparePartResponse.success) return sparePartResponse;
+        if(sparePartResponse.value === null) return Result.Failure(removeSparePartInStockErrors.DEALER_STOCK_NOT_FOUND)
 
         const stockQuantityResponse = await _stockRepository.getStockQuantity(sparePartResponse.value, input.siret);
         if (!stockQuantityResponse.success) return Result.Failure(removeSparePartInStockErrors.DEALER_STOCK_NOT_FOUND)

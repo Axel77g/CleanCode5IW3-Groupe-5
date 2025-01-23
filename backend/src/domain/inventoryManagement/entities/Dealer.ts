@@ -1,5 +1,6 @@
 import { AddressDTO, Address } from "@domain/shared/value-object/Address";
 import { Siret } from "../../shared/value-object/Siret";
+import {ApplicationException} from "@shared/ApplicationException";
 
 export interface DealerDTO {
     siret: string,
@@ -18,13 +19,13 @@ export class Dealer {
     ) { }
 
 
-    static fromObject(object: DealerDTO): Dealer | Error {
+    static fromObject(object: DealerDTO): Dealer | ApplicationException {
         const siret = Siret.create(object.siret);
-        if (siret instanceof Error) {
+        if (siret instanceof ApplicationException) {
             return siret;
         }
         const address = Address.create(object.address);
-        if (address instanceof Error) {
+        if (address instanceof ApplicationException) {
             return address;
         }
 

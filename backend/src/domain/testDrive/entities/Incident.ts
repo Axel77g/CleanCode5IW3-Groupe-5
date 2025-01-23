@@ -1,5 +1,6 @@
 import {IncidentType} from "../enums/IncidentType";
 import {DriverLicenseId} from "../value-object/DriverLicenseId";
+import {ApplicationException} from "@shared/ApplicationException";
 
 export interface IncidentDTO{
     incidentId: string;
@@ -18,9 +19,9 @@ export class Incident{
         public readonly date: Date,
     ) {}
 
-    static fromObject(object: IncidentDTO) : Incident | Error {
+    static fromObject(object: IncidentDTO) : Incident | ApplicationException {
         const driverLicenseId = DriverLicenseId.create(object.driverLicenseId);
-        if(driverLicenseId instanceof Error) return driverLicenseId;
+        if(driverLicenseId instanceof ApplicationException) return driverLicenseId;
         return new Incident(
             object.incidentId,
             driverLicenseId,

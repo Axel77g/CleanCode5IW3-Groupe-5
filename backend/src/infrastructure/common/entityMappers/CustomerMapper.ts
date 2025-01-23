@@ -1,5 +1,6 @@
 import { Customer, CustomerDTO } from "../../../domain/maintenance/entities/Customer";
 import { MappedEntities, MappedEntity } from "./MappedEntity";
+import {ApplicationException} from "@shared/ApplicationException";
 
 export class CustomerMapper {
     public static toPersistence(customer: Customer): MappedEntity<CustomerDTO> {
@@ -12,7 +13,7 @@ export class CustomerMapper {
         })
     }
 
-    public static toDomain(customer: any): Customer | Error {
+    public static toDomain(customer: any): Customer | ApplicationException {
         return Customer.fromObject({
             customerId: customer.customerId,
             name: customer.name,

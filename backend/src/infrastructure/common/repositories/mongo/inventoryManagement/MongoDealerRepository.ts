@@ -1,10 +1,11 @@
 import {AbstractMongoRepository} from "../AbstractMongoRepository";
 import {DealerRepository} from "@application/inventoryManagement/repositories/DealerRepository";
 import {Siret} from "@domain/shared/value-object/Siret";
-import {PaginatedResult, Result, VoidResult} from "@shared/Result";
+import {OptionalResult, PaginatedResult, Result, VoidResult} from "@shared/Result";
 import {Dealer} from "@domain/inventoryManagement/entities/Dealer";
 import {DealerMapper} from "@infrastructure/common/entityMappers/DealerMapper";
 import {PaginatedInput} from "@shared/PaginatedInput";
+import {ApplicationException} from "@shared/ApplicationException";
 
 
 export class MongoDealerRepository extends AbstractMongoRepository implements DealerRepository{
@@ -23,12 +24,13 @@ export class MongoDealerRepository extends AbstractMongoRepository implements De
         )
     }
 
-    getBySiret(siret: Siret): Promise<Result<Dealer>> {
-        return this.catchError<Result<Dealer>>(
+    getBySiret(siret: Siret): Promise<OptionalResult<Dealer>> {
+        return this.catchError(
             async () =>{
                 const dealerDocument = await this.getQuery().findOne({siret: siret.getValue()});
+                if(!dealerDocument) return Result.SuccessEmpty();
                 const dealer = DealerMapper.toDomain(dealerDocument);
-                if(dealer instanceof Error) return Result.Failure(dealer);
+                if(dealer instanceof ApplicationException) return Result.Failure(dealer);
                 return Result.Success<Dealer>(dealer);
             }
         )

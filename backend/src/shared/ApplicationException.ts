@@ -11,4 +11,27 @@ export class ApplicationException extends Error{
     is(identifier : string) : boolean {
         return this.identifier === identifier;
     }
+
+}
+
+export class NotFoundEntityException extends ApplicationException {
+    private constructor(message: string){
+        super('NOT_FOUND_ENTITY', message);
+    }
+
+    static create(message: string) : NotFoundEntityException {
+        return new NotFoundEntityException(message);
+    }
+}
+
+export class InternalErrorException extends ApplicationException {
+    private detailedMessage: string;
+    private constructor(message: string){
+        super('INTERNAL_ERROR', "An internal error occurred");
+        this.detailedMessage = message;
+    }
+
+    static create(message: string) : InternalErrorException {
+        return new InternalErrorException(message);
+    }
 }
