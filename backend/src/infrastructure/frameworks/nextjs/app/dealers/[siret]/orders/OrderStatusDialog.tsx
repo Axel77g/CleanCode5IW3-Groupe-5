@@ -1,12 +1,11 @@
 "use client"
-import {Dialog} from "@/components/Dialog";
-import {useDialog} from "@/hooks/useDialog";
 import {Button} from "@/components/Button";
-import HeadingTile from "@/components/HeadingTitle";
 import Select from "@/components/Select";
 import {OrderStatusEnum} from "@domain/inventoryManagement/enums/OrderStatusEnum";
 import {useActionState} from "react";
-import {updateOrderStatus} from "@/app/dealers/[siret]/orders/actions";
+import { updateOrderStatus} from "./actions";
+import {Form} from "@/components/Form";
+import {Dialog} from "@/components/Dialog";
 
 const orderStatus = [
     {
@@ -33,31 +32,23 @@ const initialState = {
     success : false
 }
 
-export function OrderStatusDialog(props : {order : any}){
-    const [isOpen, open, close] = useDialog()
-    const [state , action] = useActionState(updateOrderStatus, initialState)
-
-    console.log(action)
-    return <div>
-        <Button onClick={open}>Modifier</Button>
-        <HeadingTile>Détail de Commande : #{props.order.orderId}</HeadingTile>
-        <form action={action}>
-            <Select  options={orderStatus} label={"Status de la commande"} value={props.order.status}  name={"status"}/>
-
+export function OrderStatusDialog(props: {isOpen: boolean, order : any, onClose: () => void}){
+    const [state, action] = useActionState(updateOrderStatus, initialState)
+    if(!props.order) return null
+    return <Dialog isOpen={props.isOpen} onClose={props.onClose}>
+        <Form action={action}  state={state} title={"Mettre a jour le status de la commande"}>
+            <input name={"orderId"} type={"hidden"} value={props.order.orderId}/>
+            <Select  options={orderStatus} label={"Status de la commande"}  name={"status"} value={props.order.status}/>
+            <p>
+                {props.order.orderedAt}
+            </p>
             <p>
                 {props.order.deliveredAt}
             </p>
 
-            <p>
-                {props.order.orderedAt}
-            </p>
-            {JSON.stringify(state)}
             <Button>
                 Enregistrer
             </Button>
-        </form>
-        <Dialog isOpen={isOpen} onClose={close}>
-
-        </Dialog>
-    </div>
+        </Form>
+    </Dialog>
 }

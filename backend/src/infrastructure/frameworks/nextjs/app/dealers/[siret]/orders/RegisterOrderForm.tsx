@@ -22,8 +22,8 @@ const initialState = {
 export default function RegisterOrderForm(props: { siret : string}){
     const [state, action] = useActionState<ActionResponse,FormData>(registerOrder,initialState)
     const [orderLines, setOrderLines] = useState<OrderLineForm[]>([])
-    function handleAddOrderLine(e : any){
-        e.preventDefault()
+    function handleAddOrderLine(event : any){
+        event.preventDefault()
         const temp = [...orderLines]
         temp.push({
             reference: "",
@@ -83,7 +83,7 @@ function ReferenceSelector(props: { onChange: (reference: string) => void, label
     const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
     const searchRef = useRef<HTMLInputElement>(null);
 
-    const [selectedReference, setSelectedReference] = useState<{ reference: string, name: string }>(null)
+    const [selectedReference, setSelectedReference] = useState<{ reference: string, name: string } | null>(null)
 
 
     useEffect(() => {

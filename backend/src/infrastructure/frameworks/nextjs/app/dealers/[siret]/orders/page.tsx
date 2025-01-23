@@ -4,15 +4,10 @@ import {createShowOrderHistoryUseCase} from "@application/inventoryManagement/us
 import {createShowDealerUseCase} from "@application/inventoryManagement/usecases/dealer/ShowDealerUseCase";
 import {dealerRepository} from "@infrastructureCore/repositories/inventoryManagement/dealerRepository";
 import {orderRepository} from "@infrastructureCore/repositories/inventoryManagement/orderRepository";
-import List from "@/components/List";
-import ListItem from "@/components/ListItem";
 import RegisterOrderForm from "@/app/dealers/[siret]/orders/RegisterOrderForm";
 import HeadingTile from "@/components/HeadingTitle";
-import {Dialog} from "@/components/Dialog";
-import {OrderStatusDialog} from "@/app/dealers/[siret]/orders/OrderStatusDialog";
-import {OrderDTO} from "@domain/inventoryManagement/entities/Order";
-import {Property} from "csstype";
-import Order = Property.Order;
+import {Order} from "@domain/inventoryManagement/entities/Order";
+import {ListOrders} from "@/app/dealers/[siret]/orders/ListOrders";
 
 export default async function DealerOrderPage(pageProps: { params: Promise<{siret: string}>}){
     const {siret : siretString} = await pageProps.params;
@@ -28,15 +23,7 @@ export default async function DealerOrderPage(pageProps: { params: Promise<{sire
 
     return <div>
         <HeadingTile>Commandes du concessionnaire {siret.getValue()}</HeadingTile>
-        <List>
-            {
-                ordersHistory.value.map(order=>(
-                    <ListItem key={order.orderId} link={`/dealers/${siretString}/orders`}>
-                        {order.orderId} - {order.orderedAt.toISOString()} - {order.status} - <OrderStatusDialog order={getOrderDTO(order)}/>
-                    </ListItem>
-                ))
-            }
-        </List>
+        <ListOrders orders={ordersHistory.value.map((order)=> getOrderDTO(order))} siretString={siretString}/>
         <br/>
         <RegisterOrderForm siret={siretString}/>
     </div>

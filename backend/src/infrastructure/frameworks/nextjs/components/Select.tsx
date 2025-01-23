@@ -2,7 +2,7 @@
 
 import React from "react";
 
-export default function Select(props : {name: string, value ?: string, label:string, onChange ?: (e : string) => void, options: {title: string, value: string}[]}) {
+export default function Select(props : {name: string, value ?: string, label:string, onChange ?: (event : string) => void, options: {title: string, value: string}[]}) {
     return <div className="flex flex-col mb-4">
         <label className="mb-2 text-sm font-semibold text-gray-700" htmlFor={props.name}>{props.label}</label>
         <select
