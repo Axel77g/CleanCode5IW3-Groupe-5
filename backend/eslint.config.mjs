@@ -13,6 +13,7 @@ export default tseslint.config(
         ignores: [
             'src/infrastructure/frameworks/nextjs/.next/*',
             "jest.config.js",
+            "dist/*",
         ]
 
     }

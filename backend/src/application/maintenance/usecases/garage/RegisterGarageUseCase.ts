@@ -10,7 +10,9 @@ interface RegisterGarageInput extends IInputUseCase {
 }
 
 export type RegisterGarageUseCase = IUseCase<RegisterGarageInput, Result>
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const registerGarageUseCAse = (_garageRepository: GarageRepository): RegisterGarageUseCase => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return async (input: RegisterGarageInput) => {
         // const garage = new Garage(
         //     input.siret,
