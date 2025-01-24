@@ -40,6 +40,7 @@
     "@infrastructure": "dist/infrastructure",
     "@application": "dist/application",
     "@shared": "dist/shared",
-    "@infra_express": "dist/infrastructure/frameworks/express"
+    "@infra_express": "dist/infrastructure/frameworks/express",
+    "@tests": "dist/tests"
   }
 }

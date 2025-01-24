@@ -12,6 +12,10 @@ export class ApplicationException extends Error{
         return this.identifier === identifier;
     }
 
+    equals(error : ApplicationException) : boolean {
+        return this.identifier === error.identifier;
+    }
+
 }
 
 export class NotFoundEntityException extends ApplicationException {
