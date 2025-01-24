@@ -43,6 +43,7 @@ export class DriversProjection extends AbstractProjection {
             firstName: event.payload.firstName || driverResponse.value.firstName,
             lastName: event.payload.lastName || driverResponse.value.lastName,
             email: event.payload.email || driverResponse.value.email,
+            birthDate: driverResponse.value.birthDate,
             driverLicensedAt: driverResponse.value.driverLicensedAt,
             documents: []
         })

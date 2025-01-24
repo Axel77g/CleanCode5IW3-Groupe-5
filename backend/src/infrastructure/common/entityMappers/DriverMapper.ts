@@ -10,6 +10,7 @@ export class DriverMapper{
             firstName: driver.firstName,
             lastName: driver.lastName,
             email: driver.email,
+            birthDate: driver.birthDate,
             driverLicensedAt: driver.driverLicensedAt,
             documents: driver.documents
         })
@@ -22,6 +23,7 @@ export class DriverMapper{
             driver.firstName,
             driver.lastName,
             driver.email,
+            driver.birthDate,
             driver.driverLicensedAt,
             driver.documents
         )

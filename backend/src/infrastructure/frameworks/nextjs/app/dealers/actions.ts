@@ -8,6 +8,7 @@ import {createRegisterDealerUseCase} from "@application/inventoryManagement/usec
 import {
     inventoryManagementEventRepository
 } from "@infrastructureCore/repositories/inventoryManagement/inventoryManagementEventRepository";
+import {dealerRepository} from "@infrastructureCore/repositories/inventoryManagement/dealerRepository";
 
 export async function registerDealer(prevState: any, formData: FormData){
     return useServerForm(formData,registerDealerRequest, async (payload, success, abort) =>{
@@ -15,7 +16,7 @@ export async function registerDealer(prevState: any, formData: FormData){
         if(address instanceof Error) return abort(address.message)
         const siret = Siret.create(payload.siret)
         if(siret instanceof Error) return abort(siret.message)
-        const registerDealerUseCase = createRegisterDealerUseCase(inventoryManagementEventRepository)
+        const registerDealerUseCase = createRegisterDealerUseCase(inventoryManagementEventRepository, dealerRepository)
         const registerResponse = await registerDealerUseCase({
             siret,
             name: payload.name,

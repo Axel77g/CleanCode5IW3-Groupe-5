@@ -5,12 +5,13 @@ import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
 import {createPatchDriverUseCase} from "@application/testDrive/usecases/driver/PatchDriverUseCase";
 import {testDriveEventRepository} from "@infrastructureCore/repositories/testDrive/testDriveEventRepository";
 import {useServerForm} from "@/hooks/useServerForm";
+import {driverRepository} from "@infrastructureCore/repositories/testDrive/driverRepository";
 
 export async function patchDriverAction(prevState: any, formData : FormData){
     return useServerForm(formData, patchDriverRequest, async (payload, success,abort)=>{
         const driverLicenseId = DriverLicenseId.create(payload.driverLicenseId)
         if(driverLicenseId instanceof Error) return abort(driverLicenseId.message)
-        const patchDriverUseCase = createPatchDriverUseCase(testDriveEventRepository)
+        const patchDriverUseCase = createPatchDriverUseCase(testDriveEventRepository, driverRepository)
         const result = await patchDriverUseCase({
             driverLicenseId,
             driver: {

@@ -29,7 +29,7 @@ export default function DriverTestDriveForm(props : {driverLicenseId : string}){
     const [formState, formAction] = useActionState<ActionState,FormData>(registerDriverTestDrive,initialState)
     return <Form state={formState} action={formAction} title={"Ajouter un test de conduite"}>
         <input type="hidden" name={"driverLicenseId"} value={props.driverLicenseId}/>
-        <Input placeholder={"Immatriculation du véhicule"} label={"Immatriculation"} name={"vehicleImmatriculation"} type={"text"} value={formState.vehicleImmatriculation} />
+        <Input placeholder={"Immatriculation du véhicule (AA-999-ZZ"} label={"Immatriculation"} name={"vehicleImmatriculation"} type={"text"} value={formState.vehicleImmatriculation} />
         <Input type="date" name="period.startDate" placeholder={"Date début du test"} value={formState?.period?.startDate} label={"Date début du test"}/>
         <Input type="date" name="period.endDate" placeholder={"Date début du test"} value={formState?.period?.endDate} label={"Date debut du test"}/>
         <Button>Ajouter le test de conduite</Button>

@@ -11,6 +11,7 @@ export interface RegisterDriverInput extends IInputUseCase{
     firstName : string ,
     lastName: string,
     email: string,
+    birthDate: Date,
     driverLicensedAt: Date,
 }
 
@@ -31,6 +32,7 @@ export const createRegisterDriverUseCase = (_eventRepository: EventRepository, d
             firstName: input.firstName,
             lastName: input.lastName,
             email: input.email,
+            birthDate: input.birthDate,
             driverLicensedAt: input.driverLicensedAt,
             documents: []
         })
