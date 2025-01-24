@@ -7,13 +7,14 @@ import {
 } from "@infrastructureCore/repositories/inventoryManagement/inventoryManagementEventRepository";
 import {Siret} from "@domain/shared/value-object/Siret";
 import {Address} from "@domain/shared/value-object/Address";
+import {dealerRepository} from "@infrastructureCore/repositories/inventoryManagement/dealerRepository";
 
 export const registerDealerController : Controller<typeof registerDealerRequest> = async (payload) => {
     const address = Address.create(payload.address)
     if(address instanceof Error) return Response.Fail(400, address.message)
     const siret = Siret.create(payload.siret)
     if(siret instanceof Error) return Response.Fail(400, siret.message)
-    const registerDealerUseCase = createRegisterDealerUseCase(inventoryManagementEventRepository)
+    const registerDealerUseCase = createRegisterDealerUseCase(inventoryManagementEventRepository,dealerRepository)
     const registerResponse = await registerDealerUseCase({
         siret,
         name: payload.name,

@@ -4,12 +4,13 @@ import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
 import {Response} from "@expressApp/core/Response";
 import {createPatchDriverUseCase} from "@application/testDrive/usecases/driver/PatchDriverUseCase";
 import {testDriveEventRepository} from "@infrastructureCore/repositories/testDrive/testDriveEventRepository";
+import {driverRepository} from "@infrastructureCore/repositories/testDrive/driverRepository";
 
 export const patchDriverController : Controller<typeof patchDriverRequest> = async (payload) => {
     const driverLicenseId = DriverLicenseId.create(payload.driverLicenseId)
     if(driverLicenseId instanceof Error) return Response.Fail(400, driverLicenseId.message)
 
-    const patchDriverUseCase = createPatchDriverUseCase(testDriveEventRepository)
+    const patchDriverUseCase = createPatchDriverUseCase(testDriveEventRepository, driverRepository)
     const result = await patchDriverUseCase({
         driverLicenseId,
         driver: {

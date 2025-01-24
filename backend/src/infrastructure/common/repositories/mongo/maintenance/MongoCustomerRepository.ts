@@ -12,7 +12,7 @@ export class MongoCustomerRepository extends AbstractMongoRepository implements 
         return this.catchError(
             async () => {
                 const customerDocument = await this.getQuery().findOne({ customerId: customerId });
-                if(!customerDocument) return Result.SuccessEmpty();
+                if(!customerDocument) return Result.SuccessVoid();
                 const customer = CustomerMapper.toDomain(customerDocument);
                 if (customer instanceof ApplicationException) return Result.Failure(customer);
                 return Result.Success<Customer>(customer);

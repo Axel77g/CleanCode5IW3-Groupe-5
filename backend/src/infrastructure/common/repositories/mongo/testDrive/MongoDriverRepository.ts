@@ -26,7 +26,7 @@ export class MongoDriverRepository extends AbstractMongoRepository implements Dr
         return this.catchError(
             async () => {
                 const driverDocument = await this.getQuery().findOne({ driverLicenseId: driverLicenseId })
-                if(!driverDocument) return Result.SuccessEmpty()
+                if(!driverDocument) return Result.SuccessVoid()
                 const driver = DriverMapper.toDomain(driverDocument)
                 if(driver instanceof ApplicationException) return Result.Failure(driver)
                 return Result.Success<Driver>(driver)

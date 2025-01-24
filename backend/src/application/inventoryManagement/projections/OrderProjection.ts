@@ -1,4 +1,3 @@
-import {OrderRepository} from "../repositories/OrderRepository";
 import {RegisterOrderEvent} from "@domain/inventoryManagement/events/RegisterOrderEvent";
 import {UpdateOrderStatusEvent} from "@domain/inventoryManagement/events/UpdateOrderStatusEvent";
 import {Order} from "@domain/inventoryManagement/entities/Order";
@@ -9,6 +8,7 @@ import {OrderStatusEnum} from "@domain/inventoryManagement/enums/OrderStatusEnum
 import {ApplicationException, NotFoundEntityException} from "@shared/ApplicationException";
 import {UnregisterDealerEvent} from "@domain/inventoryManagement/events/UnregisterDealerEvent";
 import {Siret} from "@domain/shared/value-object/Siret";
+import {OrderRepository} from "@application/inventoryManagement/repositories/OrderRepository";
 
 export class OrderProjection extends AbstractProjection {
     constructor(private _orderRepository: OrderRepository) { super() }
@@ -45,7 +45,7 @@ export class OrderProjection extends AbstractProjection {
     async applyUpdateStatusEvent(event: UpdateOrderStatusEvent) : Promise<VoidResult> {
         const orderResponse = await this._orderRepository.findOrderById(event.payload.orderId)
         if(!orderResponse.success) return orderResponse
-        if(orderResponse.value === null) return Result.Failure(NotFoundEntityException.create("Order not found during update projection, this should not happen, please check the event store"))
+        if(orderResponse.empty) return Result.Failure(NotFoundEntityException.create("Order not found during update projection, this should not happen, please check the event store"))
         const order = orderResponse.value.applyStatus(event.payload.status)
         if(order instanceof ApplicationException) return Result.Failure(order)
         const statusHistory = [
@@ -61,7 +61,7 @@ export class OrderProjection extends AbstractProjection {
 
     async applyUnregisterDealerEvent(event: UnregisterDealerEvent) : Promise<VoidResult> {
         const siret = Siret.create(event.payload.siret)
-        if(siret instanceof Error) return Result.Failure(siret)
+        if(siret instanceof ApplicationException) return Result.Failure(siret)
         return this._orderRepository.deleteOrdersByDealerSiret(siret)
     }
 

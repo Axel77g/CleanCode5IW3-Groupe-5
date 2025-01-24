@@ -2,7 +2,7 @@ import { StockInventorySparePart } from "@domain/inventoryManagement/value-objec
 import { Siret } from '@domain/shared/value-object/Siret';
 import { IInputUseCase, IUseCase } from "@shared/IUseCase";
 import { Result } from "@shared/Result";
-import { StockRepository } from "../../repositories/StockRepository";
+import {StockRepository} from "@application/inventoryManagement/repositories/StockRepository";
 
 interface ShowDealerStockInput extends IInputUseCase {
     siret: Siret,

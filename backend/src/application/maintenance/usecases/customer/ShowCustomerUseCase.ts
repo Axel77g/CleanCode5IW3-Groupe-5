@@ -1,8 +1,8 @@
 import { Customer } from '@domain/maintenance/entities/Customer';
 import { IInputUseCase, IUseCase } from "@shared/IUseCase";
 import { Result } from '@shared/Result';
-import { CustomerRepository } from '../../repositories/CustomerRepository';
 import {NotFoundEntityException} from "@shared/ApplicationException";
+import {CustomerRepository} from "@application/maintenance/repositories/CustomerRepository";
 
 interface ShowCustomerInput extends IInputUseCase {
     customerId: string,
@@ -14,7 +14,7 @@ export const createShowCustomerUseCase = (_customerRepository: CustomerRepositor
     return async (input: ShowCustomerInput) => {
         const findResponse = await _customerRepository.find(input.customerId);
         if (!findResponse.success) return findResponse;
-        if (findResponse.value === null) return Result.Failure(NotFoundEntityException.create("Customer not found"));
+        if (findResponse.empty) return Result.Failure(NotFoundEntityException.create("Customer not found"));
         return findResponse
     }
 }

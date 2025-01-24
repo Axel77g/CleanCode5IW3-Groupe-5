@@ -3,6 +3,8 @@ import {OrderLine, OrderLineDTO} from "../value-object/OrderLine";
 import {randomUUID} from "node:crypto";
 import {OrderStatusEnum} from "../enums/OrderStatusEnum";
 import {ApplicationException} from "@shared/ApplicationException";
+import {RegisterOrderEvent} from "@domain/inventoryManagement/events/RegisterOrderEvent";
+import {UpdateOrderStatusEvent} from "@domain/inventoryManagement/events/UpdateOrderStatusEvent";
 
 
 export interface OrderDTO {
@@ -72,6 +74,27 @@ export class Order {
         }
     }
 
+    setStatusHistory(statusHistory : OrderStatusHistory[]){
+        return new Order(this.orderId, this.orderedAt, this.deliveredAt, this.siret, this.lines, this.status, statusHistory);
+    }
+
+    registerEvent() : RegisterOrderEvent {
+        return new RegisterOrderEvent({
+            orderId: this.orderId,
+            orderedAt: this.orderedAt,
+            deliveredAt: this.deliveredAt,
+            siret: this.siret.getValue(),
+            lines: this.lines
+        })
+    }
+
+    updateStatusEvent() : UpdateOrderStatusEvent {
+        return new UpdateOrderStatusEvent({
+            orderId: this.orderId,
+            status: this.status
+        })
+    }
+
     static generateID(): string {
         return randomUUID();
     }
@@ -87,10 +110,36 @@ export class Order {
           return error
         }
 
-        return new Order(object.orderId, object.orderedAt, object.deliveredAt, siret, lines as OrderLine[], object?.status, object?.statusHistory);
+        return this.create({
+            orderId: object.orderId,
+            orderedAt: object.orderedAt,
+            deliveredAt: object.deliveredAt,
+            siret,
+            lines: lines as OrderLine[],
+            status: object.status,
+            statusHistory: object.statusHistory
+        })
     }
 
-    setStatusHistory(statusHistory : OrderStatusHistory[]){
-        return new Order(this.orderId, this.orderedAt, this.deliveredAt, this.siret, this.lines, this.status, statusHistory);
+    static create(order : {
+        orderId ?: string,
+        orderedAt: Date,
+        deliveredAt: Date,
+        siret: Siret,
+        lines: OrderLine[],
+        status ?: OrderStatusEnum,
+        statusHistory ?: OrderStatusHistory[]
+    }){
+        if(order.orderedAt > order.deliveredAt) return new ApplicationException("Order.InvalidDates","Ordered date must be before delivered date");
+        if(order.lines.length === 0) return new ApplicationException("Order.NoLines","Order must have at least one line");
+        return new Order(
+            order.orderId || Order.generateID(),
+            order.orderedAt,
+            order.deliveredAt,
+            order.siret,
+            order.lines,
+            order.status,
+            order.statusHistory
+        );
     }
 }

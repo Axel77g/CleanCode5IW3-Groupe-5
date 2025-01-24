@@ -2,8 +2,8 @@ import {IUseCase} from "@shared/IUseCase";
 import { PaginatedResult, Result} from "@shared/Result";
 import {Driver} from "@domain/testDrive/entities/Driver";
 import {PaginatedInput} from "@shared/PaginatedInput";
-import {DriverRepository} from "../../repositories/DriverRepository";
 import {ApplicationException} from "@shared/ApplicationException";
+import {DriverRepository} from "@application/testDrive/repositories/DriverRepository";
 
 export type ListDriversUseCase = IUseCase<PaginatedInput, PaginatedResult<Driver>>
 

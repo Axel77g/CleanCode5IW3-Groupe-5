@@ -6,6 +6,7 @@ import {StockInventorySparePart} from "@domain/inventoryManagement/value-object/
 import {InventorySparePart} from "@domain/inventoryManagement/entities/InventorySparePart";
 
 export class MongoStockRepository extends AbstractMongoRepository implements StockRepository{
+
     protected collectionName: string = 'stock';
 
     getStock(siret: Siret): Promise<Result<StockInventorySparePart[]>> {
@@ -13,7 +14,9 @@ export class MongoStockRepository extends AbstractMongoRepository implements Sto
             async () => {
                 const stockDocuments = await this.getQuery().find({siret: siret.getValue()}).toArray();
                 const stockInventorySpareParts = stockDocuments.map((stockDocument : any) => StockInventorySparePart.create(stockDocument));
-                return Result.Success<StockInventorySparePart[]>(stockInventorySpareParts);
+                const stockInventorySparePartsSafe = stockInventorySpareParts.filter((stockInventorySparePart) => stockInventorySparePart instanceof StockInventorySparePart) as StockInventorySparePart[];
+                if(stockInventorySparePartsSafe.length !== stockInventorySpareParts.length) console.warn("Some stock inventory spare parts could not be created");
+                return Result.Success<StockInventorySparePart[]>(stockInventorySparePartsSafe);
             }
         )
     }
@@ -41,6 +44,22 @@ export class MongoStockRepository extends AbstractMongoRepository implements Sto
                 const safeActualQuantity = actualQuantity.value || 0;
                 const newQuantity = safeActualQuantity + quantity;
                 await this.getQuery().updateOne({siret: siret.getValue(), sparePartReference: sparePart.reference}, {$set: {quantity: newQuantity}}, {upsert: true});
+                await session.commitTransaction();
+                return Result.SuccessVoid();
+            },
+            session.abortTransaction.bind(session)
+        )
+    }
+
+    deleteByDealerSiret(siret: Siret): Promise<VoidResult> {
+        const session = this.getSessionTransaction();
+        return this.catchError(
+            async () => {
+                session.startTransaction({
+                    readConcern: { level: 'snapshot' },
+                    writeConcern: { w: 'majority' }
+                });
+                await this.getQuery().deleteMany({siret: siret.getValue()});
                 await session.commitTransaction();
                 return Result.SuccessVoid();
             },

@@ -1,19 +1,20 @@
 import {Incident, IncidentDTO} from "@domain/testDrive/entities/Incident";
-import {IncidentType} from "@domain/testDrive/enums/IncidentType";
 import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
 import {MappedEntities, MappedEntity} from "./MappedEntity";
+import {ApplicationException} from "@shared/ApplicationException";
 
 export class IncidentMapper {
-    static toDomain(incidentEventRaw: any) : Incident | Error {
+    static toDomain(incidentEventRaw: any) : Incident | ApplicationException {
         const driverLicenceId = DriverLicenseId.create(incidentEventRaw.driverLicenceId)
-        if(driverLicenceId instanceof Error) return driverLicenceId
-        return new Incident(
-            incidentEventRaw.incidentId,
-            driverLicenceId,
-            incidentEventRaw.type as IncidentType,
-            incidentEventRaw.description,
-            new Date(incidentEventRaw.date)
-        );
+        if(driverLicenceId instanceof ApplicationException) return driverLicenceId
+        return Incident.create({
+            incidentId: incidentEventRaw.incidentId,
+            driverLicenseId: driverLicenceId,
+            type: incidentEventRaw.type,
+            description: incidentEventRaw.description,
+            date: incidentEventRaw.date
+        })
+
     }
 
     static toPersistence(incident: Incident) : MappedEntity<IncidentDTO> {

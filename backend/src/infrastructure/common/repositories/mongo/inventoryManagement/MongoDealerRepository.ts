@@ -28,7 +28,7 @@ export class MongoDealerRepository extends AbstractMongoRepository implements De
         return this.catchError(
             async () =>{
                 const dealerDocument = await this.getQuery().findOne({siret: siret.getValue()});
-                if(!dealerDocument) return Result.SuccessEmpty();
+                if(!dealerDocument) return Result.SuccessVoid();
                 const dealer = DealerMapper.toDomain(dealerDocument);
                 if(dealer instanceof ApplicationException) return Result.Failure(dealer);
                 return Result.Success<Dealer>(dealer);
