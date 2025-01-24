@@ -98,3 +98,14 @@ export const generateOrderDTO = (
         ...overrides,
     };
 };
+
+export const generateStockInventorySparePart = (
+    overrides?: Partial<{ siret: Siret; sparePartReference: string; quantity: number }>
+) => {
+    return {
+        siret: generateSiret(),
+        sparePartReference: "VALID_REF",
+        quantity: 10,
+        ...overrides,
+    };
+};
