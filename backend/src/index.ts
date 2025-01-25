@@ -47,6 +47,7 @@ async function main(){
 
     const result = await rDriverUseCase({
         driverLicenseId,
+        birthDate: new Date(),
         driverLicensedAt : new Date(),
         firstName:"John",
         lastName:"Doe",

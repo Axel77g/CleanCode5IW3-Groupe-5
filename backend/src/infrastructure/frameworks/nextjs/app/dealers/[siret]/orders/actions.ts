@@ -16,6 +16,7 @@ import {
 import {updateOrderStatusRequest} from "@infrastructureCore/requests/inventoryManagement/updateOrderStatusRequest";
 import {createUpdateOrderStatusUseCase} from "@application/inventoryManagement/usecases/order/UpdateOrderStatusUseCase";
 import {orderRepository} from "@infrastructureCore/repositories/inventoryManagement/orderRepository";
+import {ApplicationException} from "@shared/ApplicationException";
 
 export async function registerOrder(prevState:any, formData: FormData){
     return useServerForm(formData, registerOrderRequest, async (payload, success, abort)=>{
@@ -24,11 +25,12 @@ export async function registerOrder(prevState:any, formData: FormData){
         const orderLines = payload.orderLines.map((line) => {
             return OrderLine.create(line)
         })
+        if(orderLines.some((line) => line instanceof ApplicationException)) return abort("Invalid order lines")
         const registerOrderUseCase = createRegisterOrderUseCase(inventoryManagementEventRepository,dealerRepository,inventorySparePartRepository)
         const result = await registerOrderUseCase({
             ...payload,
             dealer: siret,
-            orderLines
+            orderLines : orderLines as OrderLine[]
         })
         if(!result.success) return abort(result.error.message)
         return success(result.value)
