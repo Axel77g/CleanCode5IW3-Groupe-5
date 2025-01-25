@@ -7,13 +7,14 @@ import List from "@/components/List";
 import {Driver} from "@domain/testDrive/entities/Driver";
 import ListItem from "@/components/ListItem";
 import {useServerPagination} from "@/hooks/useServerPagination";
+import HeadingTile from "@/components/HeadingTitle";
 export default async function DriversPage(pageProps : {searchParams: any}){
     const listDriversUseCase = createListDriversUseCase(driverRepository)
     const result = await listDriversUseCase(await useServerPagination(pageProps))
     if(!result.success) return <div>{result.error.message}</div>
     const {value,...pagination} = result
     return <div className={"flex flex-col gap-6"}>
-        <h1 className={'text-xl font-semibold'}>Liste des conducteurs</h1>
+        <HeadingTile>Liste des conducteurs</HeadingTile>
         <List>
             {
                 value.map((driver :  Driver)=> (

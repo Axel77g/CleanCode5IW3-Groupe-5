@@ -39,7 +39,6 @@ export function useServerForm<T extends ZodSchema>(formData: FormData, schema: T
             ...rawPayload
         })
     }
-    console.log(rawPayload)
     const payloadResponse = schema.safeParse(rawPayload);
     if(!payloadResponse.success) return abort(getFirstZodError(payloadResponse.error))
     return handler(payloadResponse.data,success,abort)
