@@ -1,8 +1,11 @@
-import { VehiculeImmatriculation } from "../../maintenance/value-object/VehiculeImmatriculation";
-import { DriverLicenseId } from "../value-object/DriverLicenseId";
-import { Period } from "../value-object/Period";
+import {VehicleImmatriculation} from "../../shared/value-object/VehicleImmatriculation";
+import {Period} from "../value-object/Period";
+import {DriverLicenseId} from "../value-object/DriverLicenseId";
+import {ApplicationException} from "@shared/ApplicationException";
+import {RegisterTestDriveEvent} from "@domain/testDrive/Events/RegisterTestDriveEvent";
+import {randomUUID} from "node:crypto";
 
-export interface TestDriveDTO {
+export interface TestDriveDTO{
     testDriveId: string;
     driverLicenseId: string;
     vehicleImmatriculation: string;
@@ -10,29 +13,53 @@ export interface TestDriveDTO {
     periodEnd: Date;
 }
 
-export class TestDrive {
-    constructor(
+export class TestDrive{
+    private constructor(
         public readonly testDriveId: string,
         public readonly driverLicenseId: DriverLicenseId,
-        public readonly vehicleImmatriculation: VehiculeImmatriculation,
-        public readonly period: Period
-    ) { }
+        public readonly vehicleImmatriculation: VehicleImmatriculation,
+        public readonly period : Period
+    ) {}
 
-    static fromObject(testDrive: TestDriveDTO): TestDrive | Error {
+    static fromObject(testDrive: TestDriveDTO) : TestDrive | ApplicationException {
         const driverLicenseId = DriverLicenseId.create(testDrive.driverLicenseId)
-        if (driverLicenseId instanceof Error) return driverLicenseId
+        if(driverLicenseId instanceof ApplicationException) return driverLicenseId
 
-        const vehicleImmatriculation = VehiculeImmatriculation.create(testDrive.vehicleImmatriculation)
-        if (vehicleImmatriculation instanceof Error) return vehicleImmatriculation
+        const vehicleImmatriculation = VehicleImmatriculation.create(testDrive.vehicleImmatriculation)
+        if(vehicleImmatriculation instanceof ApplicationException) return vehicleImmatriculation
 
-        const period = Period.create(testDrive.periodStart, testDrive.periodEnd)
-        if (period instanceof Error) return period
+        const period = Period.create(testDrive.periodStart,testDrive.periodEnd)
+        if(period instanceof ApplicationException) return period
 
-        return new TestDrive(
-            testDrive.testDriveId,
+        return TestDrive.create({
+            testDriveId: testDrive.testDriveId,
             driverLicenseId,
             vehicleImmatriculation,
             period
+        })
+    }
+
+    static create(testDrive: {
+        testDriveId?: string,
+        driverLicenseId: DriverLicenseId,
+        vehicleImmatriculation: VehicleImmatriculation,
+        period: Period
+    }) {
+        return new TestDrive(
+            testDrive.testDriveId ?? randomUUID(),
+            testDrive.driverLicenseId,
+            testDrive.vehicleImmatriculation,
+            testDrive.period
         )
+    }
+
+    registerEvent() : RegisterTestDriveEvent {
+        return new RegisterTestDriveEvent({
+            testDriveId: this.testDriveId,
+            driverLicenseId: this.driverLicenseId.getValue(),
+            vehicleImmatriculation: this.vehicleImmatriculation.getValue(),
+            periodStart: this.period.startDate,
+            periodEnd: this.period.endDate
+        })
     }
 }

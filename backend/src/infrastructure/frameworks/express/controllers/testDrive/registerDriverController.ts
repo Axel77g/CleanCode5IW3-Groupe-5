@@ -7,12 +7,13 @@ import {Controller} from "../../types/Controller";
 import {Response} from "../../core/Response";
 import {registerDriverRequest} from "@infrastructureCore/requests/testDrive/registerDriverRequest";
 import {testDriveEventRepository} from "@infrastructureCore/repositories/testDrive/testDriveEventRepository";
+import {driverRepository} from "@infrastructureCore/repositories/testDrive/driverRepository";
 
 export const registerDriverController : Controller<typeof registerDriverRequest> = async (payload) => {
     const driverLicenseId = DriverLicenseId.create(payload.driverLicenseId)
     if(driverLicenseId instanceof Error) return Response.Fail(400, driverLicenseId.message)
 
-    const registerDriverUseCase = createRegisterDriverUseCase(testDriveEventRepository)
+    const registerDriverUseCase = createRegisterDriverUseCase(testDriveEventRepository, driverRepository)
     const input : RegisterDriverInput = {
         ...payload,
         driverLicenseId

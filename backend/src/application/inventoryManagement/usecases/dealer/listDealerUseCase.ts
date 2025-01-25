@@ -1,8 +1,8 @@
 import { Dealer } from "@domain/inventoryManagement/entities/Dealer";
 import { IUseCase } from "@shared/IUseCase";
 import {PaginatedResult, Result} from "@shared/Result";
-import { DealerRepository } from "../../repositories/DealerRepository";
 import {PaginatedInput} from "@shared/PaginatedInput";
+import {DealerRepository} from "@application/inventoryManagement/repositories/DealerRepository";
 
 
 type ListDealerResult = PaginatedResult<Dealer>

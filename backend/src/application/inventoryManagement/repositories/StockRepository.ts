@@ -8,4 +8,5 @@ export interface StockRepository extends IRepository{
     update(sparePart: InventorySparePart, siret: Siret, quantity: number): Promise<VoidResult>
     getStock(siret: Siret): Promise<Result<StockInventorySparePart[]>>
     getStockQuantity(sparePart: InventorySparePart, siret: Siret): Promise<Result<number>>
+    deleteByDealerSiret(siret: Siret): Promise<VoidResult>
 }

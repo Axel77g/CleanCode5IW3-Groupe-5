@@ -6,6 +6,7 @@ import Input from "@/components/Input";
 import {Button} from "@/components/Button";
 import {registerOrder} from "@/app/dealers/[siret]/orders/actions";
 import {ActionResponse} from "@/hooks/useServerForm";
+import Chip from "@/components/Chip";
 
 interface OrderLineForm{
     reference : string,
@@ -21,8 +22,8 @@ const initialState = {
 export default function RegisterOrderForm(props: { siret : string}){
     const [state, action] = useActionState<ActionResponse,FormData>(registerOrder,initialState)
     const [orderLines, setOrderLines] = useState<OrderLineForm[]>([])
-    function handleAddOrderLine(e : any){
-        e.preventDefault()
+    function handleAddOrderLine(event : any){
+        event.preventDefault()
         const temp = [...orderLines]
         temp.push({
             reference: "",
@@ -82,6 +83,9 @@ function ReferenceSelector(props: { onChange: (reference: string) => void, label
     const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
     const searchRef = useRef<HTMLInputElement>(null);
 
+    const [selectedReference, setSelectedReference] = useState<{ reference: string, name: string } | null>(null)
+
+
     useEffect(() => {
 
         if (query.length === 0) {
@@ -109,21 +113,24 @@ function ReferenceSelector(props: { onChange: (reference: string) => void, label
         setQuery(e.target.value);
     }
 
-    function handleOptionClick(reference: string) {
-        props.onChange(reference);
-        searchRef.current!.value = reference;
+    function handleOptionClick(element : {reference : string, name: string}) {
+        props.onChange(element.reference);
+        searchRef.current!.value = element.reference;
+        setSelectedReference(element)
         setOptions([]);
     }
 
+    const inputPrefix = selectedReference ? <div><Chip>{selectedReference.name}</Chip></div> : null
+    const inputMessage = !selectedReference ? 'Aucune référence sélectionnée'  : undefined
     return (
         <div>
-            <Input type="text" ref={searchRef} label={props.label} value={query} onChange={handleInputChange} placeholder="Rechercher une référence ou un nom ..."  name={"$SEARCH_REF"}/>
+            <Input message={inputMessage} prefix={inputPrefix} type="text" ref={searchRef} label={props.label} value={query} onChange={handleInputChange} placeholder="Rechercher une référence ou un nom ..."  name={"$SEARCH_REF"}/>
             {(options.length > 0 || loading) && (
                 <ul className="absolute bg-white border border-gray-300 rounded-md mt-[-10px] w-full z-10">
                     {options.map(option => (
                         <li
                             key={option.reference}
-                            onClick={() => handleOptionClick(option.reference)}
+                            onClick={() => handleOptionClick(option)}
                             className="px-4 py-2 hover:bg-gray-100 cursor-pointer border-b last:border-b-0"
                         >
                             {option.name} (ref: {option.reference})

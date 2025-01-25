@@ -24,7 +24,6 @@ export class DriverLicenseId{
     }
 
     public isValid(){
-        return true;
         const regex = /^[A-Z]\d{12}$/;
         return regex.test(this.value);
     }

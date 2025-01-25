@@ -5,11 +5,11 @@ import {Button} from "@/components/Button";
 import {registerDealer} from "@/app/dealers/actions";
 import {Form} from "@/components/Form";
 
-interface DealerRegisterFormProps {
+interface DealerRegisterFormProps{
     siret ?: string,
     name ?: string | undefined
     phoneNumber ?: string | undefined
-    address: {
+    address ?: {
         city ?: string | undefined,
         country ?: string | undefined
         postalCode ?: string | undefined
@@ -17,7 +17,7 @@ interface DealerRegisterFormProps {
     }
 }
 
-interface ActionState  extends DealerRegisterFormProps{
+interface ActionState extends DealerRegisterFormProps{
     message: string,
     success: boolean
 }

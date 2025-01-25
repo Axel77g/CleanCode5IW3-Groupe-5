@@ -1,5 +1,6 @@
-import { Result } from "@shared/Result";
-import { MongoClient } from 'mongodb';
+import {MongoClient} from 'mongodb'
+import {Result} from "@shared/Result";
+import {InternalErrorException} from "@shared/ApplicationException";
 export abstract class AbstractMongoRepository {
     protected abstract collectionName: string;
     public constructor(
@@ -20,8 +21,8 @@ export abstract class AbstractMongoRepository {
         } catch (e) {
             await onError();
             const message = e instanceof Error ? e.message : defaultMessageError;
-            console.error("[MONGO ERROR]", message);
-            return Result.FailureStr(message) as T;
+            console.error("[MONGO ERROR]", e);
+            return Result.Failure(InternalErrorException.create(message)) as T;
         }
     }
 

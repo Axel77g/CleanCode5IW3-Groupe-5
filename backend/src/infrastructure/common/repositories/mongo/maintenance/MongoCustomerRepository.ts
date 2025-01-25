@@ -2,17 +2,19 @@ import { CustomerRepository } from '@application/maintenance/repositories/Custom
 import { Customer } from '@domain/maintenance/entities/Customer';
 import { CustomerMapper } from '@infrastructure/common/entityMappers/CustomerMapper';
 import { AbstractMongoRepository } from '@infrastructure/common/repositories/mongo/AbstractMongoRepository';
-import { Result, VoidResult } from '@shared/Result';
+import {OptionalResult, Result, VoidResult} from '@shared/Result';
+import {ApplicationException} from "@shared/ApplicationException";
 
 export class MongoCustomerRepository extends AbstractMongoRepository implements CustomerRepository {
     protected collectionName: string = 'customers';
 
-    find(customerId: string): Promise<Result<Customer>> {
+    find(customerId: string): Promise<OptionalResult<Customer>> {
         return this.catchError(
             async () => {
                 const customerDocument = await this.getCollection().findOne({ customerId: customerId });
+                if(!customerDocument) return Result.SuccessVoid();
                 const customer = CustomerMapper.toDomain(customerDocument);
-                if (customer instanceof Error) return Result.Failure(customer);
+                if (customer instanceof ApplicationException) return Result.Failure(customer);
                 return Result.Success<Customer>(customer);
             },
         )

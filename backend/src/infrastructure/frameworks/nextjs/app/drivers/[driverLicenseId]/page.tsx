@@ -18,9 +18,12 @@ export default async function DriverDetailPage(pageProps: {params: any, searchPa
         firstName: result.value.firstName,
         lastName: result.value.lastName,
         email: result.value.email,
+        birthDate: result.value.birthDate,
         driverLicensedAt : result.value.driverLicensedAt,
         documents: result.value.documents
     }
+
+    console.log(driver)
 
     const driverPath = `/drivers/${driverLicenseId.getValue()}`
 

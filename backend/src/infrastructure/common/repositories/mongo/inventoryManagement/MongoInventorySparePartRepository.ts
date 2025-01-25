@@ -1,6 +1,8 @@
+import {AbstractMongoRepository} from "../AbstractMongoRepository";
 import {
     InventorySparePartRepository
 } from "@application/inventoryManagement/repositories/InventorySparePartRepository";
+import {OptionalResult, PaginatedResult, Result, VoidResult} from "@shared/Result";
 import {
     InventorySparePart,
     InventorySparePartDTO
@@ -8,30 +10,50 @@ import {
 import {
     ListInventorySparePartInput
 } from "@application/inventoryManagement/usecases/inventorySparePart/ListInventorySparePartUseCase";
-import { AbstractMongoRepository } from "../AbstractMongoRepository";
-import { PaginatedResult, Result, VoidResult } from "@shared/Result";
+import {ApplicationException} from "@shared/ApplicationException";
 
 export class MongoInventorySparePartRepository extends AbstractMongoRepository implements InventorySparePartRepository {
     protected collectionName: string = 'inventorySpareParts';
 
     constructor(...args: [any]){
         super(...args);
-        this.createTextIndex().then();
+        //this.createTextIndex().then();
     }
 
     private async createTextIndex() {
+        const existingIndexes = await this.getCollection().listIndexes().toArray();
+        const textIndex = existingIndexes.find((index: any) => index.name === "text");
+        if (textIndex) return;
         await this.getCollection().createIndex({ name: "text", reference: "text" });
     }
 
 
-    find(reference: string): Promise<Result<InventorySparePart>> {
-        return this.catchError<Result<InventorySparePart>>(
+    find(reference: string): Promise<OptionalResult<InventorySparePart>> {
+        return this.catchError(
             async () => {
                 const inventorySparePartDocument = await this.getCollection().findOne({
                     reference: reference
                 });
+                if(!inventorySparePartDocument) return Result.SuccessVoid();
                 const inventorySparePart = InventorySparePart.fromObject(inventorySparePartDocument as any);
+                if(inventorySparePart instanceof ApplicationException) return Result.Failure(inventorySparePart);
                 return Result.Success<InventorySparePart>(inventorySparePart);
+            }
+        )
+    }
+
+    findAll(references: string[]): Promise<Result<InventorySparePart[]>> {
+        return this.catchError(
+            async()=>{
+                const inventorySparePartDocuments = await this.getCollection().find({
+                    reference: {
+                        $in: references
+                    }
+                }).toArray();
+                const inventorySpareParts = inventorySparePartDocuments.map((document : any) => InventorySparePart.fromObject(document as InventorySparePartDTO));
+                const inventorySparePartsSafe = inventorySpareParts.filter((inventorySparePart : InventorySparePart | any) => !(inventorySparePart instanceof ApplicationException)) as InventorySparePart[];
+                if(inventorySparePartsSafe.length !== inventorySpareParts.length) console.warn("[WARNING] Some inventory spare parts could not be loaded");
+                return Result.Success<InventorySparePart[]>(inventorySparePartsSafe);
             }
         )
     }
@@ -69,8 +91,11 @@ export class MongoInventorySparePartRepository extends AbstractMongoRepository i
                 } : {}
                 const inventorySparePartDocuments = await this.getCollection().find(filters).skip((page - 1) * limit).limit(limit).toArray();
                 const inventorySparePartTotal = await this.getCollection().countDocuments(filters);
-                const inventorySpareParts = inventorySparePartDocuments.map((document : any) => InventorySparePart.fromObject(document as InventorySparePartDTO));
-                return Result.SuccessPaginated<InventorySparePart>(inventorySpareParts, inventorySparePartTotal, page, limit);
+                const inventorySpareParts = inventorySparePartDocuments
+                    .map((document : any) => InventorySparePart.fromObject(document as InventorySparePartDTO))
+                const inventorySparePartSafe = inventorySpareParts.filter((inventorySparePart : InventorySparePart | any) => !(inventorySparePart instanceof ApplicationException)) as InventorySparePart[];
+                if(inventorySparePartSafe.length !== inventorySpareParts.length) console.warn("[WARNING] Some inventory spare parts could not be loaded");
+                return Result.SuccessPaginated<InventorySparePart>(inventorySparePartSafe, inventorySparePartTotal, page, limit);
             }
         );
     }

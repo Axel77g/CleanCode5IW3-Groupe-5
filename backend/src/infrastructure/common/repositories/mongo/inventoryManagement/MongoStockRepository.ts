@@ -5,15 +5,18 @@ import { Siret } from "@domain/shared/value-object/Siret";
 import { Result, VoidResult } from "@shared/Result";
 import { AbstractMongoRepository } from "../AbstractMongoRepository";
 
-export class MongoStockRepository extends AbstractMongoRepository implements StockRepository {
+export class MongoStockRepository extends AbstractMongoRepository implements StockRepository{
+
     protected collectionName: string = 'stock';
 
     getStock(siret: Siret): Promise<Result<StockInventorySparePart[]>> {
         return this.catchError(
             async () => {
-                const stockDocuments = await this.getCollection().find({ siret: siret.getValue() }).toArray();
-                const stockInventorySpareParts = stockDocuments.map((stockDocument: any) => StockInventorySparePart.create(stockDocument));
-                return Result.Success<StockInventorySparePart[]>(stockInventorySpareParts);
+                const stockDocuments = await this.getCollection().find({siret: siret.getValue()}).toArray();
+                const stockInventorySpareParts = stockDocuments.map((stockDocument : any) => StockInventorySparePart.create(stockDocument));
+                const stockInventorySparePartsSafe = stockInventorySpareParts.filter((stockInventorySparePart) => stockInventorySparePart instanceof StockInventorySparePart) as StockInventorySparePart[];
+                if(stockInventorySparePartsSafe.length !== stockInventorySpareParts.length) console.warn("Some stock inventory spare parts could not be created");
+                return Result.Success<StockInventorySparePart[]>(stockInventorySparePartsSafe);
             }
         )
     }
@@ -37,9 +40,26 @@ export class MongoStockRepository extends AbstractMongoRepository implements Sto
                     writeConcern: { w: 'majority' }
                 });
                 const actualQuantity = await this.getStockQuantity(sparePart, siret);
-                if (!actualQuantity.success) return actualQuantity;
-                const newQuantity = actualQuantity.value + quantity;
-                await this.getCollection().updateOne({ siret: siret.getValue(), sparePartReference: sparePart.reference }, { $set: { quantity: newQuantity } }, { upsert: true });
+                if(!actualQuantity.success) return actualQuantity;
+                const safeActualQuantity = actualQuantity.value || 0;
+                const newQuantity = safeActualQuantity + quantity;
+                await this.getCollection().updateOne({siret: siret.getValue(), sparePartReference: sparePart.reference}, {$set: {quantity: newQuantity}}, {upsert: true});
+                await session.commitTransaction();
+                return Result.SuccessVoid();
+            },
+            session.abortTransaction.bind(session)
+        )
+    }
+
+    deleteByDealerSiret(siret: Siret): Promise<VoidResult> {
+        const session = this.getSessionTransaction();
+        return this.catchError(
+            async () => {
+                session.startTransaction({
+                    readConcern: { level: 'snapshot' },
+                    writeConcern: { w: 'majority' }
+                });
+                await this.getCollection().deleteMany({siret: siret.getValue()});
                 await session.commitTransaction();
                 return Result.SuccessVoid();
             },
