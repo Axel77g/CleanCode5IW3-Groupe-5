@@ -27,7 +27,9 @@ export class Order {
     static errors = {
         CANNOT_COMPLETE_CANCELED_ORDER: new ApplicationException("Order","Cannot complete a cancelled order"),
         CANNOT_CANCEL_COMPLETED_ORDER: new ApplicationException("Order","Cannot cancel a completed order"),
-        CANNOT_PROCESS_ORDER: new ApplicationException("Order","Cannot process a cancelled or a completed order")
+        CANNOT_PROCESS_ORDER: new ApplicationException("Order","Cannot process a cancelled or a completed order"),
+        INVALID_DATE : new ApplicationException("Order.InvalidDates","Ordered date must be before delivered date"),
+        NO_LINES :  new ApplicationException("Order.NoLines","Order must have at least one line")
     }
 
     private constructor(
@@ -129,9 +131,9 @@ export class Order {
         lines: OrderLine[],
         status ?: OrderStatusEnum,
         statusHistory ?: OrderStatusHistory[]
-    }){
-        if(order.orderedAt > order.deliveredAt) return new ApplicationException("Order.InvalidDates","Ordered date must be before delivered date");
-        if(order.lines.length === 0) return new ApplicationException("Order.NoLines","Order must have at least one line");
+    }) : Order | ApplicationException {
+        if(order.orderedAt > order.deliveredAt) return this.errors.INVALID_DATE;
+        if(order.lines.length === 0) return this.errors.NO_LINES;
         return new Order(
             order.orderId || Order.generateID(),
             order.orderedAt,

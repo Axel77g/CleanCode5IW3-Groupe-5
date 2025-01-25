@@ -5,6 +5,7 @@ import {Result} from "@shared/Result";
 import {Siret} from "@domain/shared/value-object/Siret";
 import {Dealer} from "@domain/inventoryManagement/entities/Dealer";
 import {DealerMapper} from "@infrastructure/common/entityMappers/DealerMapper";
+import {generateDealerDTO} from "@tests/Utils";
 
 jest.mock('mongodb');
 const mockClient = new MongoClient('mongodb://localhost:27017/');
@@ -52,17 +53,7 @@ describe('MongoInventorySparePartRepository', () => {
     test('getBySiret method', async () => {
         const mockSiret = Siret.create('01234567890123');
         if(mockSiret instanceof Error) throw mockSiret;
-        const dealer = Dealer.fromObject({
-            siret: '01234567890123',
-            name:"dealer",
-            address: {
-                street: "street",
-                city: "city",
-                postalCode: "postalCode",
-                country: "fr"
-            },
-            phoneNumber: "01010101010",
-        })
+        const dealer = Dealer.fromObject(generateDealerDTO());
         if(dealer instanceof Error) throw dealer;
         const dealerDocument = DealerMapper.toPersistence(dealer);
 
@@ -74,17 +65,7 @@ describe('MongoInventorySparePartRepository', () => {
     });
 
     describe('store method', () => {
-        const dealer = Dealer.fromObject({
-            siret: '01234567890123',
-            name:"dealer",
-            address: {
-                street: "street",
-                city: "city",
-                postalCode: "postalCode",
-                country: "fr"
-            },
-            phoneNumber: "01010101010",
-        })
+        const dealer = Dealer.fromObject(generateDealerDTO())
 
         if(dealer instanceof Error) throw dealer;
 

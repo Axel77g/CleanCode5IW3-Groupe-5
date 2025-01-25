@@ -11,6 +11,7 @@ module.exports = {
     "^@application/(.*)$": "<rootDir>/src/application/$1",
     "^@shared/(.*)$": "<rootDir>/src/shared/$1",
     "^@expressApp/(.*)$": "<rootDir>/src/infrastructure/frameworks/express/$1",
+    "^@tests/(.*)$": "<rootDir>/src/tests/$1",
   },
   testPathIgnorePatterns: ["/node_modules/", "/dist/"],
 };
