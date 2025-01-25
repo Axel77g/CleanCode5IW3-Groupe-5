@@ -1,9 +1,9 @@
-import {VehicleImmatriculation} from "../../shared/value-object/VehicleImmatriculation";
 import {Period} from "../value-object/Period";
 import {DriverLicenseId} from "../value-object/DriverLicenseId";
 import {ApplicationException} from "@shared/ApplicationException";
 import {RegisterTestDriveEvent} from "@domain/testDrive/Events/RegisterTestDriveEvent";
 import {randomUUID} from "node:crypto";
+import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
 
 export interface TestDriveDTO{
     testDriveId: string;
@@ -17,7 +17,7 @@ export class TestDrive{
     private constructor(
         public readonly testDriveId: string,
         public readonly driverLicenseId: DriverLicenseId,
-        public readonly vehicleImmatriculation: VehicleImmatriculation,
+        public readonly vehicleImmatriculation: VehiculeImmatriculation,
         public readonly period : Period
     ) {}
 
@@ -25,7 +25,7 @@ export class TestDrive{
         const driverLicenseId = DriverLicenseId.create(testDrive.driverLicenseId)
         if(driverLicenseId instanceof ApplicationException) return driverLicenseId
 
-        const vehicleImmatriculation = VehicleImmatriculation.create(testDrive.vehicleImmatriculation)
+        const vehicleImmatriculation = VehiculeImmatriculation.create(testDrive.vehicleImmatriculation)
         if(vehicleImmatriculation instanceof ApplicationException) return vehicleImmatriculation
 
         const period = Period.create(testDrive.periodStart,testDrive.periodEnd)
@@ -42,7 +42,7 @@ export class TestDrive{
     static create(testDrive: {
         testDriveId?: string,
         driverLicenseId: DriverLicenseId,
-        vehicleImmatriculation: VehicleImmatriculation,
+        vehicleImmatriculation: VehiculeImmatriculation,
         period: Period
     }) {
         return new TestDrive(

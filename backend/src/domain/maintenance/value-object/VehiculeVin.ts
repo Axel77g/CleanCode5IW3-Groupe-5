@@ -19,7 +19,7 @@ export class VehiculeVin {
         return regex.test(this.vin);
     }
 
-    static create(payload: VehiculeVinDTO): VehiculeVin | Error {
+    static create(payload: VehiculeVinDTO): VehiculeVin | ApplicationException {
         const vin = new VehiculeVin(payload.vin);
         if (!vin.validate()) return VehiculeVin.errors.VIN_NOT_VALID;
         return vin;

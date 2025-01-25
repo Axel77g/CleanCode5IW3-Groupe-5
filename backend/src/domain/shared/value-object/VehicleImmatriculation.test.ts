@@ -1,31 +1,31 @@
-import { VehicleImmatriculation } from "./VehicleImmatriculation";
 import { ApplicationException } from "@shared/ApplicationException";
 import {assertError} from "@tests/Utils";
+import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
 
 describe("VehicleImmatriculation", () => {
     describe("create", () => {
         it("should create a valid VehicleImmatriculation when the format is correct", () => {
             const immatriculation = "AB-123-CD";
-            const vehicleImmatriculation = VehicleImmatriculation.create(immatriculation);
+            const vehicleImmatriculation = VehiculeImmatriculation.create(immatriculation);
 
-            expect(vehicleImmatriculation).toBeInstanceOf(VehicleImmatriculation);
-            expect((vehicleImmatriculation as VehicleImmatriculation).getValue()).toEqual(immatriculation);
+            expect(vehicleImmatriculation).toBeInstanceOf(VehiculeImmatriculation);
+            expect((vehicleImmatriculation as VehiculeImmatriculation).getValue()).toEqual(immatriculation);
         });
 
         it("should return an ApplicationException when the format is invalid", () => {
             const invalidImmatriculation = "INVALID123";
-            const vehicleImmatriculation = VehicleImmatriculation.create(invalidImmatriculation);
+            const vehicleImmatriculation = VehiculeImmatriculation.create(invalidImmatriculation);
 
             expect(vehicleImmatriculation).toBeInstanceOf(ApplicationException);
-            assertError(vehicleImmatriculation as ApplicationException, VehicleImmatriculation.errors.NOT_VALID);
+            assertError(vehicleImmatriculation as ApplicationException, VehiculeImmatriculation.errors.NOT_VALID);
         });
 
         it("should return an ApplicationException when immatriculation is empty", () => {
             const invalidImmatriculation = "";
-            const vehicleImmatriculation = VehicleImmatriculation.create(invalidImmatriculation);
+            const vehicleImmatriculation = VehiculeImmatriculation.create(invalidImmatriculation);
 
             expect(vehicleImmatriculation).toBeInstanceOf(ApplicationException);
-            assertError(vehicleImmatriculation as ApplicationException, VehicleImmatriculation.errors.NOT_VALID);
+            assertError(vehicleImmatriculation as ApplicationException, VehiculeImmatriculation.errors.NOT_VALID);
         });
     });
 });

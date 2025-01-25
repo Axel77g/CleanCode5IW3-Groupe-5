@@ -16,7 +16,7 @@ export interface VehiculeDTO {
 }
 
 export class Vehicule {
-    static errors = {
+    static ApplicationExceptions = {
         INVALID_BRAND: new ApplicationException('Vehicule', 'Brand is not valid, must be Triumph'),
         INVALID_YEAR: new ApplicationException('Vehicule', 'Year is not valid, must be between 1902 and current year'),
         INVALID_VIN: new ApplicationException('Vehicule', 'VIN is not valid'),
@@ -25,47 +25,47 @@ export class Vehicule {
         INVALID_STATUS: new ApplicationException('Vehicule', 'Status is not valid'),
     }
 
-    available(): Vehicule | Error {
+    available(): Vehicule | ApplicationException {
         if (this.status === VehiculeStatusEnum.AVAILABLE) {
             return new ApplicationException('Vehicule', 'Vehicule is already available');
         }
         return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, VehiculeStatusEnum.AVAILABLE);
     }
 
-    sold(): Vehicule | Error {
+    sold(): Vehicule | ApplicationException {
         if (this.status === VehiculeStatusEnum.SOLD) {
             return new ApplicationException('Vehicule', 'Vehicule is already sold');
         }
         return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, VehiculeStatusEnum.SOLD);
     }
 
-    maintenance(): Vehicule | Error {
+    maintenance(): Vehicule | ApplicationException {
         if (this.status === VehiculeStatusEnum.IN_MAINTENANCE) {
             return new ApplicationException('Vehicule', 'Vehicule is already in maintenance');
         }
         return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, VehiculeStatusEnum.IN_MAINTENANCE);
     }
 
-    testDrive(): Vehicule | Error {
+    testDrive(): Vehicule | ApplicationException {
         if (this.status === VehiculeStatusEnum.IN_TEST_DRIVE) {
             return new ApplicationException('Vehicule', 'Vehicule is already in test drive');
         }
         return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, VehiculeStatusEnum.IN_TEST_DRIVE);
     }
 
-    reserved(): Vehicule | Error {
+    reserved(): Vehicule | ApplicationException {
         if (this.status === VehiculeStatusEnum.RESERVED) {
             return new ApplicationException('Vehicule', 'Vehicule is already reserved');
         }
         return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, VehiculeStatusEnum.RESERVED);
     }
 
-    validBrand(): Vehicule | Error {
-        if (this.brand !== 'Triumph') return Vehicule.errors.INVALID_BRAND;
+    validBrand(): Vehicule | ApplicationException {
+        if (this.brand !== 'Triumph') return Vehicule.ApplicationExceptions.INVALID_BRAND;
         return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, this.status);
     }
 
-    applyStatus(status: VehiculeStatusEnum): Vehicule | Error {
+    applyStatus(status: VehiculeStatusEnum): Vehicule | ApplicationException {
         switch (status) {
             case VehiculeStatusEnum.AVAILABLE:
                 return this.available();
@@ -78,7 +78,7 @@ export class Vehicule {
             case VehiculeStatusEnum.RESERVED:
                 return this.reserved();
             default:
-                return Vehicule.errors.INVALID_STATUS;
+                return Vehicule.ApplicationExceptions.INVALID_STATUS;
         }
     }
 
@@ -93,11 +93,11 @@ export class Vehicule {
         public readonly status: VehiculeStatusEnum = VehiculeStatusEnum.AVAILABLE
     ) { }
 
-    static fromObject(vehicule: VehiculeDTO): Vehicule | Error {
+    static fromObject(vehicule: VehiculeDTO): Vehicule | ApplicationException {
         const immatriculation = VehiculeImmatriculation.create(vehicule.immatriculation);
-        if (immatriculation instanceof Error) return immatriculation;
+        if (immatriculation instanceof ApplicationException) return immatriculation;
         const vin = VehiculeVin.create(vehicule.vin);
-        if (vin instanceof Error) return vin;
+        if (vin instanceof ApplicationException) return vin;
 
         return new Vehicule(immatriculation, vehicule.brand, vehicule.model, vehicule.year, vin, vehicule.mileage, vehicule.maintenanceDate, vehicule.status);
     }

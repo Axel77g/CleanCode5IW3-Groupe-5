@@ -2,13 +2,14 @@ import { Vehicule, VehiculeDTO } from "@domain/maintenance/entities/Vehicule";
 import { VehiculeImmatriculation } from "@domain/maintenance/value-object/VehiculeImmatriculation";
 import { VehiculeVin } from "@domain/maintenance/value-object/VehiculeVin";
 import { MappedEntity } from "./MappedEntity";
+import {ApplicationException} from "@shared/ApplicationException";
 
 export class VehiculeMapper {
-    static toDomain(vehiculeRaw: any): Vehicule | Error {
+    static toDomain(vehiculeRaw: any): Vehicule | ApplicationException {
         const immatriculation = VehiculeImmatriculation.create(vehiculeRaw.immatriculation);
-        if (immatriculation instanceof Error) return immatriculation;
+        if (immatriculation instanceof ApplicationException) return immatriculation;
         const vin = VehiculeVin.create(vehiculeRaw.vin);
-        if (vin instanceof Error) return vin;
+        if (vin instanceof ApplicationException) return vin;
         return new Vehicule(
             immatriculation,
             vehiculeRaw.brand,

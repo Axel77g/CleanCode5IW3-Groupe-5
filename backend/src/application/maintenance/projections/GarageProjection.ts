@@ -5,6 +5,7 @@ import { RegisterGarageEvent } from "@domain/maintenance/events/garage/RegisterG
 import { UnregisterGarageEvent } from "@domain/maintenance/events/garage/UnregisterGarageEvent";
 import { UpdateGarageEvent } from "@domain/maintenance/events/garage/UpdateGarageEvent";
 import { Result, VoidResult } from "@shared/Result";
+import {ApplicationException} from "@shared/ApplicationException";
 
 export class GarageProjection extends AbstractProjection {
     constructor(private _garageRepository: any) {
@@ -23,7 +24,7 @@ export class GarageProjection extends AbstractProjection {
 
     async applyRegisterEvent(event: RegisterGarageEvent): Promise<VoidResult> {
         const garage = Garage.fromObject(event.payload)
-        if (garage instanceof Error) return Result.Failure(garage)
+        if (garage instanceof ApplicationException) return Result.Failure(garage)
         return this._garageRepository.store(garage)
     }
 

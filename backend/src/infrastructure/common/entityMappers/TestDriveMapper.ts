@@ -16,12 +16,12 @@ export class TestDriveMapper {
         const period = Period.create(testDrive.periodStart, testDrive.periodEnd)
         if (period instanceof Error) return period
 
-        return new TestDrive(
-            testDrive.testDriveId,
-            driverLicenseId,
-            vehicleImmatriculation,
-            period
-        )
+        return TestDrive.create({
+                testDriveId: testDrive.testDriveId,
+                driverLicenseId,
+                vehicleImmatriculation,
+                period
+            })
     }
 
     static toPersistence(testDrive: TestDrive): MappedEntity<TestDriveDTO> {

@@ -4,6 +4,7 @@ import { VehiculeImmatriculation } from '@domain/maintenance/value-object/Vehicu
 import { VehiculeMapper } from '@infrastructure/common/entityMappers/VehiculeMapper';
 import { Result, VoidResult } from '@shared/Result';
 import { AbstractMongoRepository } from '../AbstractMongoRepository';
+import {ApplicationException} from "@shared/ApplicationException";
 
 export class MongoVehiculeRepository extends AbstractMongoRepository implements VehiculeRepository {
     protected collectionName: string = "vehicules";
@@ -39,7 +40,7 @@ export class MongoVehiculeRepository extends AbstractMongoRepository implements 
             async () => {
                 const vehiculeDocument = await this.getCollection().findOne({ immatriculation: immatriculation });
                 const vehicule = VehiculeMapper.toDomain(vehiculeDocument);
-                if (vehicule instanceof Error) return Result.Failure(vehicule);
+                if (vehicule instanceof ApplicationException) return Result.Failure(vehicule);
                 return Result.Success<Vehicule>(vehicule);
             }
         )

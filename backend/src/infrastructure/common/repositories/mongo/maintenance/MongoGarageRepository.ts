@@ -4,6 +4,7 @@ import { Siret } from "@domain/shared/value-object/Siret";
 import { GarageMapper } from "@infrastructure/common/entityMappers/GarageMapper";
 import { Result, VoidResult } from "@shared/Result";
 import { AbstractMongoRepository } from "../AbstractMongoRepository";
+import {ApplicationException} from "@shared/ApplicationException";
 
 export class MongoGarageRepository extends AbstractMongoRepository implements GarageRepository {
     protected collectionName: string = 'garages';
@@ -13,7 +14,7 @@ export class MongoGarageRepository extends AbstractMongoRepository implements Ga
             async () => {
                 const garageDocument = await this.getCollection().findOne({ siret: siret });
                 const garage = GarageMapper.toDomain(garageDocument);
-                if (garage instanceof Error) return Result.Failure(garage);
+                if (garage instanceof ApplicationException) return Result.Failure(garage);
                 return Result.Success<Garage>(garage);
             },
         )

@@ -22,7 +22,7 @@ export type RegisterVehiculeUseCase = IUseCase<RegisterVehicleInput, Result>
 export const createRegisterVehiculeUseCase = (_eventRepository: EventRepository): RegisterVehiculeUseCase => {
     return async (input: RegisterVehicleInput) => {
         const registerVehiculeEvent = new RegisterVehiculeEvent({
-            immatriculation: input.immatriculation,
+            immatriculation: input.immatriculation.getValue(),
             brand: input.brand,
             model: input.model,
             year: input.year,

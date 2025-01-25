@@ -6,9 +6,9 @@ export class UnregisterVehiculeEvent extends AbstractEvent {
     readonly type = UnregisterVehiculeEvent.type;
 
     readonly streamId: string;
-    readonly payload: VehiculeDTO;
+    readonly payload: Pick<VehiculeDTO,'immatriculation'>;
 
-    constructor(payload: VehiculeDTO) {
+    constructor(payload: Pick<VehiculeDTO,'immatriculation'>) {
         super();
         this.streamId = `vehicule-${payload.immatriculation}`;
         this.payload = payload;
