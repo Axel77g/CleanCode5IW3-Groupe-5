@@ -3,12 +3,12 @@
 import {ActionResponse, useServerForm} from "@/hooks/useServerForm";
 import {registerTestDriveRequest} from "@infrastructureCore/requests/testDrive/registerTestDriveRequest";
 import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
-import { VehiculeImmatriculation } from "@domain/shared/value-object/VehiculeImmatriculation";
 import {createRegisterTestDriveUseCase} from "@application/testDrive/usecases/testDrive/RegisterTestDriveUseCase";
 import {testDriveEventRepository} from "@infrastructureCore/repositories/testDrive/testDriveEventRepository";
 import {driverRepository} from "@infrastructureCore/repositories/testDrive/driverRepository";
 import {Period} from "@domain/testDrive/value-object/Period";
 import {ApplicationException} from "@shared/ApplicationException";
+import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
 
 export async function registerDriverTestDrive(state : Awaited<ActionResponse>, formData: FormData){
     return useServerForm(
