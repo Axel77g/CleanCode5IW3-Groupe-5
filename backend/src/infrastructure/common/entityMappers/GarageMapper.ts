@@ -1,5 +1,6 @@
 import { Garage, GarageDTO } from '@domain/maintenance/entities/Garage';
 import { MappedEntities, MappedEntity } from "@infrastructure/common/entityMappers/MappedEntity";
+import {ApplicationException} from "@shared/ApplicationException";
 
 export class GarageMapper {
     public static toPersistence(garage: Garage): MappedEntity<GarageDTO> {
@@ -11,21 +12,19 @@ export class GarageMapper {
         })
     }
 
-    public static toPersistenceList(garages: Garage[]): MappedEntities<GarageDTO> {
-        return new MappedEntities<GarageDTO>(
-            garages.map(garage => {
-                return GarageMapper.toPersistence(garage);
-            })
-        )
-    }
-
-    public static toDomain(garage: any): Garage | Error {
+    public static toDomain(garage: any): Garage | ApplicationException {
         return Garage.fromObject({
             siret: garage.siret,
             name: garage.name,
             phoneNumber: garage.phoneNumber,
             address: garage.address
         })
+    }
+
+    public static toPersistenceList(garages: Garage[]): MappedEntities<GarageDTO>[] {
+        return new MappedEntities(garages.map(garage => {
+            return GarageMapper.toPersistence(garage);
+        }))
     }
 
     public static toDomainList(garages: any[]): Garage[] {

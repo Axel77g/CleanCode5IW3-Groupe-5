@@ -1,16 +1,16 @@
 import {IInputUseCase, IUseCase} from "@shared/IUseCase";
 import {Result} from "@shared/Result";
 import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
-import {VehicleImmatriculation} from "@domain/shared/value-object/VehicleImmatriculation";
 import {Period} from "@domain/testDrive/value-object/Period";
 import {EventRepository} from "@application/shared/repositories/EventRepository";
 import {NotFoundEntityException} from "@shared/ApplicationException";
 import {TestDrive} from "@domain/testDrive/entities/TestDrive";
 import {DriverRepository} from "@application/testDrive/repositories/DriverRepository";
+import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
 
 interface RegisterTestDriveInput extends IInputUseCase {
     driverLicenseId: DriverLicenseId;
-    vehicleImmatriculation : VehicleImmatriculation,
+    vehicleImmatriculation : VehiculeImmatriculation,
     period : Period
 }
 

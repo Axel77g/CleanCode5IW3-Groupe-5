@@ -1,3 +1,3 @@
-export class AbstractInMemoryRepository{
-    protected data : any[] = [];
+export class AbstractInMemoryRepository {
+    protected data: any[] = [];
 }

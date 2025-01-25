@@ -29,10 +29,10 @@ describe('MongoInventorySparePartRepository', () => {
 
     describe('delete method', () => {
         const mockSiret = Siret.create('01234567890123');
-        if(mockSiret instanceof Error) throw mockSiret;
+        if (mockSiret instanceof Error) throw mockSiret;
         test('should delete dealer', async () => {
             const deleteOne = jest.fn().mockResolvedValue({ deletedCount: 1 });
-            repo.getQuery = jest.fn().mockReturnValue({ deleteOne });
+            repo.getCollection = jest.fn().mockReturnValue({ deleteOne });
             const result = await repo.delete(mockSiret); expect(mockSession.startTransaction).toHaveBeenCalled();
             expect(deleteOne).toHaveBeenCalledWith({ siret: mockSiret.getValue() });
             expect(mockSession.commitTransaction).toHaveBeenCalled();
@@ -41,7 +41,7 @@ describe('MongoInventorySparePartRepository', () => {
 
         test('should handle delete error', async () => {
             const deleteOne = jest.fn().mockRejectedValue(new Error('delete error'));
-            repo.getQuery = jest.fn().mockReturnValue({ deleteOne });
+            repo.getCollection = jest.fn().mockReturnValue({ deleteOne });
             const result = await repo.delete(mockSiret);
             expect(mockSession.startTransaction).toHaveBeenCalled();
             expect(deleteOne).toHaveBeenCalledWith({ siret: mockSiret.getValue() });
@@ -58,7 +58,7 @@ describe('MongoInventorySparePartRepository', () => {
         const dealerDocument = DealerMapper.toPersistence(dealer);
 
         const findOne = jest.fn().mockResolvedValue(dealerDocument);
-        repo.getQuery = jest.fn().mockReturnValue({ findOne });
+        repo.getCollection = jest.fn().mockReturnValue({ findOne });
         const result = await repo.getBySiret(mockSiret);
         expect(findOne).toHaveBeenCalledWith({ siret: mockSiret.getValue() });
         expect(result.success).toBeTruthy();
@@ -67,11 +67,11 @@ describe('MongoInventorySparePartRepository', () => {
     describe('store method', () => {
         const dealer = Dealer.fromObject(generateDealerDTO())
 
-        if(dealer instanceof Error) throw dealer;
+        if (dealer instanceof Error) throw dealer;
 
         test('should store dealer', async () => {
             const updateOne = jest.fn().mockResolvedValue({ upsertedCount: 1 });
-            repo.getQuery = jest.fn().mockReturnValue({ updateOne });
+            repo.getCollection = jest.fn().mockReturnValue({ updateOne });
             const result = await repo.store(dealer);
             expect(mockSession.startTransaction).toHaveBeenCalled();
             expect(updateOne).toHaveBeenCalledWith({ siret: dealer.siret.getValue() }, { $set: DealerMapper.toPersistence(dealer) }, { upsert: true });
@@ -81,7 +81,7 @@ describe('MongoInventorySparePartRepository', () => {
 
         test('should handle store error', async () => {
             const updateOne = jest.fn().mockRejectedValue(new Error('store error'));
-            repo.getQuery = jest.fn().mockReturnValue({ updateOne });
+            repo.getCollection = jest.fn().mockReturnValue({ updateOne });
             const result = await repo.store(dealer);
             expect(mockSession.startTransaction).toHaveBeenCalled();
             expect(updateOne).toHaveBeenCalledWith({ siret: dealer.siret.getValue() }, { $set: DealerMapper.toPersistence(dealer) }, { upsert: true });

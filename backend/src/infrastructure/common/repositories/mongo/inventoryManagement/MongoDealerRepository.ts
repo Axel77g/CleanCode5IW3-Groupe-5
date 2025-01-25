@@ -8,7 +8,7 @@ import {PaginatedInput} from "@shared/PaginatedInput";
 import {ApplicationException} from "@shared/ApplicationException";
 
 
-export class MongoDealerRepository extends AbstractMongoRepository implements DealerRepository{
+export class MongoDealerRepository extends AbstractMongoRepository implements DealerRepository {
     protected collectionName: string = "dealers";
 
     delete(siret: Siret): Promise<VoidResult> {
@@ -16,7 +16,7 @@ export class MongoDealerRepository extends AbstractMongoRepository implements De
         return this.catchError<VoidResult>(
             async () => {
                 session.startTransaction();
-                await this.getQuery().deleteOne({siret: siret.getValue()});
+                await this.getCollection().deleteOne({ siret: siret.getValue() });
                 await session.commitTransaction();
                 return Result.SuccessVoid();
             },
@@ -27,7 +27,7 @@ export class MongoDealerRepository extends AbstractMongoRepository implements De
     getBySiret(siret: Siret): Promise<OptionalResult<Dealer>> {
         return this.catchError(
             async () =>{
-                const dealerDocument = await this.getQuery().findOne({siret: siret.getValue()});
+                const dealerDocument = await this.getCollection().findOne({siret: siret.getValue()});
                 if(!dealerDocument) return Result.SuccessVoid();
                 const dealer = DealerMapper.toDomain(dealerDocument);
                 if(dealer instanceof ApplicationException) return Result.Failure(dealer);
@@ -41,7 +41,7 @@ export class MongoDealerRepository extends AbstractMongoRepository implements De
         return this.catchError(
             async () => {
                 session.startTransaction();
-                await this.getQuery().updateOne({siret: dealer.siret.getValue()}, {$set: DealerMapper.toPersistence(dealer)}, {upsert: true});
+                await this.getCollection().updateOne({ siret: dealer.siret.getValue() }, { $set: DealerMapper.toPersistence(dealer) }, { upsert: true });
                 await session.commitTransaction();
                 return Result.SuccessVoid();
             },
@@ -50,11 +50,11 @@ export class MongoDealerRepository extends AbstractMongoRepository implements De
     }
 
     list(pagination: PaginatedInput): Promise<PaginatedResult<Dealer>> {
-        const {page, limit} = pagination;
+        const { page, limit } = pagination;
         return this.catchError(
             async () => {
-                const dealersDocuments = await this.getQuery().find().skip((page - 1) * limit).limit(limit).toArray();
-                const dealersTotal = await this.getQuery().countDocuments();
+                const dealersDocuments = await this.getCollection().find().skip((page - 1) * limit).limit(limit).toArray();
+                const dealersTotal = await this.getCollection().countDocuments();
                 const dealers = DealerMapper.toDomainList(dealersDocuments);
                 return Result.SuccessPaginated<Dealer>(dealers, dealersTotal, page, limit);
             }

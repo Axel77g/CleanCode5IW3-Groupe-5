@@ -1,5 +1,5 @@
 import { AbstractEvent } from "@shared/AbstractEvent";
-import { CustomerDTO } from "../entities/Customer";
+import { CustomerDTO } from "../../entities/Customer";
 
 export class RegisterCustomerEvent extends AbstractEvent {
     static type = 'CUSTOMER_REGISTERED';

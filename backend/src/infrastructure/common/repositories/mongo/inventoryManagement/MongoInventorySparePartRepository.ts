@@ -12,7 +12,7 @@ import {
 } from "@application/inventoryManagement/usecases/inventorySparePart/ListInventorySparePartUseCase";
 import {ApplicationException} from "@shared/ApplicationException";
 
-export class MongoInventorySparePartRepository extends AbstractMongoRepository implements InventorySparePartRepository{
+export class MongoInventorySparePartRepository extends AbstractMongoRepository implements InventorySparePartRepository {
     protected collectionName: string = 'inventorySpareParts';
 
     constructor(...args: [any]){
@@ -21,17 +21,17 @@ export class MongoInventorySparePartRepository extends AbstractMongoRepository i
     }
 
     private async createTextIndex() {
-        const existingIndexes = await this.getQuery().listIndexes().toArray();
+        const existingIndexes = await this.getCollection().listIndexes().toArray();
         const textIndex = existingIndexes.find((index: any) => index.name === "text");
         if (textIndex) return;
-        await this.getQuery().createIndex({ name: "text", reference: "text" });
+        await this.getCollection().createIndex({ name: "text", reference: "text" });
     }
 
 
     find(reference: string): Promise<OptionalResult<InventorySparePart>> {
         return this.catchError(
             async () => {
-                const inventorySparePartDocument = await this.getQuery().findOne({
+                const inventorySparePartDocument = await this.getCollection().findOne({
                     reference: reference
                 });
                 if(!inventorySparePartDocument) return Result.SuccessVoid();
@@ -45,7 +45,7 @@ export class MongoInventorySparePartRepository extends AbstractMongoRepository i
     findAll(references: string[]): Promise<Result<InventorySparePart[]>> {
         return this.catchError(
             async()=>{
-                const inventorySparePartDocuments = await this.getQuery().find({
+                const inventorySparePartDocuments = await this.getCollection().find({
                     reference: {
                         $in: references
                     }
@@ -63,7 +63,7 @@ export class MongoInventorySparePartRepository extends AbstractMongoRepository i
         return this.catchError<VoidResult>(
             async () => {
                 session.startTransaction();
-                await this.getQuery().updateOne(
+                await this.getCollection().updateOne(
                     { reference: inventorySparePart.reference },
                     {
                         $set: {
@@ -89,8 +89,8 @@ export class MongoInventorySparePartRepository extends AbstractMongoRepository i
                         $search: search
                     }
                 } : {}
-                const inventorySparePartDocuments = await this.getQuery().find(filters).skip((page - 1) * limit).limit(limit).toArray();
-                const inventorySparePartTotal = await this.getQuery().countDocuments(filters);
+                const inventorySparePartDocuments = await this.getCollection().find(filters).skip((page - 1) * limit).limit(limit).toArray();
+                const inventorySparePartTotal = await this.getCollection().countDocuments(filters);
                 const inventorySpareParts = inventorySparePartDocuments
                     .map((document : any) => InventorySparePart.fromObject(document as InventorySparePartDTO))
                 const inventorySparePartSafe = inventorySpareParts.filter((inventorySparePart : InventorySparePart | any) => !(inventorySparePart instanceof ApplicationException)) as InventorySparePart[];

@@ -8,31 +8,31 @@ import {Result, VoidResult} from "@shared/Result";
 import {ApplicationException, NotFoundEntityException} from "@shared/ApplicationException";
 import {DealerRepository} from "@application/inventoryManagement/repositories/DealerRepository";
 
-export class DealerProjection  extends AbstractProjection{
+export class DealerProjection extends AbstractProjection {
     constructor(private _dealerRepository: DealerRepository) {
         super()
     }
 
-    init(projectionJobScheduler : ProjectionJobScheduler){
+    init(projectionJobScheduler: ProjectionJobScheduler) {
         projectionJobScheduler.schedule(RegisterDealerEvent.type, this.constructor.name)
         projectionJobScheduler.schedule(UnregisterDealerEvent.type, this.constructor.name)
     }
 
     bindEvents() {
         return {
-            [RegisterDealerEvent.type] : this.applyRegisterDealerEvent,
-            [UnregisterDealerEvent.type] : this.applyUnregisterDealerEvent
+            [RegisterDealerEvent.type]: this.applyRegisterDealerEvent,
+            [UnregisterDealerEvent.type]: this.applyUnregisterDealerEvent
         }
     }
 
 
-    async applyRegisterDealerEvent(event: RegisterDealerEvent) : Promise<VoidResult> {
+    async applyRegisterDealerEvent(event: RegisterDealerEvent): Promise<VoidResult> {
         const dealer = Dealer.fromObject(event.payload)
         if(dealer instanceof ApplicationException) return Result.Failure(dealer)
         return this._dealerRepository.store(dealer)
     }
 
-    async applyUnregisterDealerEvent(event : UnregisterDealerEvent) : Promise<VoidResult> {
+    async applyUnregisterDealerEvent(event: UnregisterDealerEvent): Promise<VoidResult> {
         const siret = Siret.create(event.payload.siret)
         if(siret instanceof ApplicationException) return Result.Failure(siret)
         const dealerFromRepo = await this._dealerRepository.getBySiret(siret)

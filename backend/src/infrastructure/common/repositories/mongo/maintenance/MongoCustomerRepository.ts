@@ -11,7 +11,7 @@ export class MongoCustomerRepository extends AbstractMongoRepository implements 
     find(customerId: string): Promise<OptionalResult<Customer>> {
         return this.catchError(
             async () => {
-                const customerDocument = await this.getQuery().findOne({ customerId: customerId });
+                const customerDocument = await this.getCollection().findOne({ customerId: customerId });
                 if(!customerDocument) return Result.SuccessVoid();
                 const customer = CustomerMapper.toDomain(customerDocument);
                 if (customer instanceof ApplicationException) return Result.Failure(customer);
@@ -26,7 +26,7 @@ export class MongoCustomerRepository extends AbstractMongoRepository implements 
             async () => {
                 session.startTransaction();
                 const customerDocument = CustomerMapper.toPersistence(customer);
-                await this.getQuery().insertOne(customerDocument);
+                await this.getCollection().insertOne(customerDocument);
                 await session.commitTransaction();
                 return Result.SuccessVoid();
             },
@@ -39,7 +39,7 @@ export class MongoCustomerRepository extends AbstractMongoRepository implements 
         return this.catchError(
             async () => {
                 session.startTransaction();
-                await this.getQuery().deleteOne({ customerId });
+                await this.getCollection().deleteOne({ customerId });
                 await session.commitTransaction();
                 return Result.SuccessVoid();
             },

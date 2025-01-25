@@ -12,10 +12,10 @@ export class MongoDriverRepository extends AbstractMongoRepository implements Dr
     store(driver: Driver): Promise<VoidResult> {
         const session = this.getSessionTransaction()
         return this.catchError(
-            async () =>{
+            async () => {
                 session.startTransaction()
-                await this.getQuery()
-                    .updateOne( { driverLicenseId: driver.driverLicenseId.getValue() }, { $set: DriverMapper.toPersistence(driver) }, { upsert: true } );
+                await this.getCollection()
+                    .updateOne({ driverLicenseId: driver.driverLicenseId.getValue() }, { $set: DriverMapper.toPersistence(driver) }, { upsert: true });
                 await session.commitTransaction()
                 return Result.SuccessVoid()
             },
@@ -25,7 +25,7 @@ export class MongoDriverRepository extends AbstractMongoRepository implements Dr
     getByLicenseId(driverLicenseId: string): Promise<OptionalResult<Driver>> {
         return this.catchError(
             async () => {
-                const driverDocument = await this.getQuery().findOne({ driverLicenseId: driverLicenseId })
+                const driverDocument = await this.getCollection().findOne({ driverLicenseId: driverLicenseId })
                 if(!driverDocument) return Result.SuccessVoid()
                 const driver = DriverMapper.toDomain(driverDocument)
                 if(driver instanceof ApplicationException) return Result.Failure(driver)
@@ -35,11 +35,11 @@ export class MongoDriverRepository extends AbstractMongoRepository implements Dr
     }
 
     async listDrivers(pagination: PaginatedInput): Promise<PaginatedResult<Driver>> {
-        const {limit, page}  = pagination
+        const { limit, page } = pagination
         return this.catchError(
             async () => {
-                const driversDocuments = await this.getQuery().find().skip((page - 1) * limit).limit(limit)
-                const total = await this.getQuery().countDocuments({})
+                const driversDocuments = await this.getCollection().find().skip((page - 1) * limit).limit(limit)
+                const total = await this.getCollection().countDocuments({})
                 const drivers = DriverMapper.toDomainList(await driversDocuments.toArray())
                 return Result.SuccessPaginated<Driver>(drivers, total, page, limit)
             }
