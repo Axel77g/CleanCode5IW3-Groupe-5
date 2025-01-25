@@ -1,12 +1,11 @@
 import { IInputUseCase, IUseCase} from "@shared/IUseCase";
 import {
-        InventorySparePartDTO
+    InventorySparePart,
+    InventorySparePartDTO
 } from "@domain/inventoryManagement/entities/InventorySparePart";
 import {Result} from "@shared/Result";
-import {
-    UpsertInventorySparePartEvent
-} from "@domain/inventoryManagement/events/UpsertInventorySparePartEvent";
-import {EventRepository} from "../../../shared/repositories/EventRepository";
+import {EventRepository} from "@application/shared/repositories/EventRepository";
+import {ApplicationException} from "@shared/ApplicationException";
 
 interface UpsertInventorySparePartInput extends IInputUseCase, InventorySparePartDTO{}
 
@@ -16,8 +15,9 @@ export const createUpsertInventorySparePartUseCase = (
 ): UpsertInventorySparePartUseCase => {
 
     return async (input: UpsertInventorySparePartInput) => {
-        const upsertSparePartEvent = new UpsertInventorySparePartEvent(input)
-        const storeResponse = await _eventRepository.storeEvent(upsertSparePartEvent)
+        const inventorySparePart = InventorySparePart.create(input)
+        if(inventorySparePart instanceof ApplicationException) return Result.Failure(inventorySparePart)
+        const storeResponse = await _eventRepository.storeEvent(inventorySparePart.upsertEvent())
         if (!storeResponse.success) return storeResponse
         return Result.Success("Spare part upserted successfully")
     }

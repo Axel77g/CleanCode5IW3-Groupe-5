@@ -40,7 +40,7 @@ async function main(){
     new IncidentsProjection(incidentRepository)
 
     const testDriveEventRepository = new MongoTestDriveEventRepository(client,eventObserver)
-    const rDriverUseCase = createRegisterDriverUseCase(testDriveEventRepository)
+    const rDriverUseCase = createRegisterDriverUseCase(testDriveEventRepository, driverRepository)
 
     const driverLicenseId = DriverLicenseId.create("124536323125")
     if(driverLicenseId instanceof Error) return console.error(driverLicenseId)

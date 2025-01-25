@@ -3,11 +3,10 @@ import {Order} from "@domain/inventoryManagement/entities/Order";
 import {OrderLine} from "@domain/inventoryManagement/value-object/OrderLine";
 import {Result} from "@shared/Result";
 import { Siret } from '@domain/shared/value-object/Siret';
-import {EventRepository} from "../../../shared/repositories/EventRepository";
-import {DealerRepository} from "../../repositories/DealerRepository";
 import {ApplicationException} from "@shared/ApplicationException";
-import {RegisterOrderEvent} from "@domain/inventoryManagement/events/RegisterOrderEvent";
 import {InventorySparePartRepository} from "@application/inventoryManagement/repositories/InventorySparePartRepository";
+import {EventRepository} from "@application/shared/repositories/EventRepository";
+import {DealerRepository} from "@application/inventoryManagement/repositories/DealerRepository";
 
 interface RegisterOrderInput extends IInputUseCase{
     dealer: Siret,
@@ -25,22 +24,24 @@ const registerOrderErrors = {
 export const createRegisterOrderUseCase = (_eventRepository : EventRepository, _dealerRepository: DealerRepository, _inventorySparePartRepository : InventorySparePartRepository) : RegisterOrderUseCase => {
     return async (input: RegisterOrderInput) => {
         const dealer = await _dealerRepository.getBySiret(input.dealer);
-        if(!dealer.success) return Result.Failure(registerOrderErrors.NOT_FOUND_DEALER)
+        if(!dealer.success) return dealer
+        if(dealer.empty) return Result.Failure(registerOrderErrors.NOT_FOUND_DEALER)
 
-        const sparePartReferences = input.orderLines.map((line) => line.reference)
-        for(const reference of sparePartReferences){
-            const sparePart = await _inventorySparePartRepository.find(reference)
-            if(!sparePart.success) return Result.Failure(registerOrderErrors.CANNOT_CREATE_ORDER_WITH_NOT_FOUND_REFERENCE)
-        }
+        const sparePartReferences = input.orderLines.map(line => line.reference);
+        const sparePartsResponse = await _inventorySparePartRepository.findAll(sparePartReferences);
+        if (!sparePartsResponse.success) return sparePartsResponse;
+        const missingReferences = sparePartReferences.filter(ref => !sparePartsResponse.value.some(sp => sp.reference === ref));
+        if (missingReferences.length > 0) return Result.Failure(registerOrderErrors.CANNOT_CREATE_ORDER_WITH_NOT_FOUND_REFERENCE);
 
-        const registerOrderEvent = new RegisterOrderEvent({
+        const order = Order.create({
             orderId: Order.generateID(),
+            orderedAt: input.orderedDate,
             deliveredAt: input.deliveryDate,
-            orderedAt :  input.orderedDate,
-            siret: input.dealer.getValue(),
+            siret: input.dealer,
             lines: input.orderLines
         })
-        const repositoryResponse = await _eventRepository.storeEvent(registerOrderEvent);
+        if(order instanceof ApplicationException) return Result.Failure(order)
+        const repositoryResponse = await _eventRepository.storeEvent(order.registerEvent());
         if(!repositoryResponse.success) return repositoryResponse
         return Result.Success("Order registered successfully")
     }

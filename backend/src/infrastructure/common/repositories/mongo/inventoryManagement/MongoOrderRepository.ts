@@ -12,7 +12,7 @@ export class MongoOrderRepository extends AbstractMongoRepository implements Ord
        return this.catchError(
            async () => {
                 const orderDocument = await this.getQuery().findOne({orderId: orderId});
-                if(!orderDocument) return Result.SuccessEmpty();
+                if(!orderDocument) return Result.SuccessVoid();
                 const order = Order.fromObject(orderDocument as any);
                 if(order instanceof Error) return Result.Failure(order);
                 return Result.Success<Order>(order);

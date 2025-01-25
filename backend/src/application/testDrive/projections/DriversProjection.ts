@@ -37,7 +37,7 @@ export class DriversProjection extends AbstractProjection {
     async applyDriverUpdatedEvent(event : DriverUpdatedEvent) : Promise<VoidResult> {
         const driverResponse = await  this._driverRepository.getByLicenseId(event.payload.driverLicenseId)
         if(!driverResponse.success) return driverResponse
-        if(driverResponse.value === null) return Result.Failure(NotFoundEntityException.create("Driver not found during update projection, this should not happen, please check the event store"))
+        if(driverResponse.empty) return Result.Failure(NotFoundEntityException.create("Driver not found during update projection, this should not happen, please check the event store"))
         const driver = Driver.fromObject({
             driverLicenseId: driverResponse.value.driverLicenseId.getValue(),
             firstName: event.payload.firstName || driverResponse.value.firstName,
