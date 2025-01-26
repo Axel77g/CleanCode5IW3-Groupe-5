@@ -1,4 +1,3 @@
-import {ShowDealerStockUseCase} from "@application/inventoryManagement/usecases/stock/ShowDealerStockUseCase";
 import {UseCaseImplementation} from "@infrastructureCore/useCaseImplementation/UseCaseImplementation";
 import {Siret} from "@domain/shared/value-object/Siret";
 import {siretRequest} from "@infrastructureCore/requests/inventoryManagement/siretRequest";

@@ -1,4 +1,3 @@
-import {Controller} from "../types/Controller";
 import {ZodArray, ZodEffects, ZodError, ZodNativeEnum, ZodNumber, ZodObject, ZodSchema, ZodString} from "zod";
 import {server} from "../server";
 import {Request, Response as ExpressResponse} from "express";
