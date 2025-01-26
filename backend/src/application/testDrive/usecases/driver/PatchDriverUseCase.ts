@@ -19,7 +19,7 @@ const patchDriverErrors = {
 
 export const createPatchDriverUseCase = (_eventRepository: EventRepository, _driverRepository: DriverRepository): PatchDriverUseCase => {
     return async (input: PatchDriverInput) => {
-        const existResponse = await _driverRepository.getByLicenseId(input.driverLicenseId.getValue())
+        const existResponse = await _driverRepository.getByLicenseId(input.driverLicenseId)
         if(!existResponse.success) return existResponse
         if(existResponse.empty) return Result.Failure(patchDriverErrors.DRIVER_NOT_FOUND)
         const driver = existResponse.value.update(input.driver)

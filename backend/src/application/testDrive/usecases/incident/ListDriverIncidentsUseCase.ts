@@ -20,7 +20,7 @@ const ListDriverIncidentsErrors = {
 
 export const createListDriverIncidentsUseCase = (_incidentRepository : IncidentRepository, _driverRepository : DriverRepository): ListDriverIncidentsUseCase => {
     return async (input : ListDriverIncidentsInput) => {
-        const driverResponse = await _driverRepository.getByLicenseId(input.driverLicenseId.getValue())
+        const driverResponse = await _driverRepository.getByLicenseId(input.driverLicenseId)
         if(!driverResponse.success) return driverResponse
         if(driverResponse.empty) return Result.Failure(ListDriverIncidentsErrors.DRIVER_NOT_FOUND)
         const incidentsResponse = await _incidentRepository.listDriverIncidents(input.driverLicenseId, input)

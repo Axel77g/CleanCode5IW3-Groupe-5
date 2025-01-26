@@ -22,7 +22,7 @@ const registerTestDriveErrors = {
 
 export const createRegisterTestDriveUseCase = (_eventRepository: EventRepository, _driverRepository : DriverRepository): RegisterTestDriveUseCase => {
     return async (input: RegisterTestDriveInput) => {
-        const driverResponse = await _driverRepository.getByLicenseId(input.driverLicenseId.getValue())
+        const driverResponse = await _driverRepository.getByLicenseId(input.driverLicenseId)
         if(!driverResponse.success) return driverResponse
         if(driverResponse.empty) return Result.Failure(registerTestDriveErrors.DRIVER_NOT_FOUND)
         const testDrive = TestDrive.create({
