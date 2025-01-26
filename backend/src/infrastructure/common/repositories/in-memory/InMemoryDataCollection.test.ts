@@ -1,4 +1,4 @@
-import { InMemoryDataCollection } from './InMemoryDataCollection';  // Assurez-vous que le chemin est correct
+import { InMemoryDataCollection } from './InMemoryDataCollection'; 
 interface SampleObject{
     stringVal: string;
     numberVal: number;
