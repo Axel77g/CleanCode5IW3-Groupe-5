@@ -28,20 +28,6 @@ export abstract class MongoEventRepository extends AbstractMongoRepository imple
         }
     }
 
-    async exists(streamId: string): Promise<Result<true>> {
-        try {
-            const count = await this.getCollection().countDocuments(
-                {
-                    streamId: { $regex: `^${streamId}` }
-                }
-            );
-            if (count === 0) return Result.FailureStr("Event not found");
-            return Result.Success<true>(true);
-        } catch (e) {
-            console.error(e);
-            return Promise.resolve(Result.FailureStr("An error occurred while checking if event exists"));
-        }
-    }
 
     getEventsById(eventId: string[]): Promise<Result<IEvent[]>> {
         return this.catchError(async () => {
