@@ -7,7 +7,7 @@ import { Controller } from "../../types/Controller";
 
 export const unregisterGarageController: Controller<typeof siretRequest> = async (payload) => {
     const siret = Siret.create(payload.siret)
-    if (siret instanceof Error) return Response.Fail(400, siret.message)
+    if (siret instanceof Error) return Response.Fail(400, siret)
     const unregisterGarageUseCase = createUnregisterGarageUseCase(maintenanceEventRepository)
     const unregisterResponse = await unregisterGarageUseCase({ siret })
     if (!unregisterResponse.success) return Response.Fail(400, unregisterResponse.error)

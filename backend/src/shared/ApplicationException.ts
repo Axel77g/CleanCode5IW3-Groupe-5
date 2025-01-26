@@ -28,14 +28,14 @@ export class NotFoundEntityException extends ApplicationException {
     }
 }
 
-export class InternalErrorException extends ApplicationException {
+export class InternalException extends ApplicationException {
     private detailedMessage: string;
     private constructor(message: string){
         super('INTERNAL_ERROR', "An internal error occurred");
         this.detailedMessage = message;
     }
 
-    static create(message: string) : InternalErrorException {
-        return new InternalErrorException(message);
+    static create(message: string) : InternalException {
+        return new InternalException(message);
     }
 }

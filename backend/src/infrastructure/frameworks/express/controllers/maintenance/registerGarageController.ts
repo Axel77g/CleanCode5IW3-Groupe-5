@@ -8,9 +8,9 @@ import { registerGarageRequest } from "@infrastructure/frameworks/core/requests/
 
 export const registerGarageController: Controller<typeof registerGarageRequest> = async (payload) => {
     const address = Address.create(payload.address)
-    if (address instanceof Error) return Response.Fail(400, address.message)
+    if (address instanceof Error) return Response.Fail(400, address)
     const siret = Siret.create(payload.siret)
-    if (siret instanceof Error) return Response.Fail(400, siret.message)
+    if (siret instanceof Error) return Response.Fail(400, siret)
     const registerGarageUseCase = createRegisterGarageUseCase(maintenanceEventRepository)
     const registerResponse = await registerGarageUseCase({
         siret,

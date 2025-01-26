@@ -5,7 +5,7 @@ import {ApplicationException} from "@shared/ApplicationException";
 
 export class IncidentMapper {
     static toDomain(incidentEventRaw: any) : Incident | ApplicationException {
-        const driverLicenceId = DriverLicenseId.create(incidentEventRaw.driverLicenceId)
+        const driverLicenceId = DriverLicenseId.create(incidentEventRaw.driverLicenseId)
         if(driverLicenceId instanceof ApplicationException) return driverLicenceId
         return Incident.create({
             incidentId: incidentEventRaw.incidentId,
