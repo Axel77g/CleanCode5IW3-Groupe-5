@@ -20,5 +20,5 @@
     }
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules","src/infrastructure/frameworks/nextjs"]
+  "exclude": ["node_modules","src/infrastructure/frameworks/nextjs/.next"]
 }

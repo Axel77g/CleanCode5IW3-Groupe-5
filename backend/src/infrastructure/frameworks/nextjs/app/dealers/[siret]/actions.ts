@@ -1,22 +1,16 @@
 "use server";
 
-import {Siret} from "@domain/shared/value-object/Siret";
-import {createUnregisterDealerUseCase} from "@application/inventoryManagement/usecases/dealer/UnregisterDealerUseCase";
-import {
-    inventoryManagementEventRepository
-} from "@infrastructureCore/repositories/inventoryManagement/inventoryManagementEventRepository";
 import {abort, ActionResponse, success} from "@/hooks/useServerForm";
-import {dealerRepository} from "@infrastructureCore/repositories/inventoryManagement/dealerRepository";
+import {
+    unregisterDealerUseCase
+} from "@infrastructureCore/useCaseImplementation/InventoryManagement/unregisterDealerUseCase";
 
 export interface UnregisterDealerActionState extends ActionResponse{
     siretString:string
 }
 
 export async function unregisterDealerAction(state : UnregisterDealerActionState){
-    const siret = Siret.create(state.siretString)
-    if(siret instanceof Error) return siret
-    const unregisterDealerUseCase = createUnregisterDealerUseCase(inventoryManagementEventRepository, dealerRepository)
-    const response = await unregisterDealerUseCase({siret})
-    if(!response.success) return abort(response.error.message)
-    return success(response.value)
+    const result = await unregisterDealerUseCase({siret : state.siretString})
+    if(!result.success) return abort(result.error.message)
+    return success(result.value)
 }

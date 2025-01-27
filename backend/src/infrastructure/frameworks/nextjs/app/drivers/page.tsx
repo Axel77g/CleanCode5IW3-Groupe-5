@@ -8,8 +8,8 @@ import {Driver} from "@domain/testDrive/entities/Driver";
 import ListItem from "@/components/ListItem";
 import {useServerPagination} from "@/hooks/useServerPagination";
 import HeadingTile from "@/components/HeadingTitle";
+import {listDriversUseCase} from "@infrastructureCore/useCaseImplementation/testDrive/listDriversUseCase";
 export default async function DriversPage(pageProps : {searchParams: any}){
-    const listDriversUseCase = createListDriversUseCase(driverRepository)
     const result = await listDriversUseCase(await useServerPagination(pageProps))
     if(!result.success) return <div>{result.error.message}</div>
     const {value,...pagination} = result
