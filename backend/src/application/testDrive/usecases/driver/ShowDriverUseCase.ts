@@ -17,7 +17,7 @@ const ShowDriverErrors = {
 
 export const createShowDriverUseCase = (_driverRepository : DriverRepository) : ShowDriverUseCase => {
     return async (input: ShowDriverInput) => {
-        const findResponse = await _driverRepository.getByLicenseId(input.driverLicenseId.getValue())
+        const findResponse = await _driverRepository.getByLicenseId(input.driverLicenseId)
         if(!findResponse.success) return findResponse
         if(findResponse.empty) return Result.Failure(ShowDriverErrors.DRIVER_NOT_FOUND)
         return findResponse

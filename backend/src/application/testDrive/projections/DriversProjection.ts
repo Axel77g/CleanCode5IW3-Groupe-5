@@ -7,7 +7,8 @@ import {
     ProjectionJobScheduler
 } from "@application/shared/projections/ProjectionJobScheduler";
 import {Result, VoidResult} from "@shared/Result";
-import {NotFoundEntityException} from "@shared/ApplicationException";
+import {ApplicationException, NotFoundEntityException} from "@shared/ApplicationException";
+import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
 
 export class DriversProjection extends AbstractProjection {
     constructor(private _driverRepository: DriverRepository) {
@@ -29,13 +30,15 @@ export class DriversProjection extends AbstractProjection {
 
     async applyDriverCreatedEvent(event: DriverCreatedEvent) : Promise<VoidResult> {
         const driver = Driver.fromObject(event.payload)
-        if(driver instanceof Error) return Result.Failure(driver)
+        if(driver instanceof ApplicationException) return Result.Failure(driver)
         await this._driverRepository.store(driver)
         return Result.SuccessVoid()
     }
 
     async applyDriverUpdatedEvent(event : DriverUpdatedEvent) : Promise<VoidResult> {
-        const driverResponse = await  this._driverRepository.getByLicenseId(event.payload.driverLicenseId)
+        const driverLicenseId = DriverLicenseId.create(event.payload.driverLicenseId)
+        if(driverLicenseId instanceof ApplicationException) return Result.Failure(driverLicenseId)
+        const driverResponse = await  this._driverRepository.getByLicenseId(driverLicenseId)
         if(!driverResponse.success) return driverResponse
         if(driverResponse.empty) return Result.Failure(NotFoundEntityException.create("Driver not found during update projection, this should not happen, please check the event store"))
         const driver = Driver.fromObject({
@@ -47,7 +50,7 @@ export class DriversProjection extends AbstractProjection {
             driverLicensedAt: driverResponse.value.driverLicensedAt,
             documents: []
         })
-        if(driver instanceof Error) return Result.Failure(driver)
+        if(driver instanceof ApplicationException) return Result.Failure(driver)
         await this._driverRepository.store(driver)
         return Result.SuccessVoid()
     }
