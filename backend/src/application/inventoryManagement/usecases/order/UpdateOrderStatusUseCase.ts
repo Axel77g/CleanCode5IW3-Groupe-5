@@ -9,13 +9,13 @@ interface UpdateOrderInput extends IInputUseCase{
     orderId: string,
     status : OrderStatusEnum
 }
-export type RegisterOrderUseCase = IUseCase<UpdateOrderInput, Result>
+export type UpdateOrderStatusUseCase = IUseCase<UpdateOrderInput, Result>
 
 const registerOrderErrors = {
     NOT_FOUND_ORDER: NotFoundEntityException.create("Cannot update status for not found order"),
 }
 
-export const createUpdateOrderStatusUseCase = (_eventRepository : EventRepository, _orderRepository: OrderRepository) : RegisterOrderUseCase => {
+export const createUpdateOrderStatusUseCase = (_eventRepository : EventRepository, _orderRepository: OrderRepository) : UpdateOrderStatusUseCase => {
     return async (input: UpdateOrderInput) => {
         const orderResponse = await _orderRepository.findOrderById(input.orderId);
         if(!orderResponse.success) return orderResponse
