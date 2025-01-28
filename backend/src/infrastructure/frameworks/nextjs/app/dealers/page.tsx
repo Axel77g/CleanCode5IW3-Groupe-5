@@ -17,7 +17,7 @@ export default async function DealersListPage(pageProps: {searchParams: any}) {
             <List>
                 {
                     value.map(dealer=>(
-                        <ListItem link={`/dealers/${dealer.siret.getValue()}`}>
+                        <ListItem key={dealer.siret.getValue()} link={`/dealers/${dealer.siret.getValue()}`}>
                             <Chip>{dealer.siret.getValue()}</Chip>
                             {dealer.name}
                         </ListItem>

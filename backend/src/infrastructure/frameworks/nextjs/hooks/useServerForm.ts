@@ -36,7 +36,6 @@ export function useServerForm<T extends ZodSchema>(formData: FormData, schema: T
         return Promise.resolve({
             message,
             success : true,
-            ...rawPayload
         })
     }
     const payloadResponse = schema.safeParse(rawPayload);

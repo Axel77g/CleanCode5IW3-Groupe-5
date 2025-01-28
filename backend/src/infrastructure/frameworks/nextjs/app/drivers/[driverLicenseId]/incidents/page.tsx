@@ -12,7 +12,7 @@ import {
 import {ErrorCallout} from "@/components/ErrorCallout";
 
 export default async function DriverIncidentsListPage(pageProps : {params : any, searchParams:any}) {
-    const {driverLicenseId} = await pageProps.params
+    const {driverLicenseId} = await pageProps.params as {driverLicenseId: string}
     const paginationQuery = await useServerPagination(pageProps)
     const result = await listDriverIncidentsUseCase({driverLicenseId, ...paginationQuery})
     if(!result.success) return <ErrorCallout>{result.error.message}</ErrorCallout>
@@ -29,6 +29,6 @@ export default async function DriverIncidentsListPage(pageProps : {params : any,
             }
         </List>
         <Pagination {...pagination}/>
-        <DriverIncidentsForm driverLicenseId={driverLicenseId.getValue()}/>
+        <DriverIncidentsForm driverLicenseId={driverLicenseId}/>
     </div>
 }

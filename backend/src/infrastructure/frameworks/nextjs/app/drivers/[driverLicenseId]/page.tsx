@@ -5,7 +5,7 @@ import Link from "next/link";
 import {ErrorCallout} from "@/components/ErrorCallout";
 import {showDriverUseCase} from "@infrastructureCore/useCaseImplementation/testDrive/showDriverUseCase";
 export default async function DriverDetailPage(pageProps: {params: any, searchParams:any}) {
-    const {driverLicenseId} = await pageProps.params
+    const {driverLicenseId} = await pageProps.params as {driverLicenseId: string}
     const result = await showDriverUseCase({driverLicenseId})
     if(!result.success) return <ErrorCallout>{result.error.message}</ErrorCallout>
     const driver : DriverDTO = {
@@ -17,10 +17,10 @@ export default async function DriverDetailPage(pageProps: {params: any, searchPa
             driverLicensedAt : result.value.driverLicensedAt,
             documents: result.value.documents
     }
-    const driverPath = `/drivers/${driverLicenseId.getValue()}`
+    const driverPath = `/drivers/${driverLicenseId}`
     return (
         <div>
-            <h1 className={"text-xl font-semibold"}>DriverDetailPage {driverLicenseId.getValue()}</h1>
+            <h1 className={"text-xl font-semibold"}>DriverDetailPage {driverLicenseId}</h1>
             <DriverPatchForm driver={driver}/>
 
             <br/>

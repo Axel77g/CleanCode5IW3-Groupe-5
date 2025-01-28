@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Link from "next/link";
+import { Home, Package, Users } from "lucide-react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,11 +26,46 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased p-4 flex flex-col gap-2`}
-      >
-        {children}
-      </body>
+    <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+    >
+    <div className="flex h-screen bg-gray-50">
+        {/* Sidebar */}
+        <aside className="w-64 bg-white border-r border-gray-200 shadow-sm p-4 flex flex-col gap-6">
+            <h1 className="text-lg font-semibold text-gray-800">Dashboard</h1>
+            <nav className="flex flex-col gap-3">
+                <Link
+                    href="/dealers"
+                    className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 hover:shadow transition"
+                >
+                    <Home className="w-5 h-5 text-gray-600"/>
+                    <span className="text-sm font-medium text-gray-700">Concessionnaires</span>
+                </Link>
+                <Link
+                    href="/inventory-spare-parts"
+                    className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 hover:shadow transition"
+                >
+                    <Package className="w-5 h-5 text-gray-600"/>
+                    <span className="text-sm font-medium text-gray-700">Pièces détachées</span>
+                </Link>
+                <Link
+                    href="/drivers"
+                    className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 hover:shadow transition"
+                >
+                    <Users className="w-5 h-5 text-gray-600"/>
+                    <span className="text-sm font-medium text-gray-700">Conducteurs</span>
+                </Link>
+            </nav>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 p-6 bg-gray-50">
+            <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6">
+                {children}
+            </div>
+        </main>
+    </div>
+    </body>
     </html>
   );
 }

@@ -11,7 +11,7 @@ import {
 import {ErrorCallout} from "@/components/ErrorCallout";
 
 export default async function DriverTestDrivesPage(pageProps : {searchParams: any, params: any}){
-    const {driverLicenseId} = await pageProps.params;
+    const {driverLicenseId} = await pageProps.params as {driverLicenseId: string};
     const paginationQuery = await useServerPagination(pageProps)
     const result = await listDriverTestsDrivesUseCase({driverLicenseId,...paginationQuery})
     if(!result.success) return <ErrorCallout>{result.error.message}</ErrorCallout>
@@ -29,6 +29,6 @@ export default async function DriverTestDrivesPage(pageProps : {searchParams: an
 
         <Pagination {...pagination}/>
         <hr/>
-        <DriverTestDriveForm driverLicenseId={driverLicenseId.getValue()}/>
+        <DriverTestDriveForm driverLicenseId={driverLicenseId}/>
     </div>
 }
