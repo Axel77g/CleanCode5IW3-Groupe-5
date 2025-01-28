@@ -11,6 +11,6 @@ export class RegisterGarageEvent extends AbstractEvent {
     constructor(payload: GarageDTO) {
         super();
         this.streamId = `garage-${payload.siret}`;
-        this.payload = payload;
+        this.payload = payload; 
     }
 }

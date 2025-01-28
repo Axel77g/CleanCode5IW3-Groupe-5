@@ -14,6 +14,7 @@ export const createShowGarageUseCase = (_garageRepository: GarageRepository): Sh
     return async (input: ShowGarageInput) => {
         const findResponse = await _garageRepository.show(input.siret);
         if (!findResponse.success) return Result.FailureStr("Garage not found")
+        if (findResponse.empty) return Result.FailureStr("Garage not found")
         return findResponse
     }
 }

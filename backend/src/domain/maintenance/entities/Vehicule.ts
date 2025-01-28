@@ -1,6 +1,7 @@
 import { VehiculeModelEnum } from "@domain/maintenance/enums/VehiculeModelEnum";
 import { VehiculeStatusEnum } from "@domain/maintenance/enums/VehiculeStatusEnum";
 import { ApplicationException } from "@shared/ApplicationException";
+import { RegisterVehiculeEvent } from "../events/vehicule/RegisterVehiculeEvent";
 import { VehiculeImmatriculation } from "../value-object/VehiculeImmatriculation";
 import { VehiculeVin, VehiculeVinDTO } from "../value-object/VehiculeVin";
 
@@ -19,7 +20,6 @@ export class Vehicule {
     static ApplicationExceptions = {
         INVALID_BRAND: new ApplicationException('Vehicule', 'Brand is not valid, must be Triumph'),
         INVALID_YEAR: new ApplicationException('Vehicule', 'Year is not valid, must be between 1902 and current year'),
-        INVALID_VIN: new ApplicationException('Vehicule', 'VIN is not valid'),
         INVALID_MILEAGE: new ApplicationException('Vehicule', 'Mileage is not valid, must be greater than 0'),
         INVALID_MODEL: new ApplicationException('Vehicule', 'Model is not valid'),
         INVALID_STATUS: new ApplicationException('Vehicule', 'Status is not valid'),
@@ -65,6 +65,26 @@ export class Vehicule {
         return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, this.status);
     }
 
+    validYear(): Vehicule | ApplicationException {
+        if (this.year < 1902 || this.year > new Date().getFullYear()) return Vehicule.ApplicationExceptions.INVALID_YEAR;
+        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, this.status);
+    }
+
+    validMileage(): Vehicule | ApplicationException {
+        if (this.mileage <= 0) return Vehicule.ApplicationExceptions.INVALID_MILEAGE;
+        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, this.status);
+    }
+
+    validModel(): Vehicule | ApplicationException {
+        if (!Object.values(VehiculeModelEnum).includes(this.model)) return Vehicule.ApplicationExceptions.INVALID_MODEL;
+        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, this.status);
+    }
+
+    validStatus(): Vehicule | ApplicationException {
+        if (!Object.values(VehiculeStatusEnum).includes(this.status)) return Vehicule.ApplicationExceptions.INVALID_STATUS;
+        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, this.status);
+    }
+
     applyStatus(status: VehiculeStatusEnum): Vehicule | ApplicationException {
         switch (status) {
             case VehiculeStatusEnum.AVAILABLE:
@@ -102,4 +122,55 @@ export class Vehicule {
         return new Vehicule(immatriculation, vehicule.brand, vehicule.model, vehicule.year, vin, vehicule.mileage, vehicule.maintenanceDate, vehicule.status);
     }
 
+    static create(object: {
+        immatriculation: VehiculeImmatriculation,
+        brand: 'Triumph',
+        model: VehiculeModelEnum,
+        year: number,
+        vin: VehiculeVin,
+        mileage: number,
+        maintenanceDate: Date,
+        status: VehiculeStatusEnum
+    }) {
+        return new Vehicule(object.immatriculation, object.brand, object.model, object.year, object.vin, object.mileage, object.maintenanceDate, object.status);
+    }
+
+    registerEvent(): RegisterVehiculeEvent {
+        return new RegisterVehiculeEvent({
+            immatriculation: this.immatriculation.getValue(),
+            brand: this.brand,
+            model: this.model,
+            year: this.year,
+            vin: this.vin,
+            mileage: this.mileage,
+            maintenanceDate: this.maintenanceDate,
+            status: this.status
+        })
+    }
+
+    unregisterEvent(): RegisterVehiculeEvent {
+        return new RegisterVehiculeEvent({
+            immatriculation: this.immatriculation.getValue(),
+            brand: this.brand,
+            model: this.model,
+            year: this.year,
+            vin: this.vin,
+            mileage: this.mileage,
+            maintenanceDate: this.maintenanceDate,
+            status: this.status
+        })
+    }
+
+    update(object: {
+        immatriculation: VehiculeImmatriculation,
+        brand: 'Triumph',
+        model: VehiculeModelEnum,
+        year: number,
+        vin: VehiculeVin,
+        mileage: number,
+        maintenanceDate: Date,
+        status: VehiculeStatusEnum
+    }) {
+        return new Vehicule(object.immatriculation, object.brand, object.model, object.year, object.vin, object.mileage, object.maintenanceDate, object.status);
+    }
 }

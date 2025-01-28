@@ -1,6 +1,7 @@
+import { VehiculeRepository } from '@application/maintenance/repositories/VehiculeRepository';
 import { EventRepository } from "@application/shared/repositories/EventRepository";
-import { UnregisterVehiculeEvent } from "@domain/maintenance/events/vehicule/UnregisterVehiculeEvent";
 import { VehiculeImmatriculation } from "@domain/maintenance/value-object/VehiculeImmatriculation";
+import { NotFoundEntityException } from "@shared/ApplicationException";
 import { IInputUseCase, IUseCase } from "@shared/IUseCase";
 import { Result } from "@shared/Result";
 
@@ -9,12 +10,17 @@ interface UnregisterVehiculeInput extends IInputUseCase {
 }
 
 export type UnregisterVehiculeUseCase = IUseCase<UnregisterVehiculeInput, Result>
-export const createUnregisterUseCase = (_eventRepository: EventRepository): UnregisterVehiculeUseCase => {
+
+const unregisteredVehicleErrors = {
+    VEHICULE_NOT_FOUND: NotFoundEntityException.create("Cannot unregister vehicule not found")
+}
+
+export const createUnregisterVehiculeUseCase = (_eventRepository: EventRepository, _vehiculeRepository: VehiculeRepository): UnregisterVehiculeUseCase => {
     return async (input: UnregisterVehiculeInput) => {
-        const unregisterVehiculeEvent = new UnregisterVehiculeEvent({
-            immatriculation: input.immatriculation.getValue()
-        })
-        const deleteResponse = await _eventRepository.storeEvent(unregisterVehiculeEvent)
+        const vehicule = await _vehiculeRepository.getByImmatriculation(input.immatriculation);
+        if (!vehicule.success) return vehicule
+        if (vehicule.empty) return Result.Failure(unregisteredVehicleErrors.VEHICULE_NOT_FOUND)
+        const deleteResponse = await _eventRepository.storeEvent(vehicule.value.unregisterEvent())
         if (!deleteResponse.success) return Result.FailureStr("Cannot unregister vehicule")
         return Result.Success("Vehicule unregistered")
     }

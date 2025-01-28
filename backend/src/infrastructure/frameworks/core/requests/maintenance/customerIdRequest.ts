@@ -1,5 +1,7 @@
-import { z } from "zod";
+import {z} from "zod";
 
-export const customerIdRequest = z.object({
-    customerId: z.string(),
-});
+export const customerIdZodObject = {
+    customerId: z.string().length(36)
+}
+
+export const customerIdRequest = z.object(customerIdZodObject);
