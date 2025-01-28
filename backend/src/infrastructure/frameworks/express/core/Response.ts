@@ -7,9 +7,11 @@ export class Response{
         return this;
     }
 
-    static Fail(code: number, data: any){
+    static Fail(code: number, data: Error){
         if(code < 400) throw new Error("Fail response must have a code greater than 400");
-        return new Response(code, data);
+        return new Response(code, {
+            message: data.message,
+        });
     }
 
     static Success(data: any, code: number = 200){

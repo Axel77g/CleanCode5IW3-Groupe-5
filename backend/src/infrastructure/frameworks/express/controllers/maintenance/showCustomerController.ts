@@ -8,6 +8,6 @@ export const showCustomerController: Controller<typeof customerIdRequest> = asyn
     const customerId = payload.customerId
     const showCustomerUseCase = createShowCustomerUseCase(customerRepository)
     const result = await showCustomerUseCase({ customerId })
-    if (!result.success) return Response.Fail(400, result.error.message)
+    if (!result.success) return Response.Fail(400, result.error)
     return Response.Success(result.value)
 }

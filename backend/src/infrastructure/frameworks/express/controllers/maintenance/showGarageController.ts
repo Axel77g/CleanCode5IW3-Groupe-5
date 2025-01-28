@@ -7,7 +7,7 @@ import {garageRepository} from "@infrastructureCore/repositories/maintenance/gar
 
 export const showGarageController: Controller<typeof siretRequest> = async (payload) => {
     const siret = Siret.create(payload.siret)
-    if (siret instanceof Error) return Response.Fail(400, siret.message)
+    if (siret instanceof Error) return Response.Fail(400, siret)
     const showGarageUseCase = createShowGarageUseCase(garageRepository)
     const showResponse = await showGarageUseCase({ siret })
     if (!showResponse.success) return Response.Fail(400, showResponse.error)

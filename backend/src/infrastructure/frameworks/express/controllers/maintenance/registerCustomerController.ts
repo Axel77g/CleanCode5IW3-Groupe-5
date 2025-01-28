@@ -7,7 +7,7 @@ import { Response } from "../../core/Response";
 
 export const registerCustomerController: Controller<typeof registerCustomerRequest> = async (payload) => {
     const address = Address.create(payload.address)
-    if (address instanceof Error) return Response.Fail(400, address.message)
+    if (address instanceof Error) return Response.Fail(400, address)
 
     const registerUseCase = createRegisterCustomerUseCase(maintenanceEventRepository)
     const result = await registerUseCase({
@@ -16,6 +16,6 @@ export const registerCustomerController: Controller<typeof registerCustomerReque
         email: payload.email,
         address: address
     })
-    if (!result.success) return Response.Fail(400, result.error.message)
+    if (!result.success) return Response.Fail(400, result.error)
     return Response.Success(result.value)
 }

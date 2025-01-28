@@ -1,8 +1,9 @@
-import {Controller} from "../types/Controller";
 import {ZodArray, ZodEffects, ZodError, ZodNativeEnum, ZodNumber, ZodObject, ZodSchema, ZodString} from "zod";
 import {server} from "../server";
 import {Request, Response as ExpressResponse} from "express";
+import {Response} from "@expressApp/core/Response";
 import fs from "fs";
+import {UseCaseImplementation} from "@infrastructureCore/useCaseImplementation/UseCaseImplementation";
 
 export const routes = []
 export const postManCollection = {
@@ -109,7 +110,7 @@ export function savePostManCollection(variables : Record<string, any>){
 export function registerRoute<T extends ZodSchema<any>>(
     method: 'get' | 'post' | 'put' | 'delete' | 'patch',
     path: string,
-    controller: Controller<T>,
+    useCaseImplementation: UseCaseImplementation<T>,
     inputSchema: T
 ) {
 
@@ -121,11 +122,23 @@ export function registerRoute<T extends ZodSchema<any>>(
                 ...req.query,
                 ...req.params
             });
-            const response = await controller(input);
+            const result = await useCaseImplementation(input);
+            let response;
+
+            const errorCase : Record<string, (e : Error) => Response> = {
+                InternalException : (error : Error) => Response.Fail(500, error),
+                NotFoundEntityException : (error : Error) => Response.Fail(404, error),
+                default: (error : Error) => Response.Fail(400, error)
+            }
+            if(!result.success) {
+                const error = result.error;
+                response = errorCase[error.constructor.name] ? errorCase[error.constructor.name](error) : errorCase.default(error);
+            }
+            else response = Response.Success(result.value);
             res.status(response.code).json(response.toObject());
         } catch (e) {
             if (e instanceof ZodError) {
-                res.status(400).json({ error: e.errors });
+                res.status(422).json({ error: e.errors });
             } else {
                 res.status(500).json({ error: 'Internal Server Error' });
             }
@@ -133,22 +146,24 @@ export function registerRoute<T extends ZodSchema<any>>(
     });
 }
 
-export function get<T extends ZodSchema<any>>(path: string, controller: Controller<T>, inputSchema: T) {
-    registerRoute('get', path, controller, inputSchema);
+
+
+export function get<T extends ZodSchema<any>>(path: string, useCaseImplementation: UseCaseImplementation<T>, inputSchema: T) {
+    registerRoute('get', path, useCaseImplementation, inputSchema);
 }
 
-export function post<T extends ZodSchema<any>>(path: string, controller: Controller<T>, inputSchema: T) {
-    registerRoute('post', path, controller, inputSchema);
+export function post<T extends ZodSchema<any>>(path: string, useCaseImplementation: UseCaseImplementation<T>, inputSchema: T) {
+    registerRoute('post', path, useCaseImplementation, inputSchema);
 }
 
-export function put<T extends ZodSchema<any>>(path: string, controller: Controller<T>, inputSchema: T) {
-    registerRoute('put', path, controller, inputSchema);
+export function put<T extends ZodSchema<any>>(path: string, useCaseImplementation: UseCaseImplementation<T>, inputSchema: T) {
+    registerRoute('put', path, useCaseImplementation, inputSchema);
 }
 
-export function patch<T extends ZodSchema<any>>(path: string, controller: Controller<T>, inputSchema: T) {
-    registerRoute('patch', path, controller, inputSchema);
+export function patch<T extends ZodSchema<any>>(path: string, useCaseImplementation: UseCaseImplementation<T>, inputSchema: T) {
+    registerRoute('patch', path, useCaseImplementation, inputSchema);
 }
 
-export function del<T extends ZodSchema<any>>(path: string, controller: Controller<T>, inputSchema: T) {
-    registerRoute('delete', path, controller, inputSchema);
+export function del<T extends ZodSchema<any>>(path: string, useCaseImplementation: UseCaseImplementation<T>, inputSchema: T) {
+    registerRoute('delete', path, useCaseImplementation, inputSchema);
 }

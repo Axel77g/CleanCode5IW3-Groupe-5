@@ -9,7 +9,7 @@ export const unregisterCustomerController: Controller<typeof customerIdRequest> 
     const customerId = payload.customerId
     const unregisterUseCase = createDeleteCustomerUseCase(maintenanceEventRepository, customerRepository)
     const result = await unregisterUseCase({ customerId })
-    if (!result.success) return Response.Fail(400, result.error.message)
+    if (!result.success) return Response.Fail(400, result.error)
     return Response.Success(result.value)
 
 }

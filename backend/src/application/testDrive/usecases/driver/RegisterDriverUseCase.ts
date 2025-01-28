@@ -24,7 +24,7 @@ const registerDriverErrors = {
 
 export const createRegisterDriverUseCase = (_eventRepository: EventRepository, driverRepository: DriverRepository): RegisterDriverUseCase => {
     return async (input: RegisterDriverInput) => {
-        const existingDriverResponse = await driverRepository.getByLicenseId(input.driverLicenseId.getValue())
+        const existingDriverResponse = await driverRepository.getByLicenseId(input.driverLicenseId)
         if(!existingDriverResponse.success) return existingDriverResponse
         if(!existingDriverResponse.empty) return Result.Failure(registerDriverErrors.DRIVER_ALREADY_REGISTERED)
         const driver = Driver.create({

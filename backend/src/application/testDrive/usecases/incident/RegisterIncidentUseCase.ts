@@ -22,7 +22,7 @@ const registerIncidentErrors = {
 
 export const createRegisterIncidentUseCase = (_eventRepository: EventRepository, _driverRepository : DriverRepository): RegisterIncidentUseCase => {
     return async (input: RegisterIncidentInput) => {
-        const driverResponse = await _driverRepository.getByLicenseId(input.driverLicenseId.getValue())
+        const driverResponse = await _driverRepository.getByLicenseId(input.driverLicenseId)
         if(!driverResponse.success) return driverResponse
         if(driverResponse.empty) return Result.Failure(registerIncidentErrors.DRIVER_NOT_FOUND)
         const incident = Incident.create(input)
