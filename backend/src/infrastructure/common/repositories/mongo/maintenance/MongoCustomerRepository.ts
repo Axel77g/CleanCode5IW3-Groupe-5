@@ -2,8 +2,9 @@ import { CustomerRepository } from '@application/maintenance/repositories/Custom
 import { Customer } from '@domain/maintenance/entities/Customer';
 import { CustomerMapper } from '@infrastructure/common/entityMappers/CustomerMapper';
 import { AbstractMongoRepository } from '@infrastructure/common/repositories/mongo/AbstractMongoRepository';
-import {OptionalResult, Result, VoidResult} from '@shared/Result';
-import {ApplicationException} from "@shared/ApplicationException";
+import { ApplicationException } from "@shared/ApplicationException";
+import { PaginatedInput } from '@shared/PaginatedInput';
+import { OptionalResult, PaginatedResult, Result, VoidResult } from '@shared/Result';
 
 export class MongoCustomerRepository extends AbstractMongoRepository implements CustomerRepository {
     protected collectionName: string = 'customers';
@@ -12,7 +13,7 @@ export class MongoCustomerRepository extends AbstractMongoRepository implements 
         return this.catchError(
             async () => {
                 const customerDocument = await this.getCollection().findOne({ customerId: customerId });
-                if(!customerDocument) return Result.SuccessVoid();
+                if (!customerDocument) return Result.SuccessVoid();
                 const customer = CustomerMapper.toDomain(customerDocument);
                 if (customer instanceof ApplicationException) return Result.Failure(customer);
                 return Result.Success<Customer>(customer);
@@ -45,5 +46,17 @@ export class MongoCustomerRepository extends AbstractMongoRepository implements 
             },
             session.abortTransaction.bind(session),
         )
+    }
+
+    list(pagination: PaginatedInput): Promise<PaginatedResult<Customer>> {
+        const { page, limit } = pagination;
+        return this.catchError(
+            async () => {
+                const customersDocuments = await this.getCollection().find().skip((page - 1) * limit).limit(limit).toArray();
+                const customersTotal = await this.getCollection().countDocuments();
+                const customers = CustomerMapper.toDomainList(customersDocuments);
+                return Result.SuccessPaginated<Customer>(customers, customersTotal, page, limit);
+            }
+        );
     }
 }
