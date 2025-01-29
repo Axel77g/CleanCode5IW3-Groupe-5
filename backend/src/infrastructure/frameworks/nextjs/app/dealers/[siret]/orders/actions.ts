@@ -1,37 +1,15 @@
 "use server";
-
-
 import {useServerForm} from "@/hooks/useServerForm";
 import {registerOrderRequest} from "@infrastructureCore/requests/inventoryManagement/registerOrderRequest";
-import {Siret} from "@domain/shared/value-object/Siret";
-import {OrderLine} from "@domain/inventoryManagement/value-object/OrderLine";
-import {createRegisterOrderUseCase} from "@application/inventoryManagement/usecases/order/RegisterOrderUseCase";
-import {
-    inventoryManagementEventRepository
-} from "@infrastructureCore/repositories/inventoryManagement/inventoryManagementEventRepository";
-import {dealerRepository} from "@infrastructureCore/repositories/inventoryManagement/dealerRepository";
-import {
-    inventorySparePartRepository
-} from "@infrastructureCore/repositories/inventoryManagement/inventorySparePartRepository";
 import {updateOrderStatusRequest} from "@infrastructureCore/requests/inventoryManagement/updateOrderStatusRequest";
-import {createUpdateOrderStatusUseCase} from "@application/inventoryManagement/usecases/order/UpdateOrderStatusUseCase";
-import {orderRepository} from "@infrastructureCore/repositories/inventoryManagement/orderRepository";
-import {ApplicationException} from "@shared/ApplicationException";
+import {registerOrderUseCase} from "@infrastructureCore/useCaseImplementation/InventoryManagement/registerOrderUseCase";
+import {
+    updateOrderStatusUseCase
+} from "@infrastructureCore/useCaseImplementation/InventoryManagement/updateOrderStatusUseCase";
 
 export async function registerOrder(prevState:any, formData: FormData){
     return useServerForm(formData, registerOrderRequest, async (payload, success, abort)=>{
-        const siret = Siret.create(payload.dealerSiret)
-        if(siret instanceof Error) return abort(siret.message)
-        const orderLines = payload.orderLines.map((line) => {
-            return OrderLine.create(line)
-        })
-        if(orderLines.some((line) => line instanceof ApplicationException)) return abort("Invalid order lines")
-        const registerOrderUseCase = createRegisterOrderUseCase(inventoryManagementEventRepository,dealerRepository,inventorySparePartRepository)
-        const result = await registerOrderUseCase({
-            ...payload,
-            dealer: siret,
-            orderLines : orderLines as OrderLine[]
-        })
+        const result = await registerOrderUseCase(payload)
         if(!result.success) return abort(result.error.message)
         return success(result.value)
     })
@@ -39,11 +17,9 @@ export async function registerOrder(prevState:any, formData: FormData){
 }
 
 export async function updateOrderStatus(prevState: any, formData: FormData){
-    console.log("ici")
     return useServerForm(formData, updateOrderStatusRequest, async(payload, success, abort)=>{
-        const updateOrderStatusUseCase = createUpdateOrderStatusUseCase(inventoryManagementEventRepository,orderRepository)
-        const response = await updateOrderStatusUseCase(payload)
-        if(!response.success) return abort(response.error.message)
-        return success(response.value)
+        const result = await updateOrderStatusUseCase(payload)
+        if(!result.success) return abort(result.error.message);
+        return success(result.value)
     })
 }
