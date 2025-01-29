@@ -3,18 +3,17 @@
 import {Driver} from "@domain/testDrive/entities/Driver";
 import {PaginationObject} from "@/hooks/useServerPagination";
 import List from "@/components/List";
-import {createListDriverIncidentsUseCase} from "@application/testDrive/usecases/incident/ListDriverIncidentsUseCase";
-import {incidentRepository} from "@infrastructureCore/repositories/testDrive/incidentRepository";
-import {driverRepository} from "@infrastructureCore/repositories/testDrive/driverRepository";
-import {Response} from "@expressApp/core/Response";
 import ListItem from "@/components/ListItem";
 import Chip from "@/components/Chip";
 import Pagination from "@/components/Pagination";
+import {
+    listDriverIncidentsUseCase
+} from "@infrastructureCore/useCaseImplementation/testDrive/listDriverIncidentsUseCase";
+import {ErrorCallout} from "@/components/ErrorCallout";
 
 export default async function DriverIncidentsList(props: {driver : Driver, pagination: PaginationObject}){
-    const listDriverIncidentsUseCase = createListDriverIncidentsUseCase(incidentRepository, driverRepository)
-    const result = await listDriverIncidentsUseCase({driverLicenseId: props.driver.driverLicenseId, ...props.pagination})
-    if(!result.success) return Response.Fail(400, result.error.message)
+    const result = await listDriverIncidentsUseCase({driverLicenseId: props.driver.driverLicenseId.getValue(), ...props.pagination})
+    if(!result.success) return <ErrorCallout>{result.error.message}</ErrorCallout>
     const {value, ...pagination } = result
 
     return <div>

@@ -1,17 +1,14 @@
 import {ErrorCallout} from "@/components/ErrorCallout";
-import {createShowDealerStockUseCase} from "@application/inventoryManagement/usecases/stock/ShowDealerStockUseCase";
-import {stockRepository} from "@infrastructureCore/repositories/inventoryManagement/stockRepository";
-import {Siret} from "@domain/shared/value-object/Siret";
 import List from "@/components/List";
 import ListItem from "@/components/ListItem";
 import {AddOrRemoveSpareFromStockForm} from "@/app/dealers/[siret]/stock/AddOrRemoveSpareFromStockForm";
+import {
+    showDealerStockUseCase
+} from "@infrastructureCore/useCaseImplementation/InventoryManagement/showDealerStockUseCase";
 
 export default async function StockPage(pageProps: {params: Promise<{siret: string}>}){
-    const {siret : siretString} = await pageProps.params
-    const siret = Siret.create(siretString)
-    if(siret instanceof Error) return <ErrorCallout>{siret.message}</ErrorCallout>
-    const getDealerStockUseCase = createShowDealerStockUseCase(stockRepository)
-    const result = await getDealerStockUseCase({siret})
+    const {siret} = await pageProps.params
+    const result = await showDealerStockUseCase({siret})
     if(!result.success) return <ErrorCallout>{result.error.message}</ErrorCallout>
     return <div>
         <List>
@@ -23,6 +20,6 @@ export default async function StockPage(pageProps: {params: Promise<{siret: stri
                 ))
             }
         </List>
-        <AddOrRemoveSpareFromStockForm siret={siretString}/>
+        <AddOrRemoveSpareFromStockForm siret={siret}/>
     </div>
 }
