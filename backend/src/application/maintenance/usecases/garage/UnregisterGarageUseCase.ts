@@ -1,9 +1,8 @@
+import { GarageRepository } from "@application/maintenance/repositories/GarageRepository";
 import { EventRepository } from "@application/shared/repositories/EventRepository";
-import { UnregisterGarageEvent } from "@domain/maintenance/events/garage/UnregisterGarageEvent";
 import { Siret } from "../../../../domain/shared/value-object/Siret";
 import { IInputUseCase, IUseCase } from "../../../../shared/IUseCase";
 import { Result } from "../../../../shared/Result";
-import { GarageRepository } from "@application/maintenance/repositories/GarageRepository";
 
 interface UnregisterGarageInput extends IInputUseCase {
     siret: Siret,

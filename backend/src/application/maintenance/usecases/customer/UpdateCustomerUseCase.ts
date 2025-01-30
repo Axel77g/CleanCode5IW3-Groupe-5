@@ -1,6 +1,6 @@
 import { CustomerRepository } from "@application/maintenance/repositories/CustomerRepository";
 import { EventRepository } from "@application/shared/repositories/EventRepository";
-import { ApplicationException } from "@shared/ApplicationException";
+import { NotFoundEntityException } from "@shared/ApplicationException";
 import { IInputUseCase, IUseCase } from "@shared/IUseCase";
 import { Result } from "@shared/Result";
 
@@ -14,23 +14,17 @@ interface UpdateCustomerInput extends IInputUseCase {
 export type UpdateCustomerUseCase = IUseCase<UpdateCustomerInput, Result>
 
 const updateCustomerErrors = {
-    NOT_FOUND_CUSTOMER: "Customer not found",
-    CANNOT_UPDATE_CUSTOMER: "Cannot update customer"
-}
-
-const updateCustomerSuccesses = {
-    CUSTOMER_UPDATED: "Customer updated successfully"
+    NOT_FOUND_CUSTOMER: NotFoundEntityException.create("Cannot update customer for not found customer")
 }
 
 export const createUpdateCustomerUseCase = (_eventRepository: EventRepository, _customerRepository: CustomerRepository): UpdateCustomerUseCase => {
     return async (input: UpdateCustomerInput) => {
-        const customerResponse = await _customerRepository.find(input.customerId);
-        if (!customerResponse.success) return customerResponse;
-        if (customerResponse.empty) return Result.FailureStr(updateCustomerErrors.NOT_FOUND_CUSTOMER);
-        const customer = customerResponse.value.updateCustomerEvent();
-        if (customer instanceof ApplicationException) return Result.Failure(customer);
-        const repositoryResponse = await _eventRepository.storeEvent(customerResponse.value.updateCustomerEvent());
-        if (!repositoryResponse.success) return Result.FailureStr(updateCustomerErrors.CANNOT_UPDATE_CUSTOMER);
-        return Result.Success(updateCustomerSuccesses.CUSTOMER_UPDATED);
+        const existingCustomerResponse = await _customerRepository.find(input.customerId);
+        if (!existingCustomerResponse.success) return existingCustomerResponse
+        if (existingCustomerResponse.empty) return Result.Failure(updateCustomerErrors.NOT_FOUND_CUSTOMER)
+        const customer = existingCustomerResponse.value.update(input)
+        const response = await _eventRepository.storeEvent(customer.updateCustomerEvent())
+        if (!response.success) return response
+        return Result.Success("Customer updated")
     }
 }

@@ -6,7 +6,7 @@ import { UnregisterCustomerEvent } from "../events/customer/UnregisterCustomerEv
 import { UpdateCustomerEvent } from "../events/customer/UpdateCustomerEvent";
 
 export interface CustomerDTO {
-    customerId: string;
+    customerId: string,
     name: string;
     phoneNumber: string;
     email: string;
@@ -42,6 +42,14 @@ export class Customer {
         })
     }
 
+    update(object: {
+        name?: string,
+        phoneNumber?: string,
+        email?: string,
+    }) {
+        return new Customer(this.customerId, object.name || this.name, object.phoneNumber || this.phoneNumber, object.email || this.email, this.address);
+    }
+
     unregisterEvent(): UnregisterCustomerEvent {
         return new UnregisterCustomerEvent({
             customerId: this.customerId,
@@ -53,7 +61,7 @@ export class Customer {
     }
 
     static fromObject(object: CustomerDTO): Customer | ApplicationException {
-        const address = Address.create(object.address);
+        const address = Address.create(object.address)
         if (address instanceof ApplicationException) {
             return address;
         }

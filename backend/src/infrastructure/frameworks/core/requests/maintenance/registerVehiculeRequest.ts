@@ -1,4 +1,3 @@
-import { siretZodObject } from "@infrastructureCore/requests/inventoryManagement/siretRequest";
 import { z } from 'zod';
 import { dateParser } from "../dateParser";
 

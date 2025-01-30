@@ -1,6 +1,5 @@
 import { CustomerRepository } from "@application/maintenance/repositories/CustomerRepository";
 import { EventRepository } from "@application/shared/repositories/EventRepository";
-import { UnregisterCustomerEvent } from '@domain/maintenance/events/customer/UnregisterCustomerEvent';
 import { NotFoundEntityException } from "@shared/ApplicationException";
 import { IInputUseCase, IUseCase } from "@shared/IUseCase";
 import { Result } from "@shared/Result";
