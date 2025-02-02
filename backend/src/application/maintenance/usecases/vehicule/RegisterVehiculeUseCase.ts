@@ -8,6 +8,7 @@ import { VehiculeVin } from "@domain/maintenance/value-object/VehiculeVin";
 import { ApplicationException } from "@shared/ApplicationException";
 import { IInputUseCase, IUseCase } from "@shared/IUseCase";
 import { Result } from "@shared/Result";
+import {Period} from "@domain/testDrive/value-object/Period";
 
 interface RegisterVehiculeInput extends IInputUseCase {
     immatriculation: VehiculeImmatriculation;
@@ -18,6 +19,7 @@ interface RegisterVehiculeInput extends IInputUseCase {
     mileage: number;
     maintenanceDate: Date;
     status: VehiculeStatusEnum;
+    warranty: Period;
 }
 
 export type RegisterVehiculeUseCase = IUseCase<RegisterVehiculeInput, Result>
@@ -40,11 +42,12 @@ export const createRegisterVehiculeUseCase = (_eventRepository: EventRepository,
             vin: input.vin,
             mileage: input.mileage,
             maintenanceDate: input.maintenanceDate,
-            status: input.status
+            status: input.status,
+            warranty: input.warranty
         })
 
         if (vehicule instanceof ApplicationException) return Result.Failure(vehicule)
-        const repositoryResponse = await _eventRepository.storeEvent(vehicule.vehicule.registerEvent());
+        const repositoryResponse = await _eventRepository.storeEvent(vehicule.registerEvent());
         if (!repositoryResponse.success) return repositoryResponse
         return Result.Success("Vehicule registered successfully")
     }

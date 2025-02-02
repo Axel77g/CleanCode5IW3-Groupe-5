@@ -4,7 +4,6 @@ import { ApplicationException } from "@shared/ApplicationException";
 import { RegisterVehiculeEvent } from "../events/vehicule/RegisterVehiculeEvent";
 import { VehiculeImmatriculation } from "../value-object/VehiculeImmatriculation";
 import { VehiculeVin, VehiculeVinDTO } from "../value-object/VehiculeVin";
-import {VehiculeWarranty} from "@domain/maintenance/entities/VehiculeWarranty";
 import {Period} from "@domain/testDrive/value-object/Period";
 
 export interface VehiculeDTO {
@@ -16,6 +15,10 @@ export interface VehiculeDTO {
     mileage: number;
     maintenanceDate: Date;
     status: VehiculeStatusEnum;
+    warranty : {
+        periodStart: Date,
+        periodEnd: Date
+    }
 }
 
 export class Vehicule {
@@ -31,60 +34,60 @@ export class Vehicule {
         if (this.status === VehiculeStatusEnum.AVAILABLE) {
             return new ApplicationException('Vehicule', 'Vehicule is already available');
         }
-        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, VehiculeStatusEnum.AVAILABLE);
+        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, VehiculeStatusEnum.AVAILABLE, this.warranty);
     }
 
     sold(): Vehicule | ApplicationException {
         if (this.status === VehiculeStatusEnum.SOLD) {
             return new ApplicationException('Vehicule', 'Vehicule is already sold');
         }
-        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, VehiculeStatusEnum.SOLD);
+        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, VehiculeStatusEnum.SOLD, this.warranty);
     }
 
     maintenance(): Vehicule | ApplicationException {
         if (this.status === VehiculeStatusEnum.IN_MAINTENANCE) {
             return new ApplicationException('Vehicule', 'Vehicule is already in maintenance');
         }
-        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, VehiculeStatusEnum.IN_MAINTENANCE);
+        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, VehiculeStatusEnum.IN_MAINTENANCE, this.warranty);
     }
 
     testDrive(): Vehicule | ApplicationException {
         if (this.status === VehiculeStatusEnum.IN_TEST_DRIVE) {
             return new ApplicationException('Vehicule', 'Vehicule is already in test drive');
         }
-        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, VehiculeStatusEnum.IN_TEST_DRIVE);
+        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, VehiculeStatusEnum.IN_TEST_DRIVE, this.warranty);
     }
 
     reserved(): Vehicule | ApplicationException {
         if (this.status === VehiculeStatusEnum.RESERVED) {
             return new ApplicationException('Vehicule', 'Vehicule is already reserved');
         }
-        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, VehiculeStatusEnum.RESERVED);
+        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, VehiculeStatusEnum.RESERVED, this.warranty);
     }
 
     validBrand(): Vehicule | ApplicationException {
         if (this.brand !== 'Triumph') return Vehicule.ApplicationExceptions.INVALID_BRAND;
-        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, this.status);
+        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, this.status, this.warranty);
     }
 
     validYear(): Vehicule | ApplicationException {
         if (this.year < 1902 || this.year > new Date().getFullYear()) return Vehicule.ApplicationExceptions.INVALID_YEAR;
-        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, this.status);
+        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, this.status, this.warranty);
     }
 
     validMileage(): Vehicule | ApplicationException {
         if (this.mileage <= 0) return Vehicule.ApplicationExceptions.INVALID_MILEAGE;
-        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, this.status);
+        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, this.status, this.warranty);
     }
 
     validModel(): Vehicule | ApplicationException {
         if (!Object.values(VehiculeModelEnum).includes(this.model)) return Vehicule.ApplicationExceptions.INVALID_MODEL;
-        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, this.status);
+        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, this.status, this.warranty);
     }
 
     validStatus(): Vehicule | ApplicationException {
         if (!Object.values(VehiculeStatusEnum).includes(this.status)) return Vehicule.ApplicationExceptions.INVALID_STATUS;
-        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, this.status);
+        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceDate, this.status, this.warranty);
     }
 
     applyStatus(status: VehiculeStatusEnum): Vehicule | ApplicationException {
@@ -112,7 +115,8 @@ export class Vehicule {
         public readonly vin: VehiculeVin,
         public readonly mileage: number,
         public readonly maintenanceDate: Date,
-        public readonly status: VehiculeStatusEnum = VehiculeStatusEnum.AVAILABLE
+        public readonly status: VehiculeStatusEnum = VehiculeStatusEnum.AVAILABLE,
+        public readonly warranty : Period
     ) { }
 
     static fromObject(vehicule: VehiculeDTO): Vehicule | ApplicationException {
@@ -120,8 +124,9 @@ export class Vehicule {
         if (immatriculation instanceof ApplicationException) return immatriculation;
         const vin = VehiculeVin.create(vehicule.vin);
         if (vin instanceof ApplicationException) return vin;
-
-        return new Vehicule(immatriculation, vehicule.brand, vehicule.model, vehicule.year, vin, vehicule.mileage, vehicule.maintenanceDate, vehicule.status);
+        const warranty = Period.create(vehicule.warranty.periodStart, vehicule.warranty.periodEnd);
+        if(warranty instanceof ApplicationException) return warranty;
+        return new Vehicule(immatriculation, vehicule.brand, vehicule.model, vehicule.year, vin, vehicule.mileage, vehicule.maintenanceDate, vehicule.status,warranty);
     }
 
     static create(object: {
@@ -132,22 +137,10 @@ export class Vehicule {
         vin: VehiculeVin,
         mileage: number,
         maintenanceDate: Date,
-        status: VehiculeStatusEnum
-    }) : {vehicule: Vehicule, warranty: VehiculeWarranty} | ApplicationException {
-        const fourYearsPeriodFromYear = new Date(object.year, 0, 1);
-        fourYearsPeriodFromYear.setFullYear(fourYearsPeriodFromYear.getFullYear() + 4);
-
-        const warrantyPeriod = Period.create(new Date(object.year, 0, 1), fourYearsPeriodFromYear);
-        if(warrantyPeriod instanceof ApplicationException) return warrantyPeriod;
-
-        const vehiculeWarranty = VehiculeWarranty.create({
-            vehiculeImmatriculation: object.immatriculation,
-            period : warrantyPeriod
-        })
-        return {
-            vehicule: new Vehicule(object.immatriculation, object.brand, object.model, object.year, object.vin, object.mileage, object.maintenanceDate, object.status),
-            warranty: vehiculeWarranty
-        }
+        status: VehiculeStatusEnum,
+        warranty: Period
+    }) : Vehicule | ApplicationException {
+        return new Vehicule(object.immatriculation, object.brand, object.model, object.year, object.vin, object.mileage, object.maintenanceDate, object.status, object.warranty);
     }
 
     registerEvent(): RegisterVehiculeEvent {
@@ -159,7 +152,11 @@ export class Vehicule {
             vin: this.vin,
             mileage: this.mileage,
             maintenanceDate: this.maintenanceDate,
-            status: this.status
+            status: this.status,
+            warranty: {
+                periodStart: this.maintenanceDate,
+                periodEnd: new Date(this.year + 4, this.maintenanceDate.getMonth(), this.maintenanceDate.getDate())
+            }
         })
     }
 
@@ -172,7 +169,11 @@ export class Vehicule {
             vin: this.vin,
             mileage: this.mileage,
             maintenanceDate: this.maintenanceDate,
-            status: this.status
+            status: this.status,
+            warranty:{
+                periodStart: this.maintenanceDate,
+                periodEnd: new Date(this.year + 4, this.maintenanceDate.getMonth(), this.maintenanceDate.getDate())
+            }
         })
     }
 
@@ -184,8 +185,9 @@ export class Vehicule {
         vin: VehiculeVin,
         mileage: number,
         maintenanceDate: Date,
-        status: VehiculeStatusEnum
+        status: VehiculeStatusEnum,
+        warranty: Period
     }) {
-        return new Vehicule(object.immatriculation, object.brand, object.model, object.year, object.vin, object.mileage, object.maintenanceDate, object.status);
+        return new Vehicule(object.immatriculation, object.brand, object.model, object.year, object.vin, object.mileage, object.maintenanceDate, object.status, object.warranty);
     }
 }
