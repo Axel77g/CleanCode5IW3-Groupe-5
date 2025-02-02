@@ -9,7 +9,7 @@ interface RegisterVehiculeBreakdownInput extends IInputUseCase {
     vehiculeImmatriculation: VehiculeImmatriculation;
     description: string;
     date: Date;
-    maintenanceId: string;
+    maintenanceId: string,
 }
 
 export type RegisterVehiculeBreakdownUseCase = IUseCase<RegisterVehiculeBreakdownInput, Result>

@@ -3,6 +3,7 @@ import {VehiculeBreakdownRepository} from "@application/maintenance/repositories
 import {VehiculeBreakdown} from "@domain/maintenance/entities/VehiculeBreakdown";
 import {OptionalResult, Result, VoidResult} from "@shared/Result";
 import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
+import {VehiculeBreakdownMapper} from "@infrastructure/common/entityMappers/VehiculeBreakdownMapper";
 
 export class MongoVehiculeBreakdownRepository extends AbstractMongoRepository implements VehiculeBreakdownRepository {
     protected collectionName: string = "vehicule-breakdowns";
@@ -22,13 +23,13 @@ export class MongoVehiculeBreakdownRepository extends AbstractMongoRepository im
 
     getBreakdownByVehicule(vehiculeImmatriculation: VehiculeImmatriculation): Promise<OptionalResult<VehiculeBreakdown>> {
         return this.catchError(
-            async () => {
-                const breakdownDocument = await this.getCollection().findOne({vehiculeImmatriculation: vehiculeImmatriculation.getValue()});
-                if (!breakdownDocument) return Result.SuccessVoid();
-                const breakdown = VehiculeBreakdownMapper.toDomain(breakdownDocument);
-                if (breakdown instanceof ApplicationException) return Result.Failure(breakdown);
-                return Result.Success<VehiculeBreakdown>(breakdown);
-            }
+           async () => {
+               const vehiculeBreakdownDocument = await this.getCollection().findOne({vehiculeImmatriculation: vehiculeImmatriculation.getValue()});
+               if (!vehiculeBreakdownDocument) return Result.SuccessVoid();
+               const vehiculeBreakdown = VehiculeBreakdownMapper.toDomain(vehiculeBreakdownDocument);
+                if (vehiculeBreakdown instanceof Error) return Result.Failure(vehiculeBreakdown);
+                return Result.Success<VehiculeBreakdown>(vehiculeBreakdown);
+           }
         )
     }
 }

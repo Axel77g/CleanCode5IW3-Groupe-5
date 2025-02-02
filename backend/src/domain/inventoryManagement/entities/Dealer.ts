@@ -12,7 +12,6 @@ export interface DealerDTO {
 }
 
 export class Dealer {
-
     constructor(
         public readonly siret: Siret,
         public readonly name: string,

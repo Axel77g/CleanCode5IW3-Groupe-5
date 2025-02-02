@@ -27,7 +27,6 @@ export interface VehiculeDTO {
         periodStart: Date,
         periodEnd: Date
     }
-
 }
 
 export class Vehicule {

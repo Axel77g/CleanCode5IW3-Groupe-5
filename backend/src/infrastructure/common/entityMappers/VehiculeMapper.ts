@@ -3,6 +3,8 @@ import { VehiculeImmatriculation } from "@domain/maintenance/value-object/Vehicu
 import { VehiculeVin } from "@domain/maintenance/value-object/VehiculeVin";
 import { MappedEntity } from "./MappedEntity";
 import {ApplicationException} from "@shared/ApplicationException";
+import {VehiculeMaintenanceInterval} from "@domain/maintenance/value-object/VehiculeMaintenanceInterval";
+import {Period} from "@domain/testDrive/value-object/Period";
 
 export class VehiculeMapper {
     static toDomain(vehiculeRaw: any): Vehicule | ApplicationException {
@@ -10,17 +12,21 @@ export class VehiculeMapper {
         if (immatriculation instanceof ApplicationException) return immatriculation;
         const vin = VehiculeVin.create(vehiculeRaw.vin);
         if (vin instanceof ApplicationException) return vin;
-        const maintenanceDate = new Date(vehiculeRaw.maintenanceDate);
-        return new Vehicule({
+        const maintenanceInterval = VehiculeMaintenanceInterval.create(vehiculeRaw.maintenanceInterval.duration, vehiculeRaw.maintenanceInterval.mileage, vehiculeRaw.maintenanceInterval.lastMaintenance);
+        if (maintenanceInterval instanceof ApplicationException) return maintenanceInterval;
+        const warranty = Period.create(vehiculeRaw.warranty.periodStart, vehiculeRaw.warranty.periodEnd);
+        if (warranty instanceof ApplicationException) return warranty;
+        return new Vehicule(
             immatriculation,
-            brand: vehiculeRaw.brand,
-            model: vehiculeRaw.model,
-            year: vehiculeRaw.year,
+            vehiculeRaw.brand,
+            vehiculeRaw.model,
+            vehiculeRaw.year,
             vin,
-            mileage: vehiculeRaw.mileage,
-            maintenanceDate: vehiculeRaw.maintenanceDate,
-            status: vehiculeRaw.status
-            }
+            vehiculeRaw.mileage,
+            maintenanceInterval,
+            vehiculeRaw.status,
+            warranty,
+        )
     }
 
     static toPersistence(vehicule: Vehicule): MappedEntity<VehiculeDTO> {
@@ -31,8 +37,17 @@ export class VehiculeMapper {
             year: vehicule.year,
             vin: vehicule.vin,
             mileage: vehicule.mileage,
-            maintenanceDate: vehicule.maintenanceDate,
-            status: vehicule.status
+            maintenanceInterval: {
+                duration: vehicule.maintenanceInterval.duration,
+                mileage: vehicule.maintenanceInterval.mileage,
+                lastMaintenanceDate: vehicule.maintenanceInterval.lastMaintenance.date,
+                lastMaintenanceMileage: vehicule.maintenanceInterval.lastMaintenance.mileage
+            },
+            status: vehicule.status,
+            warranty: {
+                periodStart: vehicule.warranty.startDate,
+                periodEnd: vehicule.warranty.endDate
+            }
         });
     }
 

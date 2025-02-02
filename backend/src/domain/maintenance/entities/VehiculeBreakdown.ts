@@ -11,12 +11,12 @@ export interface VehiculeBreakdownDTO {
 }
 
     export class VehiculeBreakdown {
-    private constructor(
-        private readonly vehiculeBreakDownId: string,
-        private readonly vehiculeImmatriculation: VehiculeImmatriculation,
-        private readonly description: string,
-        private readonly date: Date,
-        private readonly maintenanceId ?: string
+    constructor(
+        public readonly vehiculeBreakDownId: string,
+        public readonly vehiculeImmatriculation: VehiculeImmatriculation,
+        public readonly description: string,
+        public readonly date: Date,
+        public readonly maintenanceId ?: string
     ) {}
 
     static fromObject(payload : VehiculeBreakdownDTO) {
