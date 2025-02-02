@@ -1,6 +1,6 @@
-import {ApplicationException} from "@shared/ApplicationException";
+import { ApplicationException } from "@shared/ApplicationException";
 
-export class DriverLicenseId{
+export class DriverLicenseId {
 
     static errors = {
         NOT_VALID: new ApplicationException("DriverLicenseId.NotValid", "Driver license is not valid")
@@ -8,12 +8,11 @@ export class DriverLicenseId{
 
     private constructor(
         private readonly value: string
-    ) {}
+    ) { }
 
-    public static create(driverLicenseId: string): DriverLicenseId | ApplicationException
-    {
+    public static create(driverLicenseId: string): DriverLicenseId | ApplicationException {
         const driver = new DriverLicenseId(driverLicenseId);
-        if(driver.isValid()){
+        if (driver.isValid()) {
             return driver;
         }
         return DriverLicenseId.errors.NOT_VALID;
@@ -23,7 +22,7 @@ export class DriverLicenseId{
         return this.value;
     }
 
-    public isValid(){
+    public isValid() {
         const regex = /^[A-Z]\d{12}$/;
         return regex.test(this.value);
     }

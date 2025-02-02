@@ -4,7 +4,7 @@ import { ApplicationException } from "@shared/ApplicationException";
 import { Result } from "@shared/Result";
 import { customerRepository } from "../../../repositories/maintenance/customerRepository";
 import { maintenanceEventRepository } from "../../../repositories/maintenance/maintenanceEventRepository";
-import { registerCustomerRequest } from "../../../requests/maintenance/registerCustomerRequest";
+import { registerCustomerRequest } from "../../../requests/maintenance/customer/registerCustomerRequest";
 import { UseCaseImplementation } from "../../UseCaseImplementation";
 
 export const registerCustomerUseCase: UseCaseImplementation<typeof registerCustomerRequest, RegisterCustomerUseCase> = async (input) => {

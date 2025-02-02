@@ -6,9 +6,9 @@ export interface AsignBreakdownToMaintnenanceEventPayload {
     maintenanceId: string
 }
 
-export class AsignBreakdownToMaintnenanceEvent extends AbstractEvent{
+export class AssignBreakdownToMaintenanceEvent extends AbstractEvent{
     static type = 'ASIGN_BREAKDOWN_TO_MAINTENANCE';
-    readonly type = AsignBreakdownToMaintnenanceEvent.type;
+    readonly type = AssignBreakdownToMaintenanceEvent.type;
     readonly streamId: string;
     readonly payload: AsignBreakdownToMaintnenanceEventPayload;
 

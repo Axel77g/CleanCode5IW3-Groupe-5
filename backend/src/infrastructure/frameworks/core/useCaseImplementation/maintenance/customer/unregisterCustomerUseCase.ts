@@ -1,6 +1,6 @@
 import { createUnregisterCustomerUseCase, UnregisterCustomerUseCase } from "@application/maintenance/usecases/customer/UnregisterCustomerUseCase";
 import {UseCaseImplementation} from "@infrastructureCore/useCaseImplementation/UseCaseImplementation";
-import {customerIdRequest} from "@infrastructureCore/requests/maintenance/customerIdRequest";
+import {customerIdRequest} from "@infrastructureCore/requests/maintenance/customer/customerIdRequest";
 import {maintenanceEventRepository} from "@infrastructureCore/repositories/maintenance/maintenanceEventRepository";
 import {customerRepository} from "@infrastructureCore/repositories/maintenance/customerRepository";
 

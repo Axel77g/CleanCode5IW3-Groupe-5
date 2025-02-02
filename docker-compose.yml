@@ -4,7 +4,6 @@ services:
     container_name: mongo
     ports:
       - "27017:27017"
-
     volumes:
       - data:/data/db
     environment:
@@ -12,6 +11,5 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: root
       MONGO_INITDB_DATABASE: cleanCode
     restart: always
-
 volumes:
   data:

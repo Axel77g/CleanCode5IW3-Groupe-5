@@ -1,4 +1,4 @@
-import { updateCustomerRequest } from '../../../../core/requests/maintenance/updateCustomerRequest';
+import { updateCustomerRequest } from '@infrastructureCore/requests/maintenance/customer/updateCustomerRequest';
 import {
     updateCustomerUseCase
 } from '../../../../core/useCaseImplementation/maintenance/updateCustomerUseCase';

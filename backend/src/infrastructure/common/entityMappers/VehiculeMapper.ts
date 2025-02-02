@@ -10,16 +10,17 @@ export class VehiculeMapper {
         if (immatriculation instanceof ApplicationException) return immatriculation;
         const vin = VehiculeVin.create(vehiculeRaw.vin);
         if (vin instanceof ApplicationException) return vin;
-        return new Vehicule(
+        const maintenanceDate = new Date(vehiculeRaw.maintenanceDate);
+        return new Vehicule({
             immatriculation,
-            vehiculeRaw.brand,
-            vehiculeRaw.model,
-            vehiculeRaw.year,
+            brand: vehiculeRaw.brand,
+            model: vehiculeRaw.model,
+            year: vehiculeRaw.year,
             vin,
-            vehiculeRaw.mileage,
-            new Date(vehiculeRaw.maintenanceDate),
-            vehiculeRaw.status
-        );
+            mileage: vehiculeRaw.mileage,
+            maintenanceDate: vehiculeRaw.maintenanceDate,
+            status: vehiculeRaw.status
+            }
     }
 
     static toPersistence(vehicule: Vehicule): MappedEntity<VehiculeDTO> {

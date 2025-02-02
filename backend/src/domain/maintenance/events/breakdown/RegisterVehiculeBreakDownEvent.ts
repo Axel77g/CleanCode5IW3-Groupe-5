@@ -1,5 +1,5 @@
 import {AbstractEvent} from "@shared/AbstractEvent";
-import {VehiculeBreakDownDTO} from "@domain/maintenance/entities/VehiculeBreakDown";
+import {VehiculeBreakDownDTO} from "@domain/maintenance/entities/VehiculeBreakdown";
 
 export class RegisterVehiculeBreakDownEvent extends AbstractEvent {
     static type = 'VEHICULE_BREAKDOWN_REGISTERED';

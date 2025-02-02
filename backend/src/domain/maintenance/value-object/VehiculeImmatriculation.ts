@@ -19,8 +19,8 @@ export class VehiculeImmatriculation {
         return regex.test(this.value);
     }
 
-    public static create(immatriculation: string): VehiculeImmatriculation | ApplicationException {
-        const vehicleImmatriculation = new VehiculeImmatriculation(immatriculation);
+    public static create(matriculation: string): VehiculeImmatriculation | ApplicationException {
+        const vehicleImmatriculation = new VehiculeImmatriculation(matriculation);
         if (!vehicleImmatriculation.validate())
             return VehiculeImmatriculation.errors.NOT_VALID;
         return vehicleImmatriculation;

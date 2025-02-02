@@ -1,12 +1,13 @@
-"use server"
+"use server";
 
 import { useServerForm } from '@/hooks/useServerForm';
 import {
     registerCustomerRequest
-} from '@infrastructureCore/requests/maintenance/registerCustomerRequest';
+} from '@infrastructureCore/requests/maintenance/customer/registerCustomerRequest';
 import {
     registerCustomerUseCase
-} from '../../../core/useCaseImplementation/maintenance/registerCustomerUseCase';
+} from '../../../../../../dist/infrastructure/frameworks/core/useCaseImplementation/maintenance/registerCustomerUseCase';
+
 
 export async function registerCustomer(prevState: any, formData: FormData) {
     return useServerForm(formData, registerCustomerRequest, async (payload, success, abort) => {

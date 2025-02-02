@@ -3,7 +3,7 @@ import { VehiculeImmatriculation } from "@domain/maintenance/value-object/Vehicu
 import { ApplicationException } from "@shared/ApplicationException";
 import { Result } from "@shared/Result";
 import {UseCaseImplementation} from "@infrastructureCore/useCaseImplementation/UseCaseImplementation";
-import {immatriculationRequest} from "@infrastructureCore/requests/maintenance/vehiculeImmatriculationRequest";
+import {immatriculationRequest} from "@infrastructureCore/requests/maintenance/vehicule/vehiculeImmatriculationRequest";
 import {maintenanceEventRepository} from "@infrastructureCore/repositories/maintenance/maintenanceEventRepository";
 import {vehiculeRepository} from "@infrastructureCore/repositories/maintenance/vehiculeRepository";
 

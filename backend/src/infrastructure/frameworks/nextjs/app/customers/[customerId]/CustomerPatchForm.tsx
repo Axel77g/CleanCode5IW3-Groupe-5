@@ -1,7 +1,5 @@
 "use client";
-import { Button } from "@/components/Button";
 import { Form } from "@/components/Form";
-import Input from "@/components/Input";
 import { useActionState } from "react";
 import { updateCustomerAction } from "./actions";
 
@@ -10,6 +8,12 @@ interface CustomerUpdateFormProps {
   name?: string | undefined;
   phoneNumber?: string | undefined;
   email?: string | undefined;
+  address?: {
+    city?: string | undefined;
+    country?: string | undefined;
+    postalCode?: string | undefined;
+    street?: string | undefined;
+  };
 }
 
 interface ActionState extends CustomerUpdateFormProps {
@@ -31,24 +35,27 @@ export default function CustomerUpdateForm({
     updateCustomerAction,
     initialState
   );
+
   return (
-    <Form state={state} title={"Profil conducteur"} action={formAction}>
+    <Form state={state} title={"Profil client"} action={formAction}>
       <input type={"hidden"} name={"customerId"} value={customer.customerId} />
-      <Input
+      <input type="text" name="name" value={state?.name ?? customer.name} />
+      <input
         type="text"
-        name="name"
-        value={state?.name ?? customer.name}
-        label={"Prénom"}
-        placeholder={"Prénom du conducteur"}
+        name="phoneNumber"
+        value={state?.phoneNumber ?? customer.phoneNumber}
       />
-      <Input
+      <input type="text" name="email" value={state?.email ?? customer.email} />
+      <input
         type="text"
-        name="email"
-        value={state?.email ?? customer.email}
-        label={"Email"}
-        placeholder={"example@email.com"}
+        name="address.city"
+        value={state?.address?.city ?? customer.address.city}
       />
-      <Button>Modifier le client</Button>
+      <input
+        type="text"
+        namezcountry"
+        value={state?.address?.country ?? customer.address.country}
+      />
     </Form>
   );
 }

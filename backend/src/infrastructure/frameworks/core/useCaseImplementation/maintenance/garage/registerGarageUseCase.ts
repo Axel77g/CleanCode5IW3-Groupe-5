@@ -3,7 +3,7 @@ import { Address } from "@domain/shared/value-object/Address";
 import { Siret } from "@domain/shared/value-object/Siret";
 import { ApplicationException } from "@shared/ApplicationException";
 import { Result } from "@shared/Result";
-import {registerGarageRequest} from "@infrastructureCore/requests/maintenance/registerGarageRequest";
+import {registerGarageRequest} from "@infrastructureCore/requests/maintenance/garage/registerGarageRequest";
 import {UseCaseImplementation} from "@infrastructureCore/useCaseImplementation/UseCaseImplementation";
 import {maintenanceEventRepository} from "@infrastructureCore/repositories/maintenance/maintenanceEventRepository";
 import {garageRepository} from "@infrastructureCore/repositories/maintenance/garageRepository";

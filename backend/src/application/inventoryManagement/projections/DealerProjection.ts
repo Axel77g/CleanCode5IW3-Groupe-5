@@ -25,7 +25,6 @@ export class DealerProjection extends AbstractProjection {
         }
     }
 
-
     async applyRegisterDealerEvent(event: RegisterDealerEvent): Promise<VoidResult> {
         const dealer = Dealer.fromObject(event.payload)
         if(dealer instanceof ApplicationException) return Result.Failure(dealer)

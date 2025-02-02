@@ -1,6 +1,6 @@
 import { createUpdateCustomerUseCase, UpdateCustomerUseCase } from "@application/maintenance/usecases/customer/UpdateCustomerUseCase";
 import {UseCaseImplementation} from "@infrastructureCore/useCaseImplementation/UseCaseImplementation";
-import {updateCustomerRequest} from "@infrastructureCore/requests/maintenance/updateCustomerRequest";
+import {updateCustomerRequest} from "@infrastructureCore/requests/maintenance/customer/updateCustomerRequest";
 import {maintenanceEventRepository} from "@infrastructureCore/repositories/maintenance/maintenanceEventRepository";
 import {customerRepository} from "@infrastructureCore/repositories/maintenance/customerRepository";
 

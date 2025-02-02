@@ -5,6 +5,7 @@ import { UnregisterVehiculeEvent } from "@domain/maintenance/events/vehicule/Unr
 import { VehiculeImmatriculation } from "@domain/maintenance/value-object/VehiculeImmatriculation";
 import { Result, VoidResult } from "@shared/Result";
 import { VehiculeRepository } from '../repositories/VehiculeRepository';
+import {UpdateVehiculeEvent} from "@domain/maintenance/events/vehicule/UpdateVehiculeEvent";
 
 export class VehiculeProjection extends AbstractProjection {
     constructor(private _vehiculeRepository: VehiculeRepository) {
@@ -13,15 +14,13 @@ export class VehiculeProjection extends AbstractProjection {
 
     init(projectionJobScheduler: any) {
         projectionJobScheduler.schedule('RegisterVehiculeEvent', this.constructor.name)
-        projectionJobScheduler.schedule('UpdateVehiculeEvent', this.constructor.name)
         projectionJobScheduler.schedule('UnregisterVehiculeEvent', this.constructor.name)
     }
 
     bindEvents() {
         return {
-            'RegisterVehiculeEvent': this.applyRegisterEvent,
-            'UpdateVehiculeEvent': this.applyUpdateEvent,
-            'UnregisterVehiculeEvent': this.applyUnregisteredEvent
+            [RegisterVehiculeEvent.type]: this.applyRegisterEvent,
+            [UnregisterVehiculeEvent.type]: this.applyUnregisteredEvent
         }
     }
 
@@ -29,20 +28,6 @@ export class VehiculeProjection extends AbstractProjection {
         const vehicule = Vehicule.fromObject(event.payload)
         if (vehicule instanceof Error) return Result.FailureStr("Cannot register vehicule");
         return this._vehiculeRepository.store(vehicule)
-    }
-
-    async applyUpdateEvent(event: RegisterVehiculeEvent): Promise<VoidResult> {
-        const immatriculation = VehiculeImmatriculation.create(event.payload.immatriculation)
-        if (immatriculation instanceof Error) return Result.FailureStr("Cannot update vehicule")
-        const vehicule = await this._vehiculeRepository.getByImmatriculation(immatriculation)
-        if (!vehicule.success) return Result.FailureStr("Cannot update vehicule")
-
-        const updatedVehicule = Vehicule.fromObject({
-            ...vehicule,
-            ...event.payload
-        })
-        if (updatedVehicule instanceof Error) return Result.FailureStr("Cannot update vehicule")
-        return this._vehiculeRepository.store(updatedVehicule);
     }
 
     async applyUnregisteredEvent(event: UnregisterVehiculeEvent): Promise<VoidResult> {

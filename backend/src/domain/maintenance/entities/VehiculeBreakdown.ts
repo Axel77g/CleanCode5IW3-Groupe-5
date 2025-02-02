@@ -1,18 +1,16 @@
 import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
-import {RegisterVehiculeBreakDownEvent} from "@domain/maintenance/events/Breakdown/RegisterVehiculeBreakDownEvent";
-import {
-    AsignBreakdownToMaintnenanceEvent
-} from "@domain/maintenance/events/Breakdown/AsignBreakdownToMaintnenanceEvent";
+import {RegisterVehiculeBreakDownEvent} from "@domain/maintenance/events/breakdown/RegisterVehiculeBreakDownEvent";
+import {randomUUID} from "node:crypto";
 
-export interface VehiculeBreakDownDTO {
-    vehiculeBreakDownId: string,
+export interface VehiculeBreakdownDTO {
+    vehiculeBreakDownId?: string,
     vehiculeImmatriculation: string,
     description: string,
     date: Date,
     maintenanceId ?: string
 }
 
-    export class VehiculeBreakDown{
+    export class VehiculeBreakdown {
     private constructor(
         private readonly vehiculeBreakDownId: string,
         private readonly vehiculeImmatriculation: VehiculeImmatriculation,
@@ -21,7 +19,7 @@ export interface VehiculeBreakDownDTO {
         private readonly maintenanceId ?: string
     ) {}
 
-    static fromObject(payload : VehiculeBreakDownDTO) {
+    static fromObject(payload : VehiculeBreakdownDTO) {
         const vehiculeImmatriculation = VehiculeImmatriculation.create(payload.vehiculeImmatriculation);
         if(vehiculeImmatriculation instanceof Error) return vehiculeImmatriculation;
         return this.create({
@@ -35,12 +33,12 @@ export interface VehiculeBreakDownDTO {
 
     static create(object : {
         vehiculeImmatriculation: VehiculeImmatriculation,
-        vehiculeBreakDownId: string,
+        vehiculeBreakDownId?: string,
         description: string,
         date: Date,
         maintenanceId ?: string
     }) {
-        return new VehiculeBreakDown(object.vehiculeBreakDownId, object.vehiculeImmatriculation, object.description, object.date, object.maintenanceId);
+        return new VehiculeBreakdown(object?.vehiculeBreakDownId || randomUUID(), object.vehiculeImmatriculation, object.description, object.date, object.maintenanceId);
     }
 
     registerEvent(): RegisterVehiculeBreakDownEvent {
@@ -52,12 +50,4 @@ export interface VehiculeBreakDownDTO {
             maintenanceId: this.maintenanceId
         })
     }
-
-    asignMaintenanceEvent(maintenanceId: string): AsignBreakdownToMaintnenanceEvent {
-        return new AsignBreakdownToMaintnenanceEvent({
-            vehiculeBreakDownId: this.vehiculeBreakDownId,
-            maintenanceId
-        })
-    }
-
 }

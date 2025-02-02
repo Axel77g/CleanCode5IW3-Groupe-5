@@ -4,8 +4,10 @@ import List from "@/components/List";
 import ListItem from "@/components/ListItem";
 import Pagination from "@/components/Pagination";
 import { useServerPagination } from "@/hooks/useServerPagination";
-import { listCustomerUseCase } from "@infrastructureCore/useCaseImplementation/maintenance/listCustomerUseCase";
 import CustomerRegisterForm from "./CustomerRegisterForm";
+import {
+    listCustomerUseCase
+} from '../../../../../../dist/infrastructure/frameworks/core/useCaseImplementation/maintenance/listCustomerUseCase';
 
 export default async function CustomersListPage(pageProps: {
   searchParams: any;

@@ -1,8 +1,6 @@
-import { customerIdZodObject } from "@infrastructureCore/requests/maintenance/customerIdRequest";
 import { z } from "zod";
 
 export const registerCustomerRequest = z.object({
-    ...customerIdZodObject,
     name: z.string(),
     phoneNumber: z.string(),
     email: z.string(),
