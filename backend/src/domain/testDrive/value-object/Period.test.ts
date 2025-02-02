@@ -21,4 +21,18 @@ describe("Period", () => {
             assertError(period as ApplicationException, Period.errors.INVALID_PERIOD);
         });
     });
+
+    describe("isOverlapping", () => {
+        it("should return true when the periods are overlapping", () => {
+            const period1 = Period.create(new Date("2025-01-01"), new Date("2025-01-31")) as Period;
+            const period2 = Period.create(new Date("2025-01-15"), new Date("2025-02-15")) as Period;
+            expect(period1.isOverlapping(period2)).toBe(true);
+        });
+
+        it("should return false when the periods are not overlapping", () => {
+            const period1 = Period.create(new Date("2025-01-01"), new Date("2025-01-31")) as Period;
+            const period2 = Period.create(new Date("2025-02-01"), new Date("2025-02-15")) as Period;
+            expect(period1.isOverlapping(period2)).toBe(false);
+        });
+    });
 });

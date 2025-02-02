@@ -4,6 +4,8 @@ import {TestDriveRepository} from "@application/testDrive/repositories/TestDrive
 import { DriverLicenseId } from "@domain/testDrive/value-object/DriverLicenseId";
 import { PaginatedInput } from "@shared/PaginatedInput";
 import {PaginatedResult, Result, VoidResult} from "@shared/Result";
+import { VehiculeImmatriculation } from "@domain/maintenance/value-object/VehiculeImmatriculation";
+import {VehiculeDisponibilityAggregate} from "@domain/testDrive/aggregates/VehiculeDisponibilityAggregate";
 
 export class InMemoryTestDriveRepository extends AbstractInMemoryRepository<TestDrive> implements TestDriveRepository {
     async listDriverTestDrives(driverLicenseId: DriverLicenseId, pagination: PaginatedInput): Promise<PaginatedResult<TestDrive>> {
@@ -19,4 +21,9 @@ export class InMemoryTestDriveRepository extends AbstractInMemoryRepository<Test
         return Result.SuccessVoid();
     }
 
+    async getVehiculeDisponibilities(immatriculation: VehiculeImmatriculation): Promise<Result<VehiculeDisponibilityAggregate>> {
+        const testDrives = this.collection.findMany("vehicleImmatriculation", immatriculation).toArray();
+        const periods = testDrives.map(testDrive => testDrive.period);
+        return Result.Success(new VehiculeDisponibilityAggregate(periods));
+    }
 }

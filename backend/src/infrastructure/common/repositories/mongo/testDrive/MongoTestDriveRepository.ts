@@ -1,12 +1,17 @@
 import { TestDriveRepository } from "@application/testDrive/repositories/TestDriveRepository";
-import { TestDrive } from "@domain/testDrive/entities/TestDrive";
-import { DriverLicenseId } from "@domain/testDrive/value-object/DriverLicenseId";
-import { TestDriveMapper } from "@infrastructure/common/entityMappers/TestDriveMapper";
-import { PaginatedInput } from "@shared/PaginatedInput";
-import { PaginatedResult, Result, VoidResult } from "@shared/Result";
-import { AbstractMongoRepository } from "../AbstractMongoRepository";
+import { VehiculeImmatriculation } from "@domain/maintenance/value-object/VehiculeImmatriculation";
+import {TestDrive} from "@domain/testDrive/entities/TestDrive";
+import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
+import {Period} from "@domain/testDrive/value-object/Period";
+import {TestDriveMapper} from "@infrastructure/common/entityMappers/TestDriveMapper";
+import {PaginatedInput} from "@shared/PaginatedInput";
+import {PaginatedResult, Result, VoidResult} from "@shared/Result";
+import {AbstractMongoRepository} from "../AbstractMongoRepository";
+import {ApplicationException} from "@shared/ApplicationException";
+import {VehiculeDisponibilityAggregate} from "@domain/testDrive/aggregates/VehiculeDisponibilityAggregate";
 
 export class MongoTestDriveRepository extends AbstractMongoRepository implements TestDriveRepository {
+
     protected collectionName: string = 'testDrives';
 
     async listDriverTestDrives(driverLicenseId: DriverLicenseId, pagination: PaginatedInput): Promise<PaginatedResult<TestDrive>> {
@@ -35,5 +40,26 @@ export class MongoTestDriveRepository extends AbstractMongoRepository implements
             session.abortTransaction.bind(session)
         )
     }
+
+     getVehiculeDisponibilities(immatriculation: VehiculeImmatriculation): Promise<Result<VehiculeDisponibilityAggregate>> {
+        return this.catchError(async()=>{
+            const testDrivePeriodsDocuments = await this.getCollection().find({
+                vehicleImmatriculation: immatriculation.getValue(),
+            },{
+                projection : {
+                    periodStart:1,
+                    periodEnd:1
+                }
+            }).toArray()
+
+            const testDrivePeriods = testDrivePeriodsDocuments.map((testDrivePeriodDocument : any)=>{
+                const period = Period.create(testDrivePeriodDocument.periodStart, testDrivePeriodDocument.periodEnd)
+                if(period instanceof ApplicationException) return false
+                return period
+            }).filter(Boolean) as Period[]
+
+            return Result.Success(new VehiculeDisponibilityAggregate(testDrivePeriods))
+        })
+     }
 
 }
