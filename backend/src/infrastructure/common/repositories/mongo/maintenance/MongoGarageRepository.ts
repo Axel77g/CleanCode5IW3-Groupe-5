@@ -3,10 +3,12 @@ import { Garage } from "@domain/maintenance/entities/Garage";
 import { Siret } from "@domain/shared/value-object/Siret";
 import { GarageMapper } from "@infrastructure/common/entityMappers/GarageMapper";
 import { ApplicationException } from "@shared/ApplicationException";
-import { Result, VoidResult } from "@shared/Result";
-import { AbstractMongoRepository } from "../AbstractMongoRepository";
+import { PaginatedInput } from '@shared/PaginatedInput';
+import {PaginatedResult, Result, VoidResult} from "@shared/Result";
+import {AbstractMongoRepository} from "../AbstractMongoRepository";
 
 export class MongoGarageRepository extends AbstractMongoRepository implements GarageRepository {
+
     protected collectionName: string = 'garages';
 
     getBySiret(siret: Siret): Promise<Result<Garage>> {
@@ -56,5 +58,9 @@ export class MongoGarageRepository extends AbstractMongoRepository implements Ga
             },
             sesion.abortTransaction.bind(sesion),
         )
+    }
+
+    list(pagination: PaginatedInput): Promise<PaginatedResult<Garage>> {
+        throw new Error('Method not implemented.');
     }
 }

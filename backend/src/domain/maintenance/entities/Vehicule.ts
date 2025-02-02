@@ -4,6 +4,8 @@ import { ApplicationException } from "@shared/ApplicationException";
 import { RegisterVehiculeEvent } from "../events/vehicule/RegisterVehiculeEvent";
 import { VehiculeImmatriculation } from "../value-object/VehiculeImmatriculation";
 import { VehiculeVin, VehiculeVinDTO } from "../value-object/VehiculeVin";
+import {VehiculeWarranty} from "@domain/maintenance/entities/VehiculeWarranty";
+import {Period} from "@domain/testDrive/value-object/Period";
 
 export interface VehiculeDTO {
     immatriculation: string;
@@ -131,8 +133,21 @@ export class Vehicule {
         mileage: number,
         maintenanceDate: Date,
         status: VehiculeStatusEnum
-    }) {
-        return new Vehicule(object.immatriculation, object.brand, object.model, object.year, object.vin, object.mileage, object.maintenanceDate, object.status);
+    }) : {vehicule: Vehicule, warranty: VehiculeWarranty} | ApplicationException {
+        const fourYearsPeriodFromYear = new Date(object.year, 0, 1);
+        fourYearsPeriodFromYear.setFullYear(fourYearsPeriodFromYear.getFullYear() + 4);
+
+        const warrantyPeriod = Period.create(new Date(object.year, 0, 1), fourYearsPeriodFromYear);
+        if(warrantyPeriod instanceof ApplicationException) return warrantyPeriod;
+
+        const vehiculeWarranty = VehiculeWarranty.create({
+            vehiculeImmatriculation: object.immatriculation,
+            period : warrantyPeriod
+        })
+        return {
+            vehicule: new Vehicule(object.immatriculation, object.brand, object.model, object.year, object.vin, object.mileage, object.maintenanceDate, object.status),
+            warranty: vehiculeWarranty
+        }
     }
 
     registerEvent(): RegisterVehiculeEvent {

@@ -2,10 +2,13 @@ import { createUnregisterGarageUseCase, UnregisterGarageUseCase } from "@applica
 import { Siret } from "@domain/shared/value-object/Siret";
 import { ApplicationException } from "@shared/ApplicationException";
 import { Result } from "@shared/Result";
-import { inventoryManagementEventRepository } from "../../repositories/inventoryManagement/inventoryManagementEventRepository";
-import { garageRepository } from "../../repositories/maintenance/garageRepository";
-import { siretRequest } from "../../requests/inventoryManagement/siretRequest";
-import { UseCaseImplementation } from "../UseCaseImplementation";
+import {UseCaseImplementation} from "@infrastructureCore/useCaseImplementation/UseCaseImplementation";
+import {
+    inventoryManagementEventRepository
+} from "@infrastructureCore/repositories/inventoryManagement/inventoryManagementEventRepository";
+import {garageRepository} from "@infrastructureCore/repositories/maintenance/garageRepository";
+import {siretRequest} from "@infrastructureCore/requests/inventoryManagement/siretRequest";
+
 
 export const unregisterGarageUseCase: UseCaseImplementation<typeof siretRequest, UnregisterGarageUseCase> = async (input) => {
     const siret = Siret.create(input.siret)

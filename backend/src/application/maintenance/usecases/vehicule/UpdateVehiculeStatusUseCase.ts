@@ -22,8 +22,10 @@ export const createUpdateVehiculeStatusUseCase = (_eventRepositoru: EventReposit
     return async (input: UpdateVehiculeStatusInput) => {
         const vehiculeResponse = await _vehiculeRepository.getByImmatriculation(input.immatriculation);
         if (!vehiculeResponse.success) return Result.Failure(registerVehiculeErrors.NOT_FOUND_VEHICULE)
+        if(vehiculeResponse.empty) return Result.Failure(registerVehiculeErrors.NOT_FOUND_VEHICULE)
         const vehicule = vehiculeResponse.value.applyStatus(input.status)
-        if (vehicule instanceof ApplicationException) return Result.Failure(vehicule)
+        if(vehicule instanceof ApplicationException) return Result.Failure(vehicule)
+
         const updateVehiculeStatusEvent = new UpdateVehiculeStatusEvent({
             immatriculation: input.immatriculation,
             status: input.status

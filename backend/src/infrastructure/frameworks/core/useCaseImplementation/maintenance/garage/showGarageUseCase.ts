@@ -2,9 +2,10 @@ import { createShowGarageUseCase, ShowGarageUseCase } from "@application/mainten
 import { Siret } from "@domain/shared/value-object/Siret";
 import { ApplicationException } from "@shared/ApplicationException";
 import { Result } from "@shared/Result";
-import { siretRequest } from "../../requests/inventoryManagement/siretRequest";
-import { UseCaseImplementation } from "../UseCaseImplementation";
-import { garageRepository } from "../../repositories/maintenance/garageRepository";
+import {UseCaseImplementation} from "@infrastructureCore/useCaseImplementation/UseCaseImplementation";
+import {siretRequest} from "@infrastructureCore/requests/inventoryManagement/siretRequest";
+import {garageRepository} from "@infrastructureCore/repositories/maintenance/garageRepository";
+
 
 export const showGarageUseCase: UseCaseImplementation<typeof siretRequest, ShowGarageUseCase> = async (input) => {
     const siret = Siret.create(input.siret)

@@ -3,10 +3,11 @@ import { Address } from "@domain/shared/value-object/Address";
 import { Siret } from "@domain/shared/value-object/Siret";
 import { ApplicationException } from "@shared/ApplicationException";
 import { Result } from "@shared/Result";
-import { garageRepository } from "../../repositories/maintenance/garageRepository";
-import { maintenanceEventRepository } from "../../repositories/maintenance/maintenanceEventRepository";
-import { registerGarageRequest } from "../../requests/maintenance/registerGarageRequest";
-import { UseCaseImplementation } from "../UseCaseImplementation";
+import {registerGarageRequest} from "@infrastructureCore/requests/maintenance/registerGarageRequest";
+import {UseCaseImplementation} from "@infrastructureCore/useCaseImplementation/UseCaseImplementation";
+import {maintenanceEventRepository} from "@infrastructureCore/repositories/maintenance/maintenanceEventRepository";
+import {garageRepository} from "@infrastructureCore/repositories/maintenance/garageRepository";
+
 
 export const registerGarageUseCase: UseCaseImplementation<typeof registerGarageRequest, RegisterGarageUseCase> = async (input) => {
     const address = Address.create(input.address)

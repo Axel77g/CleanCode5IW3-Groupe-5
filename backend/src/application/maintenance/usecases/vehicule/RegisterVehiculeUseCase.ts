@@ -44,7 +44,7 @@ export const createRegisterVehiculeUseCase = (_eventRepository: EventRepository,
         })
 
         if (vehicule instanceof ApplicationException) return Result.Failure(vehicule)
-        const repositoryResponse = await _eventRepository.storeEvent(vehicule.registerEvent());
+        const repositoryResponse = await _eventRepository.storeEvent(vehicule.vehicule.registerEvent());
         if (!repositoryResponse.success) return repositoryResponse
         return Result.Success("Vehicule registered successfully")
     }

@@ -1,8 +1,9 @@
 import { createUpdateCustomerUseCase, UpdateCustomerUseCase } from "@application/maintenance/usecases/customer/UpdateCustomerUseCase";
-import { customerRepository } from "../../repositories/maintenance/customerRepository";
-import { maintenanceEventRepository } from "../../repositories/maintenance/maintenanceEventRepository";
-import { updateCustomerRequest } from "../../requests/maintenance/updateCustomerRequest";
-import { UseCaseImplementation } from "../UseCaseImplementation";
+import {UseCaseImplementation} from "@infrastructureCore/useCaseImplementation/UseCaseImplementation";
+import {updateCustomerRequest} from "@infrastructureCore/requests/maintenance/updateCustomerRequest";
+import {maintenanceEventRepository} from "@infrastructureCore/repositories/maintenance/maintenanceEventRepository";
+import {customerRepository} from "@infrastructureCore/repositories/maintenance/customerRepository";
+
 
 export const updateCustomerUseCase: UseCaseImplementation<typeof updateCustomerRequest, UpdateCustomerUseCase> = async (input) => {
     const useCase = createUpdateCustomerUseCase(maintenanceEventRepository, customerRepository)
