@@ -4,6 +4,7 @@ import { randomUUID } from "node:crypto";
 import { RegisterCustomerEvent } from "../events/customer/RegisterCustomerEvent";
 import { UnregisterCustomerEvent } from "../events/customer/UnregisterCustomerEvent";
 import { UpdateCustomerEvent } from "../events/customer/UpdateCustomerEvent";
+import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
 
 export interface CustomerDTO {
     customerId: string,
@@ -20,6 +21,7 @@ export class Customer {
         public readonly phoneNumber: string,
         public readonly email: string,
         public readonly address: Address,
+        public readonly vehiclesImmatriculations : VehiculeImmatriculation[]
     ) { }
 
     registerEvent(): RegisterCustomerEvent {
