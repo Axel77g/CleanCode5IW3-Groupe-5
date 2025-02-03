@@ -10,26 +10,26 @@ export interface MaintenanceDTO {
     maintenanceId : string,
     garageSiret : string,
     vehiculeImmatriculation: string,
-    maintenanceSpartParts : MaintenanceSparePart[],
+    maintenanceSpareParts : MaintenanceSparePart[],
     recommendation: string,
     status: MaintenanceStatusEnum,
     date: Date,
 }
 
 export class Maintenance{
-    private constructor(
+    constructor(
         public readonly maintenanceId : string,
         public readonly vehiculeImmatriculation: VehiculeImmatriculation,
         public readonly garageSiret : Siret,
         public readonly status : MaintenanceStatusEnum,
-        public readonly maintenanceSpartParts : MaintenanceSparePart[],
+        public readonly maintenanceSpareParts : MaintenanceSparePart[],
         public readonly recommendation: string,
         public readonly date: Date,
     ) {
     }
 
-    get totalCost() : number {
-        return this.maintenanceSpartParts.reduce((acc, part) => acc + part.price, 0);
+    getTotalCost() : number {
+        return this.maintenanceSpareParts.reduce((acc, part) => acc + part.price, 0);
     }
 
     static create(object : {
@@ -37,11 +37,11 @@ export class Maintenance{
         vehiculeImmatriculation: VehiculeImmatriculation,
         garageSiret : Siret,
         status : MaintenanceStatusEnum,
-        maintenanceSpartParts : MaintenanceSparePart[],
+        maintenanceSpareParts : MaintenanceSparePart[],
         recommendation: string,
         date: Date,
-    }) {
-        return new Maintenance(object.maintenanceId, object.vehiculeImmatriculation, object.garageSiret, object.status, object.maintenanceSpartParts, object.recommendation, object.date);
+    }) : Maintenance | ApplicationException {
+        return new Maintenance(object.maintenanceId, object.vehiculeImmatriculation, object.garageSiret, object.status, object.maintenanceSpareParts, object.recommendation, object.date);
     }
 
     static fromObject(payload : MaintenanceDTO) {
@@ -54,7 +54,7 @@ export class Maintenance{
             garageSiret,
             vehiculeImmatriculation,
             status: payload.status,
-            maintenanceSpartParts: payload.maintenanceSpartParts,
+            maintenanceSpareParts: payload.maintenanceSpareParts,
             recommendation: payload.recommendation,
             date: payload.date,
         })
@@ -65,7 +65,7 @@ export class Maintenance{
             maintenanceId: this.maintenanceId,
             garageSiret: this.garageSiret.getValue(),
             vehiculeImmatriculation: this.vehiculeImmatriculation.getValue(),
-            maintenanceSpartParts: this.maintenanceSpartParts,
+            maintenanceSpareParts: this.maintenanceSpareParts,
             recommendation: this.recommendation,
             status: this.status,
             date: this.date,
@@ -76,7 +76,7 @@ export class Maintenance{
         return new UpdateMaintenanceEvent({
             status: this.status,
             maintenanceId: this.maintenanceId,
-            maintenanceSpartParts: this.maintenanceSpartParts,
+            maintenanceSpareParts: this.maintenanceSpareParts,
             recommendation: this.recommendation
         })
     }

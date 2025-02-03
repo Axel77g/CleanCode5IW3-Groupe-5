@@ -18,7 +18,7 @@ const registerVehiculeErrors = {
     NOT_FOUND_VEHICULE: new ApplicationException('UpdateVehiculeStatusUseCase.NotFoundVehicule', 'Cannot update status for not found vehicule')
 }
 
-export const createUpdateVehiculeStatusUseCase = (_eventRepositoru: EventRepository, _vehiculeRepository: VehiculeRepository): RegisterVehiculeUseCase => {
+export const createUpdateVehiculeStatusUseCase = (_eventRepository: EventRepository, _vehiculeRepository: VehiculeRepository): RegisterVehiculeUseCase => {
     return async (input: UpdateVehiculeStatusInput) => {
         const vehiculeResponse = await _vehiculeRepository.getByImmatriculation(input.immatriculation);
         if (!vehiculeResponse.success) return Result.Failure(registerVehiculeErrors.NOT_FOUND_VEHICULE)
@@ -30,7 +30,7 @@ export const createUpdateVehiculeStatusUseCase = (_eventRepositoru: EventReposit
             immatriculation: input.immatriculation,
             status: input.status
         })
-        const repositoryResponse = await _eventRepositoru.storeEvent(updateVehiculeStatusEvent);
+        const repositoryResponse = await _eventRepository.storeEvent(updateVehiculeStatusEvent);
         if (!repositoryResponse.success) return repositoryResponse
         return Result.Success("Vehicule status updated successfully")
     }

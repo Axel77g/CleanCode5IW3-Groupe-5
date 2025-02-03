@@ -11,6 +11,7 @@ import {ApplicationException} from "@shared/ApplicationException";
 import {Result} from "@shared/Result";
 import {maintenanceEventRepository} from "@infrastructureCore/repositories/maintenance/maintenanceEventRepository";
 import {vehiculeRepository} from "@infrastructureCore/repositories/maintenance/vehiculeRepository";
+import {randomUUID} from "node:crypto";
 
 export const registerVehiculeBreakdownUseCase : UseCaseImplementation<typeof registerVehiculeBreakdownRequest, RegisterVehiculeBreakdownUseCase> = async (input) => {
     const immatriculation = VehiculeImmatriculation.create(input.vehiculeImmatriculation)
@@ -20,6 +21,6 @@ export const registerVehiculeBreakdownUseCase : UseCaseImplementation<typeof reg
         vehiculeImmatriculation: immatriculation,
         description: input.description,
         date: input.date,
-        maintenanceId: input.maintenanceId
+        maintenanceId: input.maintenanceId || randomUUID()
     })
 }

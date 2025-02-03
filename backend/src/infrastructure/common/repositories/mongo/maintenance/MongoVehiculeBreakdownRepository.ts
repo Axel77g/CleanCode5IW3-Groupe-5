@@ -8,6 +8,18 @@ import {VehiculeBreakdownMapper} from "@infrastructure/common/entityMappers/Vehi
 export class MongoVehiculeBreakdownRepository extends AbstractMongoRepository implements VehiculeBreakdownRepository {
     protected collectionName: string = "vehicule-breakdowns";
 
+    findById(vehiculeBreakdownId: string): Promise<OptionalResult<VehiculeBreakdown>> {
+        return this.catchError(
+            async () => {
+                const vehiculeBreakdownDocument = await this.getCollection().findOne({vehiculeBreakdownId: vehiculeBreakdownId});
+                if (!vehiculeBreakdownDocument) return Result.SuccessVoid();
+                const vehiculeBreakdown = VehiculeBreakdownMapper.toDomain(vehiculeBreakdownDocument);
+                if (vehiculeBreakdown instanceof Error) return Result.Failure(vehiculeBreakdown);
+                return Result.Success<VehiculeBreakdown>(vehiculeBreakdown);
+            }
+        )
+    }
+
     async store(vehiculeBreakdown: VehiculeBreakdown): Promise<VoidResult> {
         const session = this.getSessionTransaction();
         return this.catchError(

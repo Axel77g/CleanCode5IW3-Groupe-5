@@ -54,6 +54,12 @@ export default function RootLayout({
                 >
                     <Users className="w-5 h-5 text-gray-600"/>
                     <span className="text-sm font-medium text-gray-700">Conducteurs</span>
+                </Link> <Link
+                    href="/customers"
+                    className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 hover:shadow transition"
+                >
+                    <Users className="w-5 h-5 text-gray-600"/>
+                    <span className="text-sm font-medium text-gray-700">Clients</span>
                 </Link>
             </nav>
         </aside>

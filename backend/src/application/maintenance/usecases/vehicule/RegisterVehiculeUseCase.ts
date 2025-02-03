@@ -41,7 +41,6 @@ export const createRegisterVehiculeUseCase = (_eventRepository: EventRepository,
             year: input.year,
             vin: input.vin,
             mileage: input.mileage,
-            maintenanceDate: input.maintenanceDate,
             status: input.status,
             warranty: input.warranty
         })

@@ -28,6 +28,7 @@ export const createRegisterCustomerUseCase = (_eventRepository: EventRepository,
             email: input.email,
             address: input.address
         })
+
         if (customer instanceof ApplicationException) return Result.Failure(customer)
         const storeResponse = await _eventRepository.storeEvent(customer.registerEvent());
         if (!storeResponse.success) return Result.FailureStr("Cannot register customer")

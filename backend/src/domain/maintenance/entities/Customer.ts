@@ -49,7 +49,14 @@ export class Customer {
         phoneNumber?: string,
         email?: string,
     }) {
-        return new Customer(this.customerId, object.name || this.name, object.phoneNumber || this.phoneNumber, object.email || this.email, this.address);
+        return new Customer(
+            this.customerId,
+            object.name ?? this.name,
+            object.phoneNumber ?? this.phoneNumber,
+            object.email ?? this.email,
+            this.address,
+            this.vehiclesImmatriculations
+        )
     }
 
     unregisterEvent(): UnregisterCustomerEvent {
@@ -67,8 +74,13 @@ export class Customer {
         if (address instanceof ApplicationException) {
             return address;
         }
-
-        return new Customer(object.customerId, object.name, object.phoneNumber, object.email, address);
+        return this.create({
+            customerId: object.customerId,
+            name: object.name,
+            phoneNumber: object.phoneNumber,
+            email: object.email,
+            address: address
+        });
     }
 
     static create(customer: {
@@ -78,6 +90,6 @@ export class Customer {
         email: string,
         address: Address
     }) {
-        return new Customer(customer.customerId, customer.name, customer.phoneNumber, customer.email, customer.address);
+        return new Customer(customer.customerId, customer.name, customer.phoneNumber, customer.email, customer.address, []);
     }
 }

@@ -1,9 +1,10 @@
 import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
 import {RegisterVehiculeBreakDownEvent} from "@domain/maintenance/events/breakdown/RegisterVehiculeBreakDownEvent";
 import {randomUUID} from "node:crypto";
+import {UnregisterVehiculeBreakdownEvent} from "@domain/maintenance/events/breakdown/UnregisterVehiculeBreakdownEvent";
 
 export interface VehiculeBreakdownDTO {
-    vehiculeBreakDownId?: string,
+    vehiculeBreakdownId?: string,
     vehiculeImmatriculation: string,
     description: string,
     date: Date,
@@ -12,7 +13,7 @@ export interface VehiculeBreakdownDTO {
 
     export class VehiculeBreakdown {
     constructor(
-        public readonly vehiculeBreakDownId: string,
+        public readonly vehiculeBreakdownId: string,
         public readonly vehiculeImmatriculation: VehiculeImmatriculation,
         public readonly description: string,
         public readonly date: Date,
@@ -24,7 +25,7 @@ export interface VehiculeBreakdownDTO {
         if(vehiculeImmatriculation instanceof Error) return vehiculeImmatriculation;
         return this.create({
             vehiculeImmatriculation,
-            vehiculeBreakDownId: payload.vehiculeBreakDownId,
+            vehiculeBreakdownId: payload.vehiculeBreakdownId,
             description: payload.description,
             date: payload.date,
             maintenanceId: payload.maintenanceId
@@ -33,21 +34,27 @@ export interface VehiculeBreakdownDTO {
 
     static create(object : {
         vehiculeImmatriculation: VehiculeImmatriculation,
-        vehiculeBreakDownId?: string,
+        vehiculeBreakdownId?: string,
         description: string,
         date: Date,
         maintenanceId ?: string
     }) {
-        return new VehiculeBreakdown(object?.vehiculeBreakDownId || randomUUID(), object.vehiculeImmatriculation, object.description, object.date, object.maintenanceId);
+        return new VehiculeBreakdown(object?.vehiculeBreakdownId || randomUUID(), object.vehiculeImmatriculation, object.description, object.date, object.maintenanceId);
     }
 
     registerEvent(): RegisterVehiculeBreakDownEvent {
         return new RegisterVehiculeBreakDownEvent({
-            vehiculeBreakDownId: this.vehiculeBreakDownId,
+            vehiculeBreakdownId: this.vehiculeBreakdownId,
             vehiculeImmatriculation: this.vehiculeImmatriculation.getValue(),
             description: this.description,
             date: this.date,
             maintenanceId: this.maintenanceId
+        })
+    }
+
+    unregisterEvent(): UnregisterVehiculeBreakdownEvent {
+        return new UnregisterVehiculeBreakdownEvent({
+            vehiculeBreakdownId: this.vehiculeBreakdownId
         })
     }
 }

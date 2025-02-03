@@ -3,6 +3,7 @@ import {VoidResult, OptionalResult} from "@shared/Result";
 
 export interface MaintenanceRepository {
     store(maintenance: Maintenance): Promise<VoidResult>
-    update(maintenance: Maintenance): Promise<VoidResult>
-    getByMaintenanceId(maintenance: Maintenance): Promise<OptionalResult<Maintenance>>
+    update(maintenanceId: string): Promise<VoidResult>
+    getByMaintenanceId(maintenanceId: string): Promise<OptionalResult<Maintenance>>
+    listVehiculeMaintenance(vehiculeImmatriculation: string): Promise<VoidResult>
 }

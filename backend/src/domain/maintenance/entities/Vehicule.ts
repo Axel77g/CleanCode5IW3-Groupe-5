@@ -184,6 +184,13 @@ export class Vehicule {
         })
     }
 
+    update(object: {
+        mileage: number,
+        maintenanceInterval: VehiculeMaintenanceInterval,
+    }) {
+        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, object.mileage, object.maintenanceInterval, this.status, this.warranty);
+    }
+
     updateEvent(): UpdateVehiculeEvent {
         return new UpdateVehiculeEvent({
             immatriculation: this.immatriculation.getValue(),
@@ -197,17 +204,6 @@ export class Vehicule {
         })
     }
 
-    update(object: {
-        immatriculation: VehiculeImmatriculation,
-        brand: 'Triumph',
-        model: VehiculeModelEnum,
-        year: number,
-        vin: VehiculeVin,
-        mileage: number,
-        maintenanceInterval: VehiculeMaintenanceInterval,
-        status: VehiculeStatusEnum,
-        warranty: Period
-    }) {
-        return new Vehicule(object.immatriculation, object.brand, object.model, object.year, object.vin, object.mileage, object.maintenanceInterval, object.status, object.warranty);
+    listMaintenance() {
     }
 }
