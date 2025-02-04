@@ -143,14 +143,14 @@ export class Vehicule {
     }
 
     static create(object: {
-        immatriculation: VehiculeImmatriculation,
-        brand: 'Triumph',
-        model: VehiculeModelEnum,
-        year: number,
-        vin: VehiculeVin,
-        mileage: number,
-        maintenanceInterval: VehiculeMaintenanceInterval,
-        status: VehiculeStatusEnum,
+        immatriculation: VehiculeImmatriculation;
+        brand: "Triumph";
+        model: VehiculeModelEnum;
+        year: number;
+        vin: VehiculeVin;
+        mileage: number;
+        maintenanceInterval: VehiculeMaintenanceInterval;
+        status: VehiculeStatusEnum;
         warranty: Period
     }) : Vehicule | ApplicationException {
         return new Vehicule(object.immatriculation, object.brand, object.model, object.year, object.vin, object.mileage, object.maintenanceInterval, object.status, object.warranty);

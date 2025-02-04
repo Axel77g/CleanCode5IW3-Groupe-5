@@ -9,6 +9,7 @@ import { ApplicationException } from "@shared/ApplicationException";
 import { IInputUseCase, IUseCase } from "@shared/IUseCase";
 import { Result } from "@shared/Result";
 import {Period} from "@domain/testDrive/value-object/Period";
+import {VehiculeMaintenanceInterval} from "@domain/maintenance/value-object/VehiculeMaintenanceInterval";
 
 interface RegisterVehiculeInput extends IInputUseCase {
     immatriculation: VehiculeImmatriculation;
@@ -17,7 +18,7 @@ interface RegisterVehiculeInput extends IInputUseCase {
     year: number;
     vin: VehiculeVin;
     mileage: number;
-    maintenanceDate: Date;
+    maintenanceInterval: VehiculeMaintenanceInterval,
     status: VehiculeStatusEnum;
     warranty: Period;
 }
@@ -33,7 +34,6 @@ export const createRegisterVehiculeUseCase = (_eventRepository: EventRepository,
         const vehiculeImmatriculation = await _vehiculeRepository.getByImmatriculation(input.immatriculation);
         if (!vehiculeImmatriculation.success) return vehiculeImmatriculation
         if (vehiculeImmatriculation.empty) return Result.Failure(registeredVehiculeErrors.VEHICULE_ALREADY_EXISTS)
-
         const vehicule = Vehicule.create({
             immatriculation: input.immatriculation,
             brand: input.brand,
@@ -41,6 +41,7 @@ export const createRegisterVehiculeUseCase = (_eventRepository: EventRepository,
             year: input.year,
             vin: input.vin,
             mileage: input.mileage,
+            maintenanceInterval: input.maintenanceInterval,
             status: input.status,
             warranty: input.warranty
         })
