@@ -10,6 +10,7 @@ export class CustomerMapper {
             phoneNumber: customer.phoneNumber,
             email: customer.email,
             address: customer.address,
+            vehiculeImmatriculations: customer.vehiculeImmatriculations
         })
     }
 
@@ -19,7 +20,8 @@ export class CustomerMapper {
             name: customer.name,
             phoneNumber: customer.phoneNumber,
             email: customer.email,
-            address: customer.address
+            address: customer.address,
+            vehiculeImmatriculations: customer.vehiculeImmatriculations,
         })
     }
 

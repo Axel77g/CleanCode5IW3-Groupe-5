@@ -3,6 +3,7 @@ import { Customer } from "@domain/maintenance/entities/Customer";
 import { PaginatedInput } from "@shared/PaginatedInput";
 import { OptionalResult, PaginatedResult, Result, VoidResult } from "@shared/Result";
 import { AbstractInMemoryRepository } from "../AbstractInMemoryRepository";
+import {Vehicule} from "@domain/maintenance/entities/Vehicule";
 
 export class InMemoryCustomerRepository extends AbstractInMemoryRepository<Customer> implements CustomerRepository {
     async list(pagination: PaginatedInput): Promise<PaginatedResult<Customer>> {
@@ -24,6 +25,11 @@ export class InMemoryCustomerRepository extends AbstractInMemoryRepository<Custo
 
     async delete(customerId: string): Promise<VoidResult> {
         this.collection.remove('customerId', customerId)
+        return Result.SuccessVoid()
+    }
+
+    async update(customer: Customer): Promise<VoidResult> {
+        this.collection.upsert('customerId', customer.customerId, customer)
         return Result.SuccessVoid()
     }
 }

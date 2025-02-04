@@ -6,7 +6,7 @@ import {VehiculeImmatriculation} from "@domain/maintenance/value-object/Vehicule
 import {VehiculeBreakdownMapper} from "@infrastructure/common/entityMappers/VehiculeBreakdownMapper";
 
 export class MongoVehiculeBreakdownRepository extends AbstractMongoRepository implements VehiculeBreakdownRepository {
-    protected collectionName: string = "vehicule-breakdowns";
+    protected collectionName: string = "vehicules-breakdowns";
 
     findById(vehiculeBreakdownId: string): Promise<OptionalResult<VehiculeBreakdown>> {
         return this.catchError(

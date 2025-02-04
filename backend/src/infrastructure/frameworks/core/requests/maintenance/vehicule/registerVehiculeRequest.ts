@@ -1,18 +1,26 @@
-import { VehiculeStatusEnum } from '@domain/maintenance/enums/VehiculeStatusEnum';
 import { z } from 'zod';
 import { dateParser } from "../../dateParser";
+import { VehiculeModelEnum } from "@domain/maintenance/enums/VehiculeModelEnum";
+import { VehiculeStatusEnum } from '@domain/maintenance/enums/VehiculeStatusEnum';
+import {stringToNumber} from "@infrastructureCore/requests/stringToNumber";
 
 export const registerVehiculeRequest = z.object({
     immatriculation: z.string(),
-    brand: z.string(),
-    model: z.string(),
-    year: z.number(),
+    model: z.nativeEnum(VehiculeModelEnum),
+    year: stringToNumber,
     vin: z.string(),
-    mileage: z.number(),
-    maintenanceDate: dateParser,
+    mileage: stringToNumber,
+    maintenanceInterval: z.object({
+        mileage: stringToNumber,
+        duration: stringToNumber,
+        lastMaintenance: z.object({
+            date: dateParser,
+            mileage: stringToNumber,
+        }),
+    }),
     status: z.nativeEnum(VehiculeStatusEnum),
     warranty: z.object({
-        start: dateParser,
-        end: dateParser,
-    })
-})
+        startDate: dateParser,
+        endDate: dateParser,
+    }),
+});

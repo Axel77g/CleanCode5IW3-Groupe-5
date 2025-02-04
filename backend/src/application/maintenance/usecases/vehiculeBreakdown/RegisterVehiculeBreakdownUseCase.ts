@@ -17,7 +17,7 @@ export type RegisterVehiculeBreakdownUseCase = IUseCase<RegisterVehiculeBreakdow
 export const createRegisterVehiculeBreakdownUseCase = (_eventRepository: EventRepository, _vehiculeRepository : VehiculeRepository): RegisterVehiculeBreakdownUseCase => {
     return async (input: RegisterVehiculeBreakdownInput) => {
         const vehiculeImmatriculation = await _vehiculeRepository.getByImmatriculation(input.vehiculeImmatriculation);
-        if (!vehiculeImmatriculation.success) return Result.FailureStr("Cannot find vehicule with this immatriculation")
+        if (!vehiculeImmatriculation.success) return Result.FailureStr("Cannot find vehicules with this immatriculation")
         if (vehiculeImmatriculation.empty) return Result.FailureStr("Vehicule not found")
         const vehiculeBreakdown = VehiculeBreakdown.create({
             vehiculeImmatriculation: input.vehiculeImmatriculation,
@@ -26,7 +26,7 @@ export const createRegisterVehiculeBreakdownUseCase = (_eventRepository: EventRe
             maintenanceId: input.maintenanceId
         })
         const storeResponse = await _eventRepository.storeEvent(vehiculeBreakdown.registerEvent());
-        if (!storeResponse.success) return Result.FailureStr("Cannot register vehicule breakdown")
+        if (!storeResponse.success) return Result.FailureStr("Cannot register vehicules breakdown")
         return Result.Success("Vehicule breakdown registered")
     }
 }

@@ -9,8 +9,8 @@ import { Result } from '@shared/Result';
 interface RegisterGarageInput extends IInputUseCase {
     siret: Siret,
     name: string,
-    phoneNumber: string,
     address: Address,
+    phoneNumber: string,
 }
 
 export type RegisterGarageUseCase = IUseCase<RegisterGarageInput, Result>
@@ -21,7 +21,7 @@ export const createRegisterGarageUseCase = (_eventRepository: EventRepository, _
         if (!existingGarageResponse.empty) return Result.FailureStr("Garage already exists with this siret")
         const garage = Garage.create(input)
         const storeResponse = await _eventRepository.storeEvent(garage.registerEvent());
-        if (!storeResponse.success) return Result.FailureStr("Cannot register garage")
+        if (!storeResponse.success) return Result.FailureStr("Cannot register garages")
         return Result.Success("Garage registered")
     }
 }

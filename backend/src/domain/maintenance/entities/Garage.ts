@@ -7,16 +7,16 @@ import { UnregisterGarageEvent } from "../events/garage/UnregisterGarageEvent";
 export interface GarageDTO {
     siret: string;
     name: string;
-    phoneNumber: string;
     address: AddressDTO;
+    phoneNumber: string;
 }
 
 export class Garage {
     constructor(
         public readonly siret: Siret,
         public readonly name: string,
-        public readonly phoneNumber: string,
         public readonly address: Address,
+        public readonly phoneNumber: string,
     ) { }
 
     static fromObject(object: GarageDTO): Garage | ApplicationException {
@@ -29,24 +29,24 @@ export class Garage {
             return siret;
         }
 
-        return new Garage(siret, object.name, object.phoneNumber, address);
+        return new Garage(siret, object.name, address, object.phoneNumber);
     }
 
     static create(object: {
         siret: Siret,
         name: string,
-        phoneNumber: string,
         address: Address
+        phoneNumber: string,
     }) {
-        return new Garage(object.siret, object.name, object.phoneNumber, object.address);
+        return new Garage(object.siret, object.name, object.address, object.phoneNumber);
     }
 
     registerEvent(): RegisterGarageEvent {
         return new RegisterGarageEvent({
             siret: this.siret.getValue(),
             name: this.name,
+            address: this.address,
             phoneNumber: this.phoneNumber,
-            address: this.address
         })
     }
 
@@ -58,9 +58,9 @@ export class Garage {
 
     update(object: {
         name: string,
-        phoneNumber: string,
         address: Address
+        phoneNumber: string,
     }) {
-        return new Garage(this.siret, object.name, object.phoneNumber, object.address);
+        return new Garage(this.siret, object.name, object.address, object.phoneNumber);
     }
 }

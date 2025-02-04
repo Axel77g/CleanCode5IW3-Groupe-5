@@ -40,14 +40,16 @@ export class CustomerProjection extends AbstractProjection {
     }
 
     async applyUpdateEvent(event: UpdateCustomerEvent): Promise<VoidResult> {
-        const customer = await this._customerRepository.find(event.payload.customerId)
-        if (!customer.success) return Result.FailureStr("Cannot update customer")
-
-        const updatedCustomer = Customer.fromObject({
-            ...customer,
-            ...event.payload
+        const customer = Customer.fromObject({
+            customerId: event.payload.customerId,
+            name: event.payload.name,
+            email: event.payload.email,
+            phoneNumber: event.payload.phoneNumber,
+            address: event.payload.address,
+            vehiculeImmatriculations: []
         })
-        if (updatedCustomer instanceof Error) return Result.FailureStr("Cannot update customer")
-        return this._customerRepository.store(updatedCustomer);
+        if (customer instanceof Error) return Result.FailureStr("Cannot update customer");
+        await this._customerRepository.store(customer)
+        return Result.SuccessVoid()
     }
 }

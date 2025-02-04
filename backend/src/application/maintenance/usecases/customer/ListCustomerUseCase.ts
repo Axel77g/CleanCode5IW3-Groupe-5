@@ -3,13 +3,17 @@ import { Customer } from "@domain/maintenance/entities/Customer";
 import { IUseCase } from "@shared/IUseCase";
 import { PaginatedInput } from "@shared/PaginatedInput";
 import { PaginatedResult, Result } from "@shared/Result";
+import {ApplicationException} from "@shared/ApplicationException";
 
-type ListCustomerResult = PaginatedResult<Customer>
-export type ListCustomerUseCase = IUseCase<PaginatedInput, ListCustomerResult>
+export type ListCustomerUseCase = IUseCase<PaginatedInput, PaginatedResult<Customer>>
+
+const listCustomerErrors = {
+    CANNOT_LIST_CUSTOMERS: new ApplicationException("ListCustomerUseCase.CannotListCustomers", "Cannot list customers")
+}
 export const createListCustomerUseCase = (_customerRepository: CustomerRepository): ListCustomerUseCase => {
     return async (input: PaginatedInput) => {
-        const findResponse = await _customerRepository.list(input);
-        if (!findResponse.success) return Result.FailureStr("Cannot list customers")
-        return findResponse
+        const customersResponse = await _customerRepository.listCustomers(input);
+        if (!customersResponse.success) return Result.Failure(listCustomerErrors.CANNOT_LIST_CUSTOMERS)
+        return customersResponse
     }
 }

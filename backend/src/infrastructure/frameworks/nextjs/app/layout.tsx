@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
-import { Home, Package, Users } from "lucide-react";
+import {CarFront, Home, Package, Users, Wallet, Wrench} from "lucide-react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -52,14 +52,29 @@ export default function RootLayout({
                     href="/drivers"
                     className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 hover:shadow transition"
                 >
-                    <Users className="w-5 h-5 text-gray-600"/>
+                    <Wallet className="w-5 h-5 text-gray-600"/>
                     <span className="text-sm font-medium text-gray-700">Conducteurs</span>
-                </Link> <Link
+                </Link>
+                <Link
                     href="/customers"
                     className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 hover:shadow transition"
                 >
                     <Users className="w-5 h-5 text-gray-600"/>
                     <span className="text-sm font-medium text-gray-700">Clients</span>
+                </Link>
+                <Link
+                    href="/vehicules"
+                    className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 hover:shadow transition"
+                >
+                    <CarFront className="w-5 h-5 text-gray-600"/>
+                    <span className="text-sm font-medium text-gray-700">Véhicules</span>
+                </Link>
+                <Link
+                    href="/garages"
+                    className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 hover:shadow transition"
+                >
+                    <Wrench className="w-5 h-5 text-gray-600"/>
+                    <span className="text-sm font-medium text-gray-700">Garages</span>
                 </Link>
             </nav>
         </aside>

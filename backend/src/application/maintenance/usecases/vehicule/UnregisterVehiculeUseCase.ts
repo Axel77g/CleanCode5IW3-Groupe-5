@@ -12,7 +12,7 @@ interface UnregisterVehiculeInput extends IInputUseCase {
 export type UnregisterVehiculeUseCase = IUseCase<UnregisterVehiculeInput, Result>
 
 const unregisteredVehicleErrors = {
-    VEHICULE_NOT_FOUND: NotFoundEntityException.create("Cannot unregister vehicule not found")
+    VEHICULE_NOT_FOUND: NotFoundEntityException.create("Cannot unregister vehicules not found")
 }
 
 export const createUnregisterVehiculeUseCase = (_eventRepository: EventRepository, _vehiculeRepository: VehiculeRepository): UnregisterVehiculeUseCase => {
@@ -21,7 +21,7 @@ export const createUnregisterVehiculeUseCase = (_eventRepository: EventRepositor
         if (!vehicule.success) return vehicule
         if (vehicule.empty) return Result.Failure(unregisteredVehicleErrors.VEHICULE_NOT_FOUND)
         const deleteResponse = await _eventRepository.storeEvent(vehicule.value.unregisterEvent())
-        if (!deleteResponse.success) return Result.FailureStr("Cannot unregister vehicule")
+        if (!deleteResponse.success) return Result.FailureStr("Cannot unregister vehicules")
         return Result.Success("Vehicule unregistered")
     }
 }

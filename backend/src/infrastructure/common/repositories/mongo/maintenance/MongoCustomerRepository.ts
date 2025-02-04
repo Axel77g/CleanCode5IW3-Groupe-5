@@ -2,9 +2,10 @@ import { CustomerRepository } from '@application/maintenance/repositories/Custom
 import { Customer } from '@domain/maintenance/entities/Customer';
 import { CustomerMapper } from '@infrastructure/common/entityMappers/CustomerMapper';
 import { AbstractMongoRepository } from '@infrastructure/common/repositories/mongo/AbstractMongoRepository';
-import { ApplicationException } from "@shared/ApplicationException";
+import {ApplicationException } from "@shared/ApplicationException";
 import { PaginatedInput } from '@shared/PaginatedInput';
 import { OptionalResult, PaginatedResult, Result, VoidResult } from '@shared/Result';
+import {Vehicule} from "@domain/maintenance/entities/Vehicule";
 
 export class MongoCustomerRepository extends AbstractMongoRepository implements CustomerRepository {
     protected collectionName: string = 'customers';
@@ -26,8 +27,7 @@ export class MongoCustomerRepository extends AbstractMongoRepository implements 
         return this.catchError(
             async () => {
                 session.startTransaction();
-                const customerDocument = CustomerMapper.toPersistence(customer);
-                await this.getCollection().insertOne(customerDocument);
+                await this.getCollection().updateOne({customerId: customer.customerId,}, {$set: CustomerMapper.toPersistence(customer),}, {upsert: true,})
                 await session.commitTransaction();
                 return Result.SuccessVoid();
             },
@@ -48,15 +48,30 @@ export class MongoCustomerRepository extends AbstractMongoRepository implements 
         )
     }
 
-    list(pagination: PaginatedInput): Promise<PaginatedResult<Customer>> {
+    async listCustomers(pagination: PaginatedInput): Promise<PaginatedResult<Customer>> {
         const { page, limit } = pagination;
         return this.catchError(
             async () => {
                 const customersDocuments = await this.getCollection().find().skip((page - 1) * limit).limit(limit).toArray();
+                console.log(customersDocuments);
                 const customersTotal = await this.getCollection().countDocuments();
                 const customers = CustomerMapper.toDomainList(customersDocuments);
+                console.log("Customer Mapper", customers);
                 return Result.SuccessPaginated<Customer>(customers, customersTotal, page, limit);
             }
         );
+    }
+
+    listCustomerVehicules(customerId: string, pagination: PaginatedInput): Promise<PaginatedResult<Vehicule>> {
+        const { page, limit } = pagination;
+        return this.catchError(async () => {
+            const customerDocument = await this.getCollection().findOne({ customerId });
+            if (!customerDocument) return Result.FailureStr("Customer not found");
+            const vehicules = customerDocument.vehiculeImmatriculations;
+            const vehiculesTotal = vehicules.length;
+            const vehiculesPaginated = vehicules.slice((page - 1) * limit, page * limit);
+            return Result.SuccessPaginated<Vehicule>(vehiculesPaginated, vehiculesTotal, page, limit
+            );
+        });
     }
 }

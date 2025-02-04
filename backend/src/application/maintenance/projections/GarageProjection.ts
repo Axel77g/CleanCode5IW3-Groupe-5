@@ -30,19 +30,19 @@ export class GarageProjection extends AbstractProjection {
 
     async applyUnregisterEvent(event: UnregisterGarageEvent): Promise<VoidResult> {
         const response = await this._garageRepository.find(event.payload.siret)
-        if (!response.success) return Result.FailureStr("Cannot delete garage")
+        if (!response.success) return Result.FailureStr("Cannot delete garages")
         return this._garageRepository.delete(event.payload.siret)
     }
 
     async applyUpdateEvent(event: UpdateGarageEvent): Promise<VoidResult> {
         const garage = await this._garageRepository.find(event.payload.siret)
-        if (!garage.success) return Result.FailureStr("Cannot delete garage")
+        if (!garage.success) return Result.FailureStr("Cannot delete garages")
 
         const updatedGarage = Garage.fromObject({
             ...garage,
             ...event.payload
         })
-        if (updatedGarage instanceof Error) return Result.FailureStr("Cannot update garage")
+        if (updatedGarage instanceof Error) return Result.FailureStr("Cannot update garages")
         return this._garageRepository.store(updatedGarage);
     }
 }

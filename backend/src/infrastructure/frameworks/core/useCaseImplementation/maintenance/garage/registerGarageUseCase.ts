@@ -8,17 +8,16 @@ import {UseCaseImplementation} from "@infrastructureCore/useCaseImplementation/U
 import {maintenanceEventRepository} from "@infrastructureCore/repositories/maintenance/maintenanceEventRepository";
 import {garageRepository} from "@infrastructureCore/repositories/maintenance/garageRepository";
 
-
-export const registerGarageUseCase: UseCaseImplementation<typeof registerGarageRequest, RegisterGarageUseCase> = async (input) => {
+export const registerGarageUseCase : UseCaseImplementation<typeof registerGarageRequest, RegisterGarageUseCase> = async (input) =>{
     const address = Address.create(input.address)
-    if (address instanceof ApplicationException) return Result.Failure(address)
+    if(address instanceof ApplicationException) return Result.Failure(address)
     const siret = Siret.create(input.siret)
-    if (siret instanceof ApplicationException) return Result.Failure(siret)
-    const useCase = createRegisterGarageUseCase(maintenanceEventRepository, garageRepository)
+    if(siret instanceof ApplicationException) return Result.Failure(siret)
+    const useCase = createRegisterGarageUseCase(maintenanceEventRepository,garageRepository)
     return useCase({
         siret,
         name: input.name,
-        phoneNumber: input.phoneNumber,
-        address
+        address,
+        phoneNumber: input.phoneNumber
     })
 }

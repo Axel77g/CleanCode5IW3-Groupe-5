@@ -1,27 +1,26 @@
-import { ApplicationException } from "@shared/ApplicationException";
-
-export interface VehiculeVinDTO {
-    vin: string;
-}
+import {ApplicationException} from "@shared/ApplicationException";
 
 export class VehiculeVin {
-
     static errors = {
-        VIN_NOT_VALID: new ApplicationException('VehiculeVin.notValidVin', 'The VIN is not valid')
+        VIN_NOT_VALID: new ApplicationException("VehiculeVin.NotValid", "The vin is not valid format")
     }
 
-    private constructor(
-        public readonly vin: string,
-    ) { }
+    private constructor (private value: string) {}
 
-    public validate(): boolean {
-        const regex = new RegExp("^[A-HJ-NPR-Z0-9]{17}$");
-        return regex.test(this.vin);
+    isValid(): boolean {
+        const vinValidRegex = /^[A-HJ-NPR-Z0-9]{17}$/;
+        return vinValidRegex.test(this.value);
     }
 
-    static create(payload: VehiculeVinDTO): VehiculeVin | ApplicationException {
-        const vin = new VehiculeVin(payload.vin);
-        if (!vin.validate()) return VehiculeVin.errors.VIN_NOT_VALID;
-        return vin;
+    getValue(): string {
+        return this.value;
+    }
+
+    static create(vin: string) {
+        const vinObject = new VehiculeVin(vin);
+        if (vinObject.isValid()) {
+            return vinObject;
+        }
+        return VehiculeVin.errors.VIN_NOT_VALID;
     }
 }

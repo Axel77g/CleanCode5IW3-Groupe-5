@@ -15,7 +15,7 @@ interface UpdateVehiculeStatusInput extends IInputUseCase {
 export type UpdateVehiculeStatusUseCase = IUseCase<UpdateVehiculeStatusInput, Result>
 
 const registerVehiculeErrors = {
-    NOT_FOUND_VEHICULE: new ApplicationException('UpdateVehiculeStatusUseCase.NotFoundVehicule', 'Cannot update status for not found vehicule')
+    NOT_FOUND_VEHICULE: new ApplicationException('UpdateVehiculeStatusUseCase.NotFoundVehicule', 'Cannot update status for not found vehicules')
 }
 
 export const createUpdateVehiculeStatusUseCase = (_eventRepository: EventRepository, _vehiculeRepository: VehiculeRepository): RegisterVehiculeUseCase => {

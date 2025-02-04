@@ -3,9 +3,6 @@ import {VehiculeImmatriculation} from "@domain/maintenance/value-object/Vehicule
 import {Result} from "@shared/Result";
 import {VehiculeBreakdownRepository} from "@application/maintenance/repositories/VehiculeBreakdownRepository";
 import {VehiculeBreakdown} from "@domain/maintenance/entities/VehiculeBreakdown";
-import {
-    MongoMaintenanceEventRepository
-} from "@infrastructure/common/repositories/mongo/maintenance/MongoMaintenanceEventRepository";
 
 interface ShowVehiculeBreakdownInput extends IInputUseCase {
     vehiculeImmatriculation: VehiculeImmatriculation,

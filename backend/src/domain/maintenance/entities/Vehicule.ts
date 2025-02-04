@@ -1,35 +1,49 @@
-import { VehiculeModelEnum } from "@domain/maintenance/enums/VehiculeModelEnum";
-import { VehiculeStatusEnum } from "@domain/maintenance/enums/VehiculeStatusEnum";
-import { Period } from "@domain/testDrive/value-object/Period";
-import { ApplicationException } from "@shared/ApplicationException";
-import { RegisterVehiculeEvent } from "../events/vehicule/RegisterVehiculeEvent";
-import { VehiculeImmatriculation } from "../value-object/VehiculeImmatriculation";
-import { VehiculeVin, VehiculeVinDTO } from "../value-object/VehiculeVin";
+import {VehiculeModelEnum} from "@domain/maintenance/enums/VehiculeModelEnum";
+import {VehiculeStatusEnum} from "@domain/maintenance/enums/VehiculeStatusEnum";
+import {Period} from "@domain/testDrive/value-object/Period";
+import {ApplicationException} from "@shared/ApplicationException";
+import {RegisterVehiculeEvent} from "../events/vehicule/RegisterVehiculeEvent";
+import {VehiculeImmatriculation} from "../value-object/VehiculeImmatriculation";
+import {VehiculeVin} from "../value-object/VehiculeVin";
 import {VehiculeMaintenanceInterval} from "@domain/maintenance/value-object/VehiculeMaintenanceInterval";
 import {UnregisterVehiculeEvent} from "@domain/maintenance/events/vehicule/UnregisterVehiculeEvent";
 import {UpdateVehiculeEvent} from "@domain/maintenance/events/vehicule/UpdateVehiculeEvent";
 
-export interface VehiculeDTO {
+export interface VehiculeDTO{
     immatriculation: string;
     brand: 'Triumph';
     model: VehiculeModelEnum;
     year: number;
-    vin: VehiculeVinDTO;
+    vin: VehiculeVin;
     mileage: number;
     maintenanceInterval: {
         mileage: number,
-        duration : number
-        lastMaintenanceDate : Date,
-        lastMaintenanceMileage : number
+        duration: number
+        lastMaintenance: {
+            date: Date,
+            mileage: number
+        }
     };
     status: VehiculeStatusEnum;
-    warranty : {
+    warranty: {
         periodStart: Date,
         periodEnd: Date
     }
 }
 
 export class Vehicule {
+    constructor(
+        public readonly immatriculation: VehiculeImmatriculation,
+        public readonly brand: 'Triumph',
+        public readonly model: VehiculeModelEnum,
+        public readonly year: number,
+        public readonly vin: VehiculeVin,
+        public readonly mileage: number,
+        public readonly maintenanceInterval: VehiculeMaintenanceInterval,
+        public readonly status: VehiculeStatusEnum = VehiculeStatusEnum.AVAILABLE,
+        public readonly warranty: Period
+    ) {}
+
     static ApplicationExceptions = {
         INVALID_BRAND: new ApplicationException('Vehicule', 'Brand is not valid, must be Triumph'),
         INVALID_YEAR: new ApplicationException('Vehicule', 'Year is not valid, must be between 1902 and current year'),
@@ -93,7 +107,7 @@ export class Vehicule {
         return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceInterval, this.status, this.warranty);
     }
 
-    validStatus(): Vehicule | ApplicationException {
+        validStatus(): Vehicule | ApplicationException {
         if (!Object.values(VehiculeStatusEnum).includes(this.status)) return Vehicule.ApplicationExceptions.INVALID_STATUS;
         return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceInterval, this.status, this.warranty);
     }
@@ -115,31 +129,28 @@ export class Vehicule {
         }
     }
 
-    constructor(
-        public readonly immatriculation: VehiculeImmatriculation,
-        public readonly brand: 'Triumph',
-        public readonly model: VehiculeModelEnum,
-        public readonly year: number,
-        public readonly vin: VehiculeVin,
-        public readonly mileage: number,
-        public readonly maintenanceInterval: VehiculeMaintenanceInterval,
-        public readonly status: VehiculeStatusEnum = VehiculeStatusEnum.AVAILABLE,
-        public readonly warranty : Period
-    ) { }
 
     static fromObject(vehicule: VehiculeDTO): Vehicule | ApplicationException {
         const immatriculation = VehiculeImmatriculation.create(vehicule.immatriculation);
         if (immatriculation instanceof ApplicationException) return immatriculation;
-        const vin = VehiculeVin.create(vehicule.vin);
-        if (vin instanceof ApplicationException) return vin;
+
         const warranty = Period.create(vehicule.warranty.periodStart, vehicule.warranty.periodEnd);
-        if(warranty instanceof ApplicationException) return warranty;
-        const maintenanceInterval = VehiculeMaintenanceInterval.create(vehicule.maintenanceInterval.duration, vehicule.maintenanceInterval.mileage, {
-            date: vehicule.maintenanceInterval.lastMaintenanceDate,
-            mileage: vehicule.maintenanceInterval.lastMaintenanceMileage
-        });
+        if (warranty instanceof ApplicationException) return warranty;
+
+        const maintenanceInterval = VehiculeMaintenanceInterval.create(vehicule.maintenanceInterval.mileage, vehicule.maintenanceInterval.duration, vehicule.maintenanceInterval.lastMaintenance);
         if (maintenanceInterval instanceof ApplicationException) return maintenanceInterval;
-        return new Vehicule(immatriculation, vehicule.brand, vehicule.model, vehicule.year, vin, vehicule.mileage, maintenanceInterval, vehicule.status,warranty);
+
+        return Vehicule.create({
+            immatriculation,
+            brand: vehicule.brand,
+            model: vehicule.model,
+            year: vehicule.year,
+            vin: vehicule.vin,
+            mileage: vehicule.mileage,
+            maintenanceInterval,
+            status: vehicule.status,
+            warranty,
+        });
     }
 
     static create(object: {
@@ -152,7 +163,7 @@ export class Vehicule {
         maintenanceInterval: VehiculeMaintenanceInterval;
         status: VehiculeStatusEnum;
         warranty: Period
-    }) : Vehicule | ApplicationException {
+    }): Vehicule | ApplicationException {
         return new Vehicule(object.immatriculation, object.brand, object.model, object.year, object.vin, object.mileage, object.maintenanceInterval, object.status, object.warranty);
     }
 
@@ -167,8 +178,10 @@ export class Vehicule {
             maintenanceInterval: {
                 mileage: this.maintenanceInterval.mileage,
                 duration: this.maintenanceInterval.duration,
-                lastMaintenanceDate: this.maintenanceInterval.lastMaintenance.date,
-                lastMaintenanceMileage: this.maintenanceInterval.lastMaintenance.mileage
+                lastMaintenance: {
+                    date: this.maintenanceInterval.lastMaintenance.date,
+                    mileage: this.maintenanceInterval.lastMaintenance.mileage
+                }
             },
             status: this.status,
             warranty: {
@@ -185,10 +198,12 @@ export class Vehicule {
     }
 
     update(object: {
-        mileage: number,
-        maintenanceInterval: VehiculeMaintenanceInterval,
+        maintenanceInterval?: VehiculeMaintenanceInterval,
+        mileage?: number,
+        status?: VehiculeStatusEnum
+        warranty?: Period,
     }) {
-        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, object.mileage, object.maintenanceInterval, this.status, this.warranty);
+        return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, object.mileage || this.mileage, object.maintenanceInterval || this.maintenanceInterval, object.status || this.status, object.warranty || this.warranty);
     }
 
     updateEvent(): UpdateVehiculeEvent {
@@ -196,14 +211,13 @@ export class Vehicule {
             immatriculation: this.immatriculation.getValue(),
             mileage: this.mileage,
             maintenanceInterval: {
-                mileage: this.maintenanceInterval.mileage,
                 duration: this.maintenanceInterval.duration,
-                lastMaintenanceDate: this.maintenanceInterval.lastMaintenance.date,
-                lastMaintenanceMileage: this.maintenanceInterval.lastMaintenance.mileage
+                mileage: this.maintenanceInterval.mileage,
+                lastMaintenance: {
+                    date: this.maintenanceInterval.lastMaintenance.date,
+                    mileage: this.maintenanceInterval.lastMaintenance.mileage
+                }
             }
         })
-    }
-
-    listMaintenance() {
     }
 }

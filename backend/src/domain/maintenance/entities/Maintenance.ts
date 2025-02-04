@@ -9,7 +9,7 @@ import {MaintenanceStatusEnum} from "@domain/maintenance/enums/MaintenanceStatus
 export interface MaintenanceDTO {
     maintenanceId : string,
     garageSiret : string,
-    vehiculeImmatriculation: string,
+    vehiculeImmatriculation: VehiculeImmatriculation,
     maintenanceSpareParts : MaintenanceSparePart[],
     recommendation: string,
     status: MaintenanceStatusEnum,
@@ -64,7 +64,7 @@ export class Maintenance{
         return new RegisterMaintenanceEvent({
             maintenanceId: this.maintenanceId,
             garageSiret: this.garageSiret.getValue(),
-            vehiculeImmatriculation: this.vehiculeImmatriculation.getValue(),
+            vehiculeImmatriculation: this.vehiculeImmatriculation,
             maintenanceSpareParts: this.maintenanceSpareParts,
             recommendation: this.recommendation,
             status: this.status,

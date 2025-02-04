@@ -13,7 +13,7 @@ import {VehiculeMaintenanceInterval} from "@domain/maintenance/value-object/Vehi
 
 interface RegisterVehiculeInput extends IInputUseCase {
     immatriculation: VehiculeImmatriculation;
-    brand: 'Triumph',
+    brand: "Triumph",
     model: VehiculeModelEnum;
     year: number;
     vin: VehiculeVin;
@@ -31,9 +31,9 @@ const registeredVehiculeErrors = {
 
 export const createRegisterVehiculeUseCase = (_eventRepository: EventRepository, _vehiculeRepository: VehiculeRepository): RegisterVehiculeUseCase => {
     return async (input: RegisterVehiculeInput) => {
-        const vehiculeImmatriculation = await _vehiculeRepository.getByImmatriculation(input.immatriculation);
-        if (!vehiculeImmatriculation.success) return vehiculeImmatriculation
-        if (vehiculeImmatriculation.empty) return Result.Failure(registeredVehiculeErrors.VEHICULE_ALREADY_EXISTS)
+        const existingVehicule = await _vehiculeRepository.getByImmatriculation(input.immatriculation)
+        if(!existingVehicule.success) return existingVehicule
+        if(!existingVehicule.empty) return Result.Failure(registeredVehiculeErrors.VEHICULE_ALREADY_EXISTS)
         const vehicule = Vehicule.create({
             immatriculation: input.immatriculation,
             brand: input.brand,
@@ -45,10 +45,9 @@ export const createRegisterVehiculeUseCase = (_eventRepository: EventRepository,
             status: input.status,
             warranty: input.warranty
         })
-
-        if (vehicule instanceof ApplicationException) return Result.Failure(vehicule)
-        const repositoryResponse = await _eventRepository.storeEvent(vehicule.registerEvent());
-        if (!repositoryResponse.success) return repositoryResponse
-        return Result.Success("Vehicule registered successfully")
+        if(vehicule instanceof ApplicationException) return Result.Failure(vehicule)
+        const storeResponse = await _eventRepository.storeEvent(vehicule.registerEvent());
+        if(!storeResponse.success) return Result.Failure(registeredVehiculeErrors.VEHICULE_ALREADY_EXISTS)
+        return Result.Success("vehicule registered")
     }
 }

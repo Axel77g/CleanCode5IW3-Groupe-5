@@ -16,7 +16,7 @@ export type AssignVehiculeToMaintenanceUseCase = IUseCase<AssignBreakdownToMaint
 
 export const createAssignVehiculeBreakdownToMaintenanceUseCase   = (_eventRepository: EventRepository, _vehiculeBreakdownRepository: VehiculeBreakdownRepository, _maintenanceRepository: MaintenanceRepository): AssignVehiculeToMaintenanceUseCase => {
     return async (input: AssignBreakdownToMaintenanceInput) => {
-        const vehiculeBreakdownResponse = await _vehiculeBreakdownRepository.findById(input.vehiculeBreakdownId);
+        const vehiculeBreakdownResponse = await _vehiculeBreakdownRepository.getBreakdownByVehicule(input.vehiculeBreakdownId);
         if (!vehiculeBreakdownResponse.success) return vehiculeBreakdownResponse
         if (vehiculeBreakdownResponse.empty) return Result.FailureStr("Vehicule breakdown not found")
 

@@ -25,7 +25,7 @@ export const createRegisterIncidentUseCase = (_eventRepository: EventRepository,
         const driverResponse = await _driverRepository.getByLicenseId(input.driverLicenseId)
         if(!driverResponse.success) return driverResponse
         if(driverResponse.empty) return Result.Failure(registerIncidentErrors.DRIVER_NOT_FOUND)
-        const incident = Incident.create(input)
+        const incident = Incident.create(input) 
         if(incident instanceof ApplicationException) return Result.Failure(incident)
         const storeResponse = await _eventRepository.storeEvent(incident.registerEvent())
         if (!storeResponse.success) return storeResponse

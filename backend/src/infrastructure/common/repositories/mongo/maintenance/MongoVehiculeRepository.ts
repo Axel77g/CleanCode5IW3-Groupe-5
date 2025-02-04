@@ -2,9 +2,10 @@ import { VehiculeRepository } from '@application/maintenance/repositories//Vehic
 import { Vehicule } from '@domain/maintenance/entities/Vehicule';
 import { VehiculeImmatriculation } from '@domain/maintenance/value-object/VehiculeImmatriculation';
 import { VehiculeMapper } from '@infrastructure/common/entityMappers/VehiculeMapper';
-import { Result, VoidResult } from '@shared/Result';
+import {OptionalResult, PaginatedResult, Result, VoidResult} from '@shared/Result';
 import { AbstractMongoRepository } from '../AbstractMongoRepository';
 import {ApplicationException} from "@shared/ApplicationException";
+import {PaginatedInput} from "@shared/PaginatedInput";
 
 export class MongoVehiculeRepository extends AbstractMongoRepository implements VehiculeRepository {
     protected collectionName: string = "vehicules";
@@ -14,8 +15,7 @@ export class MongoVehiculeRepository extends AbstractMongoRepository implements 
         return this.catchError(
             async () => {
                 session.startTransaction();
-                const vehiculeDocument = VehiculeMapper.toPersistence(vehicule);
-                await this.getCollection().insertOne(vehiculeDocument);
+                await this.getCollection().updateOne({ immatriculation: vehicule.immatriculation }, { $set: VehiculeMapper.toPersistence(vehicule) }, { upsert: true });
                 await session.commitTransaction();
                 return Result.SuccessVoid();
             },
@@ -35,13 +35,28 @@ export class MongoVehiculeRepository extends AbstractMongoRepository implements 
         );
     }
 
-    getByImmatriculation(immatriculation: VehiculeImmatriculation): Promise<Result<Vehicule>> {
+    getByImmatriculation(immatriculation: VehiculeImmatriculation): Promise<OptionalResult<Vehicule>> {
         return this.catchError(
             async () => {
-                const vehiculeDocument = await this.getCollection().findOne({ immatriculation: immatriculation });
+                const vehiculeDocument = await this.getCollection().findOne({ immatriculation: immatriculation })
+                if (!vehiculeDocument) return Result.SuccessVoid();
                 const vehicule = VehiculeMapper.toDomain(vehiculeDocument);
                 if (vehicule instanceof ApplicationException) return Result.Failure(vehicule);
                 return Result.Success<Vehicule>(vehicule);
+            }
+        )
+    }
+
+    async listVehicules(pagination: PaginatedInput): Promise<PaginatedResult<Vehicule>> {
+        const { page, limit } = pagination;
+        return this.catchError(
+            async () => {
+                const vehiculesDocuments = await this.getCollection().find().skip((page - 1) * limit).limit(limit).toArray();
+                console.log("Vehicules documents:", vehiculesDocuments);
+                const vehiculesTotal = await this.getCollection().countDocuments();
+                const vehicules = VehiculeMapper.toDomainList(vehiculesDocuments);
+                console.log("Vehicule Mapper", vehicules);
+                return Result.SuccessPaginated<Vehicule>(vehicules, vehiculesTotal, page, limit);
             }
         )
     }

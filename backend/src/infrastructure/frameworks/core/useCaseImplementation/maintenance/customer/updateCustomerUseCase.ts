@@ -5,7 +5,7 @@ import {maintenanceEventRepository} from "@infrastructureCore/repositories/maint
 import {customerRepository} from "@infrastructureCore/repositories/maintenance/customerRepository";
 
 
-export const updateCustomerUseCase: UseCaseImplementation<typeof updateCustomerRequest, UpdateCustomerUseCase> = async (input) => {
+export const updateCustomerUseCase : UseCaseImplementation<typeof updateCustomerRequest, UpdateCustomerUseCase> = async (input) => {
     const useCase = createUpdateCustomerUseCase(maintenanceEventRepository, customerRepository)
     return useCase({
         customerId: input.customerId,

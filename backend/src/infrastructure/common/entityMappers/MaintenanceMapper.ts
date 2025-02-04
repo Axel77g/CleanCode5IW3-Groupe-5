@@ -19,6 +19,12 @@ export class MaintenanceMapper {
         );
     }
 
+    public static toDomainList(maintenances: any[]): Maintenance[] {
+        return maintenances.map(maintenance => {
+            return MaintenanceMapper.toDomain(maintenance);
+        }).filter(maintenance => !(maintenance instanceof Error)) as Maintenance[];
+    }
+
     public static toPersistence(maintenance: Maintenance): MappedEntity<MaintenanceDTO> {
         return new MappedEntity<MaintenanceDTO>({
             maintenanceId: maintenance.maintenanceId,

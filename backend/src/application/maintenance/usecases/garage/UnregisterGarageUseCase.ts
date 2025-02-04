@@ -11,7 +11,7 @@ interface UnregisterGarageInput extends IInputUseCase {
 export type UnregisterGarageUseCase = IUseCase<UnregisterGarageInput, Result>
 
 const unregisterGarageErrors = {
-    NOT_FOUND_GARAGE: "Cannot unregister garage not found"
+    NOT_FOUND_GARAGE: "Cannot unregister garages not found"
 }
 
 export const createUnregisterGarageUseCase = (_eventRepository: EventRepository, _garageReposiotory: GarageRepository): UnregisterGarageUseCase => {
@@ -20,7 +20,7 @@ export const createUnregisterGarageUseCase = (_eventRepository: EventRepository,
         if (!garage.success) return garage;
         if (garage.empty) return Result.FailureStr(unregisterGarageErrors.NOT_FOUND_GARAGE);
         const deleteResponse = await _eventRepository.storeEvent(garage.value.unregisterEvent());
-        if (!deleteResponse.success) return Result.FailureStr("Cannot unregister garage");
+        if (!deleteResponse.success) return Result.FailureStr("Cannot unregister garages");
         return Result.Success('"Garage unregistered"');
     }
 }

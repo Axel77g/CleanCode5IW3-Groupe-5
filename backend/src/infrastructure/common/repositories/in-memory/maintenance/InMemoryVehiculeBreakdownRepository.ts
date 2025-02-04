@@ -1,7 +1,6 @@
 import {AbstractInMemoryRepository} from "@infrastructure/common/repositories/in-memory/AbstractInMemoryRepository";
 import {VehiculeBreakdown} from "@domain/maintenance/entities/VehiculeBreakdown";
 import {VehiculeBreakdownRepository} from "@application/maintenance/repositories/VehiculeBreakdownRepository";
-import {Vehicule} from "@domain/maintenance/entities/Vehicule";
 import {OptionalResult, Result, VoidResult} from "@shared/Result";
 import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
 

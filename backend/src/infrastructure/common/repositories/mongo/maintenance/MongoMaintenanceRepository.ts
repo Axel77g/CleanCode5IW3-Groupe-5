@@ -1,9 +1,11 @@
 import {AbstractMongoRepository} from "@infrastructure/common/repositories/mongo/AbstractMongoRepository";
 import {Maintenance} from "@domain/maintenance/entities/Maintenance";
 import {MaintenanceRepository} from "@application/maintenance/repositories/MaintenanceRepository";
-import {OptionalResult, Result, VoidResult} from "@shared/Result";
+import {OptionalResult, PaginatedResult, Result, VoidResult} from "@shared/Result";
 import {MaintenanceMapper} from "@infrastructure/common/entityMappers/MaintenanceMapper";
 import {ApplicationException} from "@shared/ApplicationException";
+import {PaginatedInput} from "@shared/PaginatedInput";
+import {Siret} from "@domain/shared/value-object/Siret";
 
 export class MongoMaintenanceRepository extends AbstractMongoRepository implements MaintenanceRepository {
     protected collectionName: string = "maintenances";
@@ -54,5 +56,15 @@ export class MongoMaintenanceRepository extends AbstractMongoRepository implemen
                 return Result.SuccessVoid();
             }
         )
+    }
+
+    listGarageMaintenances(garageSiret: Siret, pagination: PaginatedInput): Promise<PaginatedResult<Maintenance>> {
+        const { page, limit } = pagination;
+        return this.catchError(async () => {
+            const maintenancesDocuments = await this.getCollection().find({ garageSiret }).skip((page - 1) * limit).limit(limit).toArray();
+            const maintenancesTotal = await this.getCollection().countDocuments({ garageSiret });
+            const maintenances = MaintenanceMapper.toDomainList(maintenancesDocuments);
+            return Result.SuccessPaginated<Maintenance>(maintenances, maintenancesTotal, page, limit);
+        })
     }
 }

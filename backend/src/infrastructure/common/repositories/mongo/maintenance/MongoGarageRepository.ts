@@ -4,14 +4,14 @@ import { Siret } from "@domain/shared/value-object/Siret";
 import { GarageMapper } from "@infrastructure/common/entityMappers/GarageMapper";
 import { ApplicationException } from "@shared/ApplicationException";
 import { PaginatedInput } from '@shared/PaginatedInput';
-import {PaginatedResult, Result, VoidResult} from "@shared/Result";
+import {OptionalResult, PaginatedResult, Result, VoidResult} from "@shared/Result";
 import {AbstractMongoRepository} from "../AbstractMongoRepository";
 
 export class MongoGarageRepository extends AbstractMongoRepository implements GarageRepository {
 
     protected collectionName: string = 'garages';
 
-    getBySiret(siret: Siret): Promise<Result<Garage>> {
+    getBySiret(siret: Siret): Promise<OptionalResult<Garage>> {
         return this.catchError(
             async () => {
                 const garageDocument = await this.getCollection().findOne({ siret: siret.getValue() });
@@ -22,24 +22,23 @@ export class MongoGarageRepository extends AbstractMongoRepository implements Ga
         )
     }
 
-    show(siret: Siret): Promise<Result<Garage>> {
-        return this.catchError(
-            async () => {
-                const garageDocument = await this.getCollection().findOne({ siret: siret });
-                const garage = GarageMapper.toDomain(garageDocument);
-                if (garage instanceof ApplicationException) return Result.Failure(garage);
-                return Result.Success<Garage>(garage);
-            },
-        )
-    }
+    // show(siret: Siret): Promise<Result<Garage>> {
+    //     return this.catchError(
+    //         async () => {
+    //             const garageDocument = await this.getCollection().findOne({ siret: siret });
+    //             const garage = GarageMapper.toDomain(garageDocument);
+    //             if (garage instanceof ApplicationException) return Result.Failure(garage);
+    //             return Result.Success<Garage>(garage);
+    //         },
+    //     )
+    // }
 
-    store(garage: Garage): Promise<VoidResult> {
+    async store(garage: Garage): Promise<VoidResult> {
         const session = this.getSessionTransaction();
         return this.catchError(
             async () => {
                 session.startTransaction();
-                const garageDocument = GarageMapper.toPersistence(garage);
-                await this.getCollection().insertOne(garageDocument);
+                await this.getCollection().updateOne({ siret: garage.siret.getValue() }, { $set: GarageMapper.toPersistence(garage) }, { upsert: true });
                 await session.commitTransaction();
                 return Result.SuccessVoid();
             },
@@ -48,19 +47,27 @@ export class MongoGarageRepository extends AbstractMongoRepository implements Ga
     }
 
     delete(siret: Siret): Promise<VoidResult> {
-        const sesion = this.getSessionTransaction();
+        const session = this.getSessionTransaction();
         return this.catchError(
             async () => {
-                sesion.startTransaction();
+                session.startTransaction();
                 await this.getCollection().deleteOne({ siret });
-                await sesion.commitTransaction();
+                await session.commitTransaction();
                 return Result.SuccessVoid();
             },
-            sesion.abortTransaction.bind(sesion),
+            session.abortTransaction.bind(session),
         )
     }
 
     list(pagination: PaginatedInput): Promise<PaginatedResult<Garage>> {
-        throw new Error('Method not implemented.');
+        const { page, limit } = pagination;
+        return this.catchError(
+            async () => {
+                const garagesDocuments = await this.getCollection().find().skip((page - 1) * limit).limit(limit).toArray();
+                const garagesTotal = await this.getCollection().countDocuments();
+                const garages = GarageMapper.toDomainList(garagesDocuments);
+                return Result.SuccessPaginated<Garage>(garages, garagesTotal, page, limit);
+            }
+        )
     }
 }

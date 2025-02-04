@@ -6,13 +6,16 @@ import { customerRepository } from "../../../repositories/maintenance/customerRe
 import { maintenanceEventRepository } from "../../../repositories/maintenance/maintenanceEventRepository";
 import { registerCustomerRequest } from "../../../requests/maintenance/customer/registerCustomerRequest";
 import { UseCaseImplementation } from "../../UseCaseImplementation";
+import {randomUUID} from "node:crypto";
 
 export const registerCustomerUseCase: UseCaseImplementation<typeof registerCustomerRequest, RegisterCustomerUseCase> = async (input) => {
     const address = Address.create(input.address)
     if (address instanceof ApplicationException) return Result.Failure(address)
+    const customerId = randomUUID()
     const useCase = createRegisterCustomerUseCase(maintenanceEventRepository, customerRepository)
     return useCase({
         ...input,
-        address: address
+        customerId,
+        address
     })
 }

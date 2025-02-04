@@ -7,7 +7,7 @@ import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
 
 export class InMemoryDriverRepository extends AbstractInMemoryRepository<Driver> implements DriverRepository{
     async getByLicenseId(driverLicenseId: DriverLicenseId): Promise<OptionalResult<Driver>> {
-        const driver = this.collection.findOne('driverLicenseId',driverLicenseId);
+        const driver     = this.collection.findOne('driverLicenseId',driverLicenseId);
         if(!driver) return Result.SuccessVoid();
         return Result.Success(driver);
     }
