@@ -6,6 +6,12 @@ import {EventRepository} from "@application/shared/repositories/EventRepository"
 import {IEvent} from "@shared/AbstractEvent";
 import {randomUUID} from "node:crypto";
 
+/**
+ * Worker responsible for applying projections on events
+ * Responsible for reading pending jobs and execute the projections job for events according to the targeted projections
+ * Process in background the pending jobs
+ * One projectionsWorker per subdomain (prepare for an eventual microservice architecture)
+ */
 export class ProjectionsWorker {
     private readonly identifier : string = randomUUID()
     private readonly interval : number = 1000
@@ -29,7 +35,9 @@ export class ProjectionsWorker {
         return this._eventRepository.getEventsById(eventsIds)
     }
 
-
+    /**
+     * Watch for new pending job through the projectionJobRepository
+     */
     async watchForNewJobs(){
         const result = await this._projectionJobRepository.watchJob(async () => {
             this.work().then()
@@ -39,13 +47,17 @@ export class ProjectionsWorker {
         }
     }
 
+    /**
+     * Process all pending jobs and apply the projections
+     * Call through each worker iteration
+     */
     async work() {
         const pendingJobsResult = await this.getPendingJobs()
         if(!pendingJobsResult.success){
             return console.error(pendingJobsResult.error)
         }
         const pendingJobs = pendingJobsResult.value
-        pendingJobs.sort((a,b) => a.createdAt.getTime() - b.createdAt.getTime())
+        pendingJobs.sort((job1,job2) => job1.createdAt.getTime() - job2.createdAt.getTime())
 
         const events = await this.fetchAllEvents(pendingJobs.map(job => job.eventId))
         if(!events.success){
