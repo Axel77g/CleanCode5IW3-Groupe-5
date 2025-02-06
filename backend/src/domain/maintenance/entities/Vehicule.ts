@@ -32,7 +32,7 @@ export interface VehiculeDTO {
 }
 
 export class Vehicule {
-    constructor(
+    private constructor(
         public readonly immatriculation: VehiculeImmatriculation,
         public readonly brand: 'Triumph',
         public readonly model: VehiculeModelEnum,
@@ -173,7 +173,6 @@ export class Vehicule {
     }
 
     update(object: {
-        immatriculation?: VehiculeImmatriculation,
         mileage?: number,
         maintenanceInterval?: VehiculeMaintenanceInterval,
         status?: VehiculeStatusEnum

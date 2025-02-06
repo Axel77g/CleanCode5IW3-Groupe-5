@@ -4,11 +4,13 @@ import {NotFoundEntityException} from "@shared/ApplicationException";
 import {VehiculeRepository} from "@application/maintenance/repositories/VehiculeRepository";
 import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
 import {VehiculeStatusEnum} from "@domain/maintenance/enums/VehiculeStatusEnum";
+import {VehiculeMaintenanceInterval} from "@domain/maintenance/value-object/VehiculeMaintenanceInterval";
 
 interface UpdateVehiculeInput extends IInputUseCase {
     immatriculation: VehiculeImmatriculation;
     mileage?: number;
     status?: VehiculeStatusEnum;
+    maintenanceInterval?: VehiculeMaintenanceInterval
 }
 
 export type UpdateVehiculeUseCase = IUseCase<UpdateVehiculeInput, Result>;

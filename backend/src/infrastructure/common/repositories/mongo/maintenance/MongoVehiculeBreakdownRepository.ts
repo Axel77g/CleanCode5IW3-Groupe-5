@@ -13,7 +13,11 @@ export class MongoVehiculeBreakdownRepository extends AbstractMongoRepository im
         return this.catchError(
             async () => {
                 session.startTransaction();
-                await this.getCollection().insertOne(vehiculeBreakdown);
+                await this.getCollection().updateOne(
+                    { immatriculation: vehiculeBreakdown.vehiculeBreakdownId },
+                    { $set: VehiculeBreakdownMapper.toPersistence(vehiculeBreakdown) },
+                    { upsert: true }
+                );
                 await session.commitTransaction();
                 return Result.SuccessVoid();
             },
@@ -37,7 +41,7 @@ export class MongoVehiculeBreakdownRepository extends AbstractMongoRepository im
         const {page, limit} = pagination;
         return this.catchError(
             async () => {
-                const breakdownsDocuments = await this.getCollection().find({vehiculeImmatriculation: vehiculeImmatriculation})
+                const breakdownsDocuments = await this.getCollection().find({vehiculeImmatriculation: vehiculeImmatriculation.getValue()})
                     .skip((page - 1) * limit)
                     .limit(limit)
                     .toArray();

@@ -26,7 +26,6 @@ export type HandlerFunctionCallable<T> = (object : T, success : (message: string
 export function useServerForm<T extends ZodSchema>(formData: FormData, schema: T, handler : HandlerFunctionCallable<z.infer<T>>) : Promise<ActionResponse> {
     const rawPayload = formDataToObject(formData)
 
-    console.log(rawPayload);
     function abort(message : string) : Promise<ActionResponse>{
         return Promise.resolve({
             message,

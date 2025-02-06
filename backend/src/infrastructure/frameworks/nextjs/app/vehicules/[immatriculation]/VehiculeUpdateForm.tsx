@@ -14,7 +14,7 @@ interface VehiculeUpdateFormProps {
     immatriculation?: string;
     brand?: "Triumph",
     model?: VehiculeModelEnum;
-    year?: number;
+    year?: string;
     vin?: string;
     mileage?: string,
     maintenanceInterval?: {
@@ -27,7 +27,7 @@ interface VehiculeUpdateFormProps {
     },
     status?: VehiculeStatusEnum;
     warranty?: {
-        periodStart?: Date,œ
+        periodStart?: Date,
         periodEnd?: Date,
     }
 }
@@ -54,7 +54,6 @@ const status = [
 
 export default function VehiculeUpdateForm({vehicule}: { vehicule: VehiculeUpdateFormProps }) {
     const [state, formAction] = useActionState<ActionState, FormData>(updateVehiculeAction, initialState);
-
     return (
         <Form state={state} action={formAction} title={"Modifier un véhicule"}>
             <input type={"hidden"} name={"immatriculation"} value={vehicule.immatriculation}/>
@@ -68,7 +67,6 @@ export default function VehiculeUpdateForm({vehicule}: { vehicule: VehiculeUpdat
                     <Input type="text" name="vin" value={vehicule?.vin} label="Vin" placeholder="Vin du véhicule" disabled />
                     <Input type="number" name="mileage" value={state?.mileage ?? vehicule?.mileage} label={"Kilométrage"} placeholder={"Kilométrage du véhicule"} />
                 </div>
-
                 <div>
                     <label className="block font-semibold text-lg text-gray-700 pb-3">Maintenance</label>
                     <Input type="text" name="maintenanceInterval.mileage" value={vehicule?.maintenanceInterval?.mileage ?? ''} label={"Intervalle de maintenance (km)"} placeholder={"Intervalle de maintenance"} disabled={!vehicule?.maintenanceInterval?.mileage} />

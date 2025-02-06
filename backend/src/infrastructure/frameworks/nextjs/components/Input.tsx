@@ -8,7 +8,7 @@ const Input = (props: {
     message?: string;
     label: string;
     name: string;
-    type: 'text' | 'date' | 'textarea'; // Ajout de 'textarea' dans les types
+    type: 'text' | 'date' | 'textarea' | 'number' | 'phone' | 'hidden'; // Ajout de 'textarea' dans les types
     value?: string;
     disabled?: boolean;
     onChange?: (...props: [any]) => void;

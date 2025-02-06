@@ -53,10 +53,8 @@ export class MongoCustomerRepository extends AbstractMongoRepository implements 
         return this.catchError(
             async () => {
                 const customersDocuments = await this.getCollection().find().skip((page - 1) * limit).limit(limit).toArray();
-                console.log(customersDocuments);
                 const customersTotal = await this.getCollection().countDocuments();
                 const customers = CustomerMapper.toDomainList(customersDocuments);
-                console.log("Customer Mapper", customers);
                 return Result.SuccessPaginated<Customer>(customers, customersTotal, page, limit);
             }
         );

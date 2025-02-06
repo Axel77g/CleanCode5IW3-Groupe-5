@@ -17,18 +17,18 @@ export default async function VehiculesPage(pageProps: {searchParams: any}) {
         <List>
             {value.map((vehicule: Vehicule) => (
                 <ListItem
-                    key={vehicule.immatriculation.toString()}
-                    link={`/vehicules/${vehicule.immatriculation.toString()}`}
+                    key={vehicule.immatriculation.getValue()}
+                    link={`/vehicules/${vehicule.immatriculation.getValue()}`}
                 >
                     <div className="flex items-center gap-4">
                         <Chip>
-                            #{vehicule.vin.toString()}
+                            #{vehicule.vin.getValue()}
                         </Chip>
                         <span className="font-semibold text-gray-800">{vehicule.model}</span>
                     </div>
 
                     <div className="text-sm text-gray-600">
-                        <span className="italic font-bold">{vehicule.immatriculation.toString()}</span>
+                        <span className="italic font-bold">{vehicule.immatriculation.getValue()}</span>
                         <span> ({vehicule.year})</span>
                     </div>
                 </ListItem>

@@ -15,7 +15,6 @@ export default async function VehiculeBreakdownListPage(pageProps: { params: any
     const {immatriculation} = await pageProps.params as { immatriculation: string }
     const paginationQuery = await useServerPagination(pageProps)
     const result = await listVehiculesBreakdownUseCase({immatriculation, ...paginationQuery})
-    console.log('RESULT', result);  
     if (!result.success) return <ErrorCallout>{result.error.message}</ErrorCallout>
     const {
         value, ...pagination

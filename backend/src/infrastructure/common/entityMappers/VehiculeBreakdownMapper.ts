@@ -5,7 +5,6 @@ import {VehiculeImmatriculation} from "@domain/maintenance/value-object/Vehicule
 
 export class VehiculeBreakdownMapper {
     static toDomain(vehiculeBreakdownRaw: any): VehiculeBreakdown | ApplicationException {
-        console.log(vehiculeBreakdownRaw);
         const vehiculeImmatriculation = VehiculeImmatriculation.create(vehiculeBreakdownRaw.vehiculeImmatriculation)
         if (vehiculeImmatriculation instanceof ApplicationException) return vehiculeImmatriculation
         return VehiculeBreakdown.create({

@@ -4,9 +4,10 @@ import {ApplicationException} from "@shared/ApplicationException";
 import {AbstractProjection} from "@application/shared/projections/AbstractProjection";
 import {Result, VoidResult} from "@shared/Result";
 import {VehiculeBreakdown} from "@domain/maintenance/entities/VehiculeBreakdown";
+import {VehiculeBreakdownRepository} from "@application/maintenance/repositories/VehiculeBreakdownRepository";
 
 export class VehiculeBreakdownProjection extends AbstractProjection {
-    constructor (private _vehiculeBreakdownRepository: any) {
+    constructor (private _vehiculeBreakdownRepository: VehiculeBreakdownRepository) {
         super();
     }
 

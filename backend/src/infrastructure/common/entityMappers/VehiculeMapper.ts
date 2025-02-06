@@ -15,15 +15,12 @@ export class VehiculeMapper {
         if (vin instanceof ApplicationException) return vin;
 
         const maintenanceIntervalRaw = vehiculeRaw.maintenanceInterval || {};
-        const lastMaintenanceDate = maintenanceIntervalRaw.lastMaintenanceDate || {date: null, mileage: 0};
+        const lastMaintenance = maintenanceIntervalRaw.lastMaintenance || {date: null, mileage: 0};
 
         const maintenanceInterval = VehiculeMaintenanceInterval.create(
-            maintenanceIntervalRaw.mileage,
             maintenanceIntervalRaw.duration,
-            {
-                date: lastMaintenanceDate.date,
-                mileage: lastMaintenanceDate.mileage
-            }
+            maintenanceIntervalRaw.mileage,
+            lastMaintenance
         );
         if (maintenanceInterval instanceof ApplicationException) return maintenanceInterval;
 
@@ -31,16 +28,18 @@ export class VehiculeMapper {
         const warranty = Period.create(warrantyRaw.periodStart, warrantyRaw.periodEnd);
         if (warranty instanceof ApplicationException) return warranty;
 
-        return new Vehicule(
-            immatriculation,
-            vehiculeRaw.brand,
-            vehiculeRaw.model,
-            vehiculeRaw.year,
-            vin,
-            vehiculeRaw.mileage,
-            maintenanceInterval,
-            vehiculeRaw.status,
-            warranty,
+        return Vehicule.create(
+            {
+                immatriculation,
+                brand: vehiculeRaw.brand,
+                model: vehiculeRaw.model,
+                year : vehiculeRaw.year,
+                vin,
+                mileage : vehiculeRaw.mileage,
+                maintenanceInterval,
+                status : vehiculeRaw.status,
+                warranty,
+            }
         );
     }
 
@@ -74,7 +73,7 @@ export class VehiculeMapper {
 
     static toDomainList(vehiculesRaw: any[]): Vehicule[] {
         return vehiculesRaw.map(vehicule => {
-            return vehicule;
-        }).filter(vehicule => !(vehicule instanceof Error)) as Vehicule[];
+            return this.toDomain(vehicule);
+        }).filter(vehicule => !(vehicule instanceof ApplicationException)) as Vehicule[];
     }
 }
