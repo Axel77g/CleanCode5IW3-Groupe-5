@@ -5,6 +5,7 @@ import Input from "@/components/Input";
 import {Button} from "@/components/Button";
 import {useActionState} from "react";
 import {updateCustomerAction} from "@/app/customers/[customerId]/actions";
+import {UnregisterCustomerButton} from "@/app/customers/[customerId]/UnregisterCustomerButton";
 
 interface CustomerPatchFormProps {
     customerId ?: string;
@@ -56,7 +57,10 @@ export default function CustomerPatchForm({ customer } : {customer : CustomerPat
                            value={state?.address?.street ?? customer?.address?.street}/>
                 </div>
             </div>
-            <Button>Modifier le client</Button>
+
+            <div className="flex items-center gap-4">
+                <Button>Modifier le client</Button>
+            </div>
         </Form>
     )
 }

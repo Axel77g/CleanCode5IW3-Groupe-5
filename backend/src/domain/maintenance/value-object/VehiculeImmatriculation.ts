@@ -15,7 +15,7 @@ export class VehiculeImmatriculation {
     }
 
     public validate(): boolean {
-        const regex = new RegExp("^[A-Z]{2}[-][0-9]{3}[-][A-Z]{2}$");
+        const regex = new RegExp("^[A-Z]{2}-[0-9]{3}-[A-Z]{2}$");
         return regex.test(this.value);
     }
 

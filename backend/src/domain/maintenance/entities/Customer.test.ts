@@ -30,11 +30,12 @@ export const generateAddressDTO = (overrides: Partial<AddressDTO> = {}): Address
 
 export const generateCustomerDTO = (overrides: Partial<CustomerDTO> = {}): CustomerDTO => {
     return {
-        customerId: `customer-${generateRandomString(5)}`,
-        name: "John Doe",
-        phoneNumber: "0123456789",
+        customerId: generateRandomString(),
+        name: generateRandomString(),
+        phoneNumber: "123-456-7890",
         email: generateRandomEmail(),
         address: generateAddressDTO(),
+        vehiculeImmatriculations: [],
         ...overrides,
     };
 };

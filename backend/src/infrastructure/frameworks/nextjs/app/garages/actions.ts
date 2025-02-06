@@ -1,4 +1,4 @@
-'use server';
+"use server";
 
 import {useServerForm} from "@/hooks/useServerForm";
 import {registerGarageRequest} from "@infrastructureCore/requests/maintenance/garage/registerGarageRequest";

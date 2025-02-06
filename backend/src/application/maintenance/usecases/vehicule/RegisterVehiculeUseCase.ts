@@ -34,17 +34,7 @@ export const createRegisterVehiculeUseCase = (_eventRepository: EventRepository,
         const existingVehicule = await _vehiculeRepository.getByImmatriculation(input.immatriculation)
         if(!existingVehicule.success) return existingVehicule
         if(!existingVehicule.empty) return Result.Failure(registeredVehiculeErrors.VEHICULE_ALREADY_EXISTS)
-        const vehicule = Vehicule.create({
-            immatriculation: input.immatriculation,
-            brand: input.brand,
-            model: input.model,
-            year: input.year,
-            vin: input.vin,
-            mileage: input.mileage,
-            maintenanceInterval: input.maintenanceInterval,
-            status: input.status,
-            warranty: input.warranty
-        })
+        const vehicule = Vehicule.create(input)
         if(vehicule instanceof ApplicationException) return Result.Failure(vehicule)
         const storeResponse = await _eventRepository.storeEvent(vehicule.registerEvent());
         if(!storeResponse.success) return Result.Failure(registeredVehiculeErrors.VEHICULE_ALREADY_EXISTS)

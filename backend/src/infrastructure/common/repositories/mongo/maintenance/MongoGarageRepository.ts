@@ -1,40 +1,42 @@
-import { GarageRepository } from '@application/maintenance/repositories/GarageRepository';
-import { Garage } from "@domain/maintenance/entities/Garage";
-import { Siret } from "@domain/shared/value-object/Siret";
-import { GarageMapper } from "@infrastructure/common/entityMappers/GarageMapper";
-import { ApplicationException } from "@shared/ApplicationException";
-import { PaginatedInput } from '@shared/PaginatedInput';
+import {AbstractMongoRepository} from "@infrastructure/common/repositories/mongo/AbstractMongoRepository";
+import {Garage} from "@domain/maintenance/entities/Garage";
+import {GarageRepository} from "@application/maintenance/repositories/GarageRepository";
 import {OptionalResult, PaginatedResult, Result, VoidResult} from "@shared/Result";
-import {AbstractMongoRepository} from "../AbstractMongoRepository";
+import {Siret} from "@domain/shared/value-object/Siret";
+import {ApplicationException} from "@shared/ApplicationException";
+import {PaginatedInput} from "@shared/PaginatedInput";
+import {GarageMapper} from "@infrastructure/common/entityMappers/GarageMapper";
 
 export class MongoGarageRepository extends AbstractMongoRepository implements GarageRepository {
+    protected collectionName: string = "garages"
 
-    protected collectionName: string = 'garages';
-
-    getBySiret(siret: Siret): Promise<OptionalResult<Garage>> {
-        return this.catchError(
+    deleteGarage(siret: Siret): Promise<VoidResult> {
+        const session = this.getSessionTransaction();
+        return this.catchError<VoidResult>(
             async () => {
-                const garageDocument = await this.getCollection().findOne({ siret: siret.getValue() });
-                const garage = GarageMapper.toDomain(garageDocument);
-                if (garage instanceof ApplicationException) return Result.Failure(garage);
-                return Result.Success<Garage>(garage);
+                session.startTransaction();
+                await this.getCollection().deleteOne({ siret: siret.getValue() });
+                await session.commitTransaction();
+                return Result.SuccessVoid();
             },
+            session.abortTransaction.bind(session)
         )
     }
 
-    // show(siret: Siret): Promise<Result<Garage>> {
-    //     return this.catchError(
-    //         async () => {
-    //             const garageDocument = await this.getCollection().findOne({ siret: siret });
-    //             const garage = GarageMapper.toDomain(garageDocument);
-    //             if (garage instanceof ApplicationException) return Result.Failure(garage);
-    //             return Result.Success<Garage>(garage);
-    //         },
-    //     )
-    // }
+    getBySiret(siret: Siret): Promise<OptionalResult<Garage>> {
+        return this.catchError(
+            async () =>{
+                const garageDocument = await this.getCollection().findOne({siret: siret.getValue()});
+                if(!garageDocument) return Result.SuccessVoid();
+                const garage = GarageMapper.toDomain(garageDocument);
+                if(garage instanceof ApplicationException) return Result.Failure(garage);
+                return Result.Success<Garage>(garage);
+            }
+        )
+    }
 
     async store(garage: Garage): Promise<VoidResult> {
-        const session = this.getSessionTransaction();
+        const session=  this.getSessionTransaction();
         return this.catchError(
             async () => {
                 session.startTransaction();
@@ -42,24 +44,11 @@ export class MongoGarageRepository extends AbstractMongoRepository implements Ga
                 await session.commitTransaction();
                 return Result.SuccessVoid();
             },
-            session.abortTransaction.bind(session),
+            session.abortTransaction.bind(session)
         )
     }
 
-    delete(siret: Siret): Promise<VoidResult> {
-        const session = this.getSessionTransaction();
-        return this.catchError(
-            async () => {
-                session.startTransaction();
-                await this.getCollection().deleteOne({ siret });
-                await session.commitTransaction();
-                return Result.SuccessVoid();
-            },
-            session.abortTransaction.bind(session),
-        )
-    }
-
-    list(pagination: PaginatedInput): Promise<PaginatedResult<Garage>> {
+    listGarages(pagination: PaginatedInput): Promise<PaginatedResult<Garage>> {
         const { page, limit } = pagination;
         return this.catchError(
             async () => {

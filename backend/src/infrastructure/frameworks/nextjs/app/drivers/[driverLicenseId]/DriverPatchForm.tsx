@@ -28,6 +28,7 @@ export default function DriverPatchForm({ driver } : {driver : DriverPatchFormPr
     const [state, formAction] = useActionState<ActionState,FormData>(patchDriverAction,initialState)
     return(
         <Form state={state} title={"Profil conducteur"} action={formAction}>
+        {console.log(driver)}
             <input type={"hidden"} name={"driverLicenseId"} value={driver.driverLicenseId}/>
             <Input type="text" name="firstName" value={state?.firstName ?? driver.firstName} label={"Prénom"} placeholder={"Prénom du conducteur"}/>
             <Input type="text" name="lastName" value={state?.lastName ?? driver.lastName} label={"Nom de famille"} placeholder={"Nom de famille du conducteur"}/>

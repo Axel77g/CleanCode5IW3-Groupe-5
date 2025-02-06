@@ -1,7 +1,7 @@
 import {AbstractMongoRepository} from "../AbstractMongoRepository";
 import {DriverRepository} from "@application/testDrive/repositories/DriverRepository";
 import {Driver} from "@domain/testDrive/entities/Driver";
-import { PaginatedInput } from "@shared/PaginatedInput";
+import {PaginatedInput} from "@shared/PaginatedInput";
 import {VoidResult, Result, PaginatedResult, OptionalResult} from "@shared/Result";
 import {DriverMapper} from "@infrastructure/common/entityMappers/DriverMapper";
 import {ApplicationException} from "@shared/ApplicationException";
@@ -16,27 +16,28 @@ export class MongoDriverRepository extends AbstractMongoRepository implements Dr
             async () => {
                 session.startTransaction()
                 await this.getCollection()
-                    .updateOne({ driverLicenseId: driver.driverLicenseId.getValue() }, { $set: DriverMapper.toPersistence(driver) }, { upsert: true });
+                    .updateOne({driverLicenseId: driver.driverLicenseId.getValue()}, {$set: DriverMapper.toPersistence(driver)}, {upsert: true});
                 await session.commitTransaction()
                 return Result.SuccessVoid()
             },
             session.abortTransaction.bind(session)
         )
     }
+
     getByLicenseId(driverLicenseId: DriverLicenseId): Promise<OptionalResult<Driver>> {
         return this.catchError(
             async () => {
-                const driverDocument = await this.getCollection().findOne({ driverLicenseId: driverLicenseId.getValue() })
-                if(!driverDocument) return Result.SuccessVoid()
+                const driverDocument = await this.getCollection().findOne({driverLicenseId: driverLicenseId.getValue()})
+                if (!driverDocument) return Result.SuccessVoid()
                 const driver = DriverMapper.toDomain(driverDocument)
-                if(driver instanceof ApplicationException) return Result.Failure(driver)
+                if (driver instanceof ApplicationException) return Result.Failure(driver)
                 return Result.Success<Driver>(driver)
             }
         )
     }
 
     async listDrivers(pagination: PaginatedInput): Promise<PaginatedResult<Driver>> {
-        const { limit, page } = pagination
+        const {limit, page} = pagination
         return this.catchError(
             async () => {
                 const driversDocuments = await this.getCollection().find().skip((page - 1) * limit).limit(limit)

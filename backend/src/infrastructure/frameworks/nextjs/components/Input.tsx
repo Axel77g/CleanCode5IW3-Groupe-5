@@ -8,7 +8,7 @@ const Input = (props: {
     message?: string;
     label: string;
     name: string;
-    type: string;
+    type: 'text' | 'date' | 'textarea'; // Ajout de 'textarea' dans les types
     value?: string;
     disabled?: boolean;
     onChange?: (...props: [any]) => void;
@@ -41,18 +41,31 @@ const Input = (props: {
             </label>
             <div className={inputContainerClass}>
                 {props.prefix}
-                <input
-                    onBlur={handleBlur}
-                    className="w-full outline-none bg-transparent"
-                    ref={props.ref}
-                    name={props.name}
-                    id={props.name}
-                    type={props.type || 'text'}
-                    defaultValue={props.value}
-                    onChange={props.onChange}
-                    placeholder={props.placeholder || 'Enter text'}
-                    disabled={props.disabled ?? false}
-                />
+                {props.type === 'textarea' ? (
+                    <textarea
+                        onBlur={handleBlur}
+                        className="w-full outline-none bg-transparent"
+                        name={props.name}
+                        id={props.name}
+                        defaultValue={props.value}
+                        onChange={props.onChange}
+                        placeholder={props.placeholder || 'Enter text'}
+                        disabled={props.disabled ?? false}
+                    />
+                ) : (
+                    <input
+                        onBlur={handleBlur}
+                        className="w-full outline-none bg-transparent"
+                        ref={props.ref}
+                        name={props.name}
+                        id={props.name}
+                        type={props.type || 'text'}
+                        defaultValue={props.value}
+                        onChange={props.onChange}
+                        placeholder={props.placeholder || 'Enter text'}
+                        disabled={props.disabled ?? false}
+                    />
+                )}
             </div>
             {props.message && <small className="text-sm mt-2">{props.message}</small>}
         </div>

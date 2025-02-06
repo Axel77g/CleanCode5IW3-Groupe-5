@@ -16,7 +16,7 @@ export const registerVehiculeRequest = z.object({
         lastMaintenance: z.object({
             date: dateParser,
             mileage: stringToNumber,
-        }),
+        }).optional(),
     }),
     status: z.nativeEnum(VehiculeStatusEnum),
     warranty: z.object({

@@ -1,15 +1,28 @@
 import {MappedEntity} from "@infrastructure/common/entityMappers/MappedEntity";
 import {VehiculeBreakdown, VehiculeBreakdownDTO} from "@domain/maintenance/entities/VehiculeBreakdown";
 import {ApplicationException} from "@shared/ApplicationException";
+import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
 
 export class VehiculeBreakdownMapper {
     static toDomain(vehiculeBreakdownRaw: any): VehiculeBreakdown | ApplicationException {
-        return new VehiculeBreakdown(
-            vehiculeBreakdownRaw.vehiculeImmatriculation,
-            vehiculeBreakdownRaw.description,
-            vehiculeBreakdownRaw.date,
-            vehiculeBreakdownRaw.maintenanceId,
-        );
+        console.log(vehiculeBreakdownRaw);
+        const vehiculeImmatriculation = VehiculeImmatriculation.create(vehiculeBreakdownRaw.vehiculeImmatriculation)
+        if (vehiculeImmatriculation instanceof ApplicationException) return vehiculeImmatriculation
+        return VehiculeBreakdown.create({
+            vehiculeBreakdownId: vehiculeBreakdownRaw.vehiculeBreakdownId,
+            vehiculeImmatriculation: vehiculeImmatriculation,
+            description: vehiculeBreakdownRaw.description,
+            date: new Date(vehiculeBreakdownRaw.date),
+        })
+    }
+
+    static toPersistence(vehiculeBreakdowns: VehiculeBreakdown) : MappedEntity<VehiculeBreakdownDTO> {
+       return new MappedEntity<VehiculeBreakdownDTO>({
+              vehiculeBreakdownId: vehiculeBreakdowns.vehiculeBreakdownId,
+              vehiculeImmatriculation: vehiculeBreakdowns.vehiculeImmatriculation.getValue(),
+              description: vehiculeBreakdowns.description,
+              date: vehiculeBreakdowns.date
+       })
     }
 
     static toDomainList(vehiculeBreakdownsRaw: any[]): VehiculeBreakdown[] {
@@ -18,12 +31,9 @@ export class VehiculeBreakdownMapper {
         }).filter(vehiculeBreakdown => !(vehiculeBreakdown instanceof Error)) as VehiculeBreakdown[];
     }
 
-    static toPersistence(vehiculeBreakdown: VehiculeBreakdown): MappedEntity<VehiculeBreakdownDTO> {
-        return new MappedEntity<VehiculeBreakdownDTO>({
-            vehiculeImmatriculation: vehiculeBreakdown.vehiculeImmatriculation.getValue(),
-            description: vehiculeBreakdown.description,
-            date: vehiculeBreakdown.date,
-            maintenanceId: vehiculeBreakdown.maintenanceId
+    static toPersistenceList(vehiculeBreakdowns: VehiculeBreakdown[]) : MappedEntity<VehiculeBreakdownDTO>[] {
+        return vehiculeBreakdowns.map(vehiculeBreakdown => {
+            return VehiculeBreakdownMapper.toPersistence(vehiculeBreakdown);
         })
     }
 }

@@ -6,7 +6,7 @@ import { AbstractInMemoryRepository } from "../AbstractInMemoryRepository";
 import {Vehicule} from "@domain/maintenance/entities/Vehicule";
 
 export class InMemoryCustomerRepository extends AbstractInMemoryRepository<Customer> implements CustomerRepository {
-    async list(pagination: PaginatedInput): Promise<PaginatedResult<Customer>> {
+    async listCustomers(pagination: PaginatedInput): Promise<PaginatedResult<Customer>> {
         const { page, limit } = pagination
         const customers = this.collection.paginate(page, limit).toArray()
         const total = this.collection.count()
@@ -31,5 +31,9 @@ export class InMemoryCustomerRepository extends AbstractInMemoryRepository<Custo
     async update(customer: Customer): Promise<VoidResult> {
         this.collection.upsert('customerId', customer.customerId, customer)
         return Result.SuccessVoid()
+    }
+
+    listCustomerVehicules(customerId: string): Promise<PaginatedResult<Vehicule>> {
+        throw new Error("Method not implemented.");
     }
 }

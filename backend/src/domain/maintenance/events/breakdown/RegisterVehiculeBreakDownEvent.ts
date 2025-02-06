@@ -10,7 +10,7 @@ export class RegisterVehiculeBreakDownEvent extends AbstractEvent {
 
     constructor(payload: VehiculeBreakdownDTO) {
         super();
-        this.streamId = `vehicule-breakdown-${payload.vehiculeBreakDownId}`;
+        this.streamId = `vehicule-breakdown-${payload.vehiculeImmatriculation}`;
         this.payload = payload;
     }
 }

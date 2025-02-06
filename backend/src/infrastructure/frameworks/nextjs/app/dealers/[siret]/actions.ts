@@ -1,9 +1,7 @@
 "use server";
 
 import {abort, ActionResponse, success} from "@/hooks/useServerForm";
-import {
-    unregisterDealerUseCase
-} from "@infrastructureCore/useCaseImplementation/InventoryManagement/unregisterDealerUseCase";
+import {unregisterDealerUseCase} from "@infrastructureCore/useCaseImplementation/InventoryManagement/unregisterDealerUseCase";
 
 export interface UnregisterDealerActionState extends ActionResponse{
     siretString:string

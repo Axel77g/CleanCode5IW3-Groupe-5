@@ -4,6 +4,7 @@ import {Button} from "@/components/Button";
 import Link from "next/link";
 import CustomerPatchForm from "@/app/customers/[customerId]/CustomerPatchForm";
 import {showCustomerUseCase} from "@infrastructureCore/useCaseImplementation/maintenance/customer/showCustomerUseCase";
+import {UnregisterCustomerButton} from "@/app/customers/[customerId]/UnregisterCustomerButton";
 
 export default async function CustomerDetailPage(pageProps: {params: any, searchParams:any}) {
     const {customerId} = await pageProps.params as {customerId: string}
@@ -32,7 +33,10 @@ export default async function CustomerDetailPage(pageProps: {params: any, search
             <br/>
             <hr/>
             <br/>
-            <div className="flex gap-4">
+            <div className="flex items-center gap-4">
+
+                <UnregisterCustomerButton customerIdString={customerId}/>
+
                 <Link href={`${customerPath}/vehicles`}>
                     <Button>
                         Accéder aux véhicules

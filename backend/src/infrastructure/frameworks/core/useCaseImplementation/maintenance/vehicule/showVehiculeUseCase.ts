@@ -12,5 +12,5 @@ export const showVehiculeUseCase : UseCaseImplementation<typeof immatriculationR
     const vehiculeImmatriculation = VehiculeImmatriculation.create(input.immatriculation)
     if(vehiculeImmatriculation instanceof Error) return Result.Failure(vehiculeImmatriculation)
     const useCase = createShowVehiculeUseCase(vehiculeRepository)
-    return useCase({immatriculation: vehiculeImmatriculation.getValue()})
+    return useCase({immatriculation: vehiculeImmatriculation})
 }

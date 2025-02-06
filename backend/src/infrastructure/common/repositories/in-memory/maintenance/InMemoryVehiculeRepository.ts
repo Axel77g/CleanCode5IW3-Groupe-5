@@ -1,8 +1,9 @@
 import { VehiculeRepository } from "@application/maintenance/repositories/VehiculeRepository";
 import { Vehicule } from "@domain/maintenance/entities/Vehicule";
 import { VehiculeImmatriculation } from "@domain/maintenance/value-object/VehiculeImmatriculation";
-import { OptionalResult, Result, VoidResult } from "@shared/Result";
+import {OptionalResult, PaginatedResult, Result, VoidResult} from "@shared/Result";
 import { AbstractInMemoryRepository } from "../AbstractInMemoryRepository";
+import {PaginatedInput} from "@shared/PaginatedInput";
 
 
 export class InMemoryVehiculeRepository extends AbstractInMemoryRepository<Vehicule> implements VehiculeRepository {
@@ -20,5 +21,12 @@ export class InMemoryVehiculeRepository extends AbstractInMemoryRepository<Vehic
     async getByImmatriculation(immatriculation: VehiculeImmatriculation): Promise<OptionalResult<Vehicule>> {
         const vehicule = this.collection.findOne('immatriculation', immatriculation);
         return vehicule ? Result.Success(vehicule) : Result.SuccessVoid();
+    }
+
+    listVehicules(pagination: PaginatedInput): Promise<PaginatedResult<Vehicule>> {
+        const { page, limit } = pagination
+        const vehicules = this.collection.paginate(page, limit).toArray()
+        const total = this.collection.count()
+        return Promise.resolve(Result.SuccessPaginated(vehicules, total, page, limit))
     }
 }

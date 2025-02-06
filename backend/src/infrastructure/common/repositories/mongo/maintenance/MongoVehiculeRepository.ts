@@ -15,7 +15,7 @@ export class MongoVehiculeRepository extends AbstractMongoRepository implements 
         return this.catchError(
             async () => {
                 session.startTransaction();
-                await this.getCollection().updateOne({ immatriculation: vehicule.immatriculation }, { $set: VehiculeMapper.toPersistence(vehicule) }, { upsert: true });
+                await this.getCollection().updateOne({ immatriculation: vehicule.immatriculation.getValue() }, { $set: VehiculeMapper.toPersistence(vehicule) }, { upsert: true });
                 await session.commitTransaction();
                 return Result.SuccessVoid();
             },
@@ -38,7 +38,7 @@ export class MongoVehiculeRepository extends AbstractMongoRepository implements 
     getByImmatriculation(immatriculation: VehiculeImmatriculation): Promise<OptionalResult<Vehicule>> {
         return this.catchError(
             async () => {
-                const vehiculeDocument = await this.getCollection().findOne({ immatriculation: immatriculation })
+                const vehiculeDocument = await this.getCollection().findOne({ immatriculation: immatriculation.getValue() });
                 if (!vehiculeDocument) return Result.SuccessVoid();
                 const vehicule = VehiculeMapper.toDomain(vehiculeDocument);
                 if (vehicule instanceof ApplicationException) return Result.Failure(vehicule);
@@ -51,11 +51,9 @@ export class MongoVehiculeRepository extends AbstractMongoRepository implements 
         const { page, limit } = pagination;
         return this.catchError(
             async () => {
-                const vehiculesDocuments = await this.getCollection().find().skip((page - 1) * limit).limit(limit).toArray();
-                console.log("Vehicules documents:", vehiculesDocuments);
+                const vehiculesDocuments = await this.getCollection().find().skip((page - 1) * limit).limit(limit);
                 const vehiculesTotal = await this.getCollection().countDocuments();
-                const vehicules = VehiculeMapper.toDomainList(vehiculesDocuments);
-                console.log("Vehicule Mapper", vehicules);
+                const vehicules = VehiculeMapper.toDomainList(await vehiculesDocuments.toArray());
                 return Result.SuccessPaginated<Vehicule>(vehicules, vehiculesTotal, page, limit);
             }
         )

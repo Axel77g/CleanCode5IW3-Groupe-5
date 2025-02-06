@@ -1,4 +1,4 @@
-
+"use server"
 
 import {showVehiculeUseCase} from "@infrastructureCore/useCaseImplementation/maintenance/vehicule/showVehiculeUseCase";
 import {VehiculeDTO} from "@domain/maintenance/entities/Vehicule";
@@ -6,7 +6,7 @@ import {ErrorCallout} from "@/components/ErrorCallout";
 import {Button} from "@/components/Button";
 import Link from "next/link";
 import VehiculeUpdateForm from "@/app/vehicules/[immatriculation]/VehiculeUpdateForm";
-import {VehiculeVin} from "@domain/maintenance/value-object/VehiculeVin";
+import {UnregisterVehiculeActionButton} from "@/app/vehicules/[immatriculation]/UnregisterVehiculeActionButton";
 
 export default async function VehiculeDetailPage(pageProps: {params: any, searchParams:any}) {
     const {immatriculation} = await pageProps.params as {immatriculation: string}
@@ -14,7 +14,7 @@ export default async function VehiculeDetailPage(pageProps: {params: any, search
     if (!result.success) return <ErrorCallout>{result.error.message}</ErrorCallout>
     const vehicule: VehiculeDTO = {
         immatriculation: result.value.immatriculation.getValue(),
-        vin: result.value.vin,
+        vin: result.value.vin.getValue(),
         mileage: result.value.mileage,
         brand: result.value.brand,
         model: result.value.model,
@@ -22,7 +22,7 @@ export default async function VehiculeDetailPage(pageProps: {params: any, search
         maintenanceInterval: {
             mileage: result.value.maintenanceInterval.mileage,
             duration: result.value.maintenanceInterval.duration,
-            lastMaintenanceDate: {
+            lastMaintenance: {
                 date: result.value.maintenanceInterval.lastMaintenance.date,
                 mileage: result.value.maintenanceInterval.lastMaintenance.mileage,
             }
@@ -47,11 +47,14 @@ export default async function VehiculeDetailPage(pageProps: {params: any, search
             <br/>
 
             <div className="flex gap-4">
-                <Link href={`${vehiculePath}/incidents`}>
-                    <Button>
-                        Accéder aux incidents
-                    </Button>
-                </Link>
+
+                    <UnregisterVehiculeActionButton immatriculationString={immatriculation}/>
+
+                    <Link href={`${vehiculePath}/breakdowns`}>
+                        <Button>
+                            Accéder aux pannes
+                        </Button>
+                    </Link>
             </div>
         </div>
     )

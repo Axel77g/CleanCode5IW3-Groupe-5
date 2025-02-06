@@ -18,8 +18,8 @@ export class VehiculeMapper {
         const lastMaintenanceDate = maintenanceIntervalRaw.lastMaintenanceDate || {date: null, mileage: 0};
 
         const maintenanceInterval = VehiculeMaintenanceInterval.create(
-            maintenanceIntervalRaw.duration || 0,
-            maintenanceIntervalRaw.mileage || 0,
+            maintenanceIntervalRaw.mileage,
+            maintenanceIntervalRaw.duration,
             {
                 date: lastMaintenanceDate.date,
                 mileage: lastMaintenanceDate.mileage
@@ -50,7 +50,7 @@ export class VehiculeMapper {
             brand: vehicule.brand,
             model: vehicule.model,
             year: vehicule.year,
-            vin: vehicule.vin,
+            vin: vehicule.vin.getValue(),
             mileage: vehicule.mileage,
             maintenanceInterval: {
                 mileage: vehicule.maintenanceInterval.mileage,
@@ -74,7 +74,7 @@ export class VehiculeMapper {
 
     static toDomainList(vehiculesRaw: any[]): Vehicule[] {
         return vehiculesRaw.map(vehicule => {
-            return vehicule
+            return vehicule;
         }).filter(vehicule => !(vehicule instanceof Error)) as Vehicule[];
     }
 }

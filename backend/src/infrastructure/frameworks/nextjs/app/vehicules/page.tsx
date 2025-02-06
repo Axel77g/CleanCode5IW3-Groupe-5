@@ -14,15 +14,26 @@ export default async function VehiculesPage(pageProps: {searchParams: any}) {
     const {value, ...pagination} = result;
     return <div className={"flex flex-col gap-6"}>
         <HeadingTile>Liste des véhicules</HeadingTile>
-        {/*<List>*/}
-        {/*    {*/}
-        {/*        value.map((vehicule :  Vehicule)=> (*/}
-        {/*            <ListItem key={vehicule.vin.getValue()} link={`/vehicules/${vehicule.vin.getValue()}`}>*/}
-        {/*                <Chip>#{vehicule.vin.getValue()}</Chip> {vehicule.model} <span className="italic font-bold text-sm">({vehicule.year})</span>*/}
-        {/*            </ListItem>*/}
-        {/*        ))*/}
-        {/*    }*/}
-        {/*</List>*/}
+        <List>
+            {value.map((vehicule: Vehicule) => (
+                <ListItem
+                    key={vehicule.immatriculation.toString()}
+                    link={`/vehicules/${vehicule.immatriculation.toString()}`}
+                >
+                    <div className="flex items-center gap-4">
+                        <Chip>
+                            #{vehicule.vin.toString()}
+                        </Chip>
+                        <span className="font-semibold text-gray-800">{vehicule.model}</span>
+                    </div>
+
+                    <div className="text-sm text-gray-600">
+                        <span className="italic font-bold">{vehicule.immatriculation.toString()}</span>
+                        <span> ({vehicule.year})</span>
+                    </div>
+                </ListItem>
+            ))}
+        </List>
         <Pagination {...pagination}/>
         <VehiculeRegisterForm />
     </div>

@@ -6,7 +6,7 @@ import { OptionalResult, PaginatedResult, Result, VoidResult } from "@shared/Res
 import { AbstractInMemoryRepository } from "../AbstractInMemoryRepository";
 
 export class InMemoryGarageRepository extends AbstractInMemoryRepository<Garage> implements GarageRepository {
-    async list(pagination: PaginatedInput): Promise<PaginatedResult<Garage>> {
+    async listGarages(pagination: PaginatedInput): Promise<PaginatedResult<Garage>> {
         const { page, limit } = pagination
         const garages = this.collection.paginate(page, limit).toArray()
         const total = this.collection.count()
@@ -28,7 +28,7 @@ export class InMemoryGarageRepository extends AbstractInMemoryRepository<Garage>
         return Result.SuccessVoid()
     }
 
-    async delete(siret: Siret): Promise<VoidResult> {
+    async deleteGarage(siret: Siret): Promise<VoidResult> {
         this.collection.remove('siret', siret)
         return Result.SuccessVoid()
     }
