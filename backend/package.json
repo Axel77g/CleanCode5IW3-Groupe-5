@@ -6,7 +6,8 @@
     "test": "jest",
     "build": "tsc",
     "dev": "tsx --watch src/index.ts",
-    "eslint": "eslint ."
+    "eslint": "eslint .",
+    "command": "ts-node -r tsconfig-paths/register src/infrastructure/cli/run.command.ts"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +21,8 @@
     "mysql": "^2.18.1",
     "reflect-metadata": "^0.2.2",
     "sqlite3": "^5.1.7",
+    "ts-node": "^10.4.0",
+    "tsconfig-paths": "^4.2.0",
     "typedi": "^0.10.0",
     "zod": "^3.24.1"
   },

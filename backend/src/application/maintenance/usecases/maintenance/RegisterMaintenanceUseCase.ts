@@ -40,7 +40,6 @@ export const createRegisterMaintenanceUseCase = (_eventRepository: EventReposito
         if (missingReferences.length > 0) return Result.Failure(registerMaintenanceErrors.CANNOT_CREATE_MAINTENANCE_WITH_NOT_FOUND_REFERENCE);
 
         const maintenance = Maintenance.create({
-            maintenanceId: input.maintenanceId,
             vehiculeImmatriculation: input.vehiculeImmatriculation,
             garageSiret: input.garageSiret,
             status: input.status,

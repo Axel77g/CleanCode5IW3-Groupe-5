@@ -2,13 +2,13 @@ import {AbstractProjection} from "@application/shared/projections/AbstractProjec
 import {ProjectionJobScheduler} from "@application/shared/projections/ProjectionJobScheduler";
 import {RegisterMaintenanceEvent} from "@domain/maintenance/events/maintenance/RegisterMaintenanceEvent";
 import {Result, VoidResult} from "@shared/Result";
-import {RegisterGarageEvent} from "@domain/maintenance/events/garage/RegisterGarageEvent";
 import {Maintenance} from "@domain/maintenance/entities/Maintenance";
 import {ApplicationException} from "@shared/ApplicationException";
 import {UpdateMaintenanceEvent} from "@domain/maintenance/events/maintenance/UpdateMaintenanceEvent";
+import {MaintenanceRepository} from "@application/maintenance/repositories/MaintenanceRepository";
 
 export class MaintenanceProjection extends AbstractProjection {
-    constructor(private _maintenanceRepository: any) {
+    constructor(private _maintenanceRepository: MaintenanceRepository) {
         super();
     }
 
@@ -30,15 +30,12 @@ export class MaintenanceProjection extends AbstractProjection {
         return this._maintenanceRepository.store(maintenance)
     }
 
-    async applyUpdateEvent(event: RegisterGarageEvent): Promise<VoidResult> {
-        const maintenance = await this._maintenanceRepository.find(event.payload.siret)
+    async applyUpdateEvent(event: UpdateMaintenanceEvent): Promise<VoidResult> {
+        const maintenance = await this._maintenanceRepository.getByMaintenanceId(event.payload.maintenanceId)
         if (!maintenance.success) return Result.FailureStr("Cannot delete maintenances")
-
-        const updatedMaintenance = Maintenance.fromObject({
-            ...maintenance,
-            ...event.payload
-        })
-        if (updatedMaintenance instanceof Error) return Result.FailureStr("Cannot update maintenances")
+        if(maintenance.empty) return Result.FailureStr("Maintenance not found, this should not happen")
+        const updatedMaintenance = maintenance.value.update(event.payload)
+        if (updatedMaintenance instanceof ApplicationException) return Result.FailureStr("Cannot update maintenances")
         return this._maintenanceRepository.store(updatedMaintenance);
     }
 }

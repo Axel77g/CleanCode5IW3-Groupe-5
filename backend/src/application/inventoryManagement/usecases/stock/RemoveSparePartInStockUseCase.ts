@@ -4,7 +4,7 @@ import { Result } from "@shared/Result";
 import {ApplicationException, NotFoundEntityException} from "@shared/ApplicationException";
 import {InventorySparePartRepository} from "@application/inventoryManagement/repositories/InventorySparePartRepository";
 import {EventRepository} from "@application/shared/repositories/EventRepository";
-import {NotificationServices} from "@application/inventoryManagement/services/NotificationServices";
+import {NotificationServices} from "@application/shared/services/NotificationServices";
 import {StockRepository} from "@application/inventoryManagement/repositories/StockRepository";
 import {StockInventorySparePart} from "@domain/inventoryManagement/value-object/StockInventorySparePart";
 

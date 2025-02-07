@@ -27,26 +27,42 @@ import {maintenanceEventRepository} from "@infrastructureCore/repositories/maint
 import {vehiculeProjection} from "@infrastructureCore/projections/maintenance/vehiculeProjection";
 import {garageProjection} from "@infrastructureCore/projections/maintenance/garageProjection";
 import {vehiculeBreakdownProjection} from "@infrastructureCore/projections/maintenance/vehiculeBreakdownProjection";
+import {maintenanceProjection} from "@infrastructureCore/projections/maintenance/maintenanceProjection";
 
 function initProjection(scheduler: ProjectionJobScheduler, ...projections: AbstractProjection[]) {
     projections.forEach(projection => projection.init(scheduler));
 }
 
 /** Schedule the projection for inventoryManagement subdomain */
-const inventoryManagementProjections = [stockProjection,orderProjection,inventorySparePartProjection,dealerProjection]
+const inventoryManagementProjections = [
+    stockProjection,
+    orderProjection,
+    inventorySparePartProjection,
+    dealerProjection
+]
 const inventoryManagementProjectionScheduler = new ProjectionJobScheduler(inventoryManagementProjectionJobRepository, eventObserver)
 new ProjectionsWorker(inventoryManagementProjectionJobRepository, inventoryManagementEventRepository, inventoryManagementProjections)
 initProjection(inventoryManagementProjectionScheduler, ...inventoryManagementProjections)
 
 /** Schedule the projection for testDrive subdomain */
-const testDriveProjections = [driverProjection, incidentsProjection, testsDrivesProjection]
+const testDriveProjections = [
+    driverProjection,
+    incidentsProjection,
+    testsDrivesProjection
+]
 const testDriveProjectionScheduler = new ProjectionJobScheduler(testDriveProjectionJobRepository, eventObserver)
 new ProjectionsWorker(testDriveProjectionJobRepository, testDriveEventRepository, testDriveProjections)
 initProjection(testDriveProjectionScheduler, ...testDriveProjections)
 
 
 /** Schedule the projection for maintenances subdomain */
-const maintenanceProjections = [customerProjection, vehiculeProjection, vehiculeBreakdownProjection, garageProjection]
+const maintenanceProjections = [
+    customerProjection,
+    vehiculeProjection,
+    vehiculeBreakdownProjection,
+    garageProjection,
+    maintenanceProjection
+]
 const maintenanceProjectionScheduler = new ProjectionJobScheduler(maintenanceProjectionJobRepository, eventObserver)
 new ProjectionsWorker(maintenanceProjectionJobRepository, maintenanceEventRepository, maintenanceProjections)
 initProjection(maintenanceProjectionScheduler, ...maintenanceProjections)

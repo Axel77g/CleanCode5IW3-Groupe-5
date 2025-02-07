@@ -17,15 +17,23 @@ export class MongoInventorySparePartRepository extends AbstractMongoRepository i
 
     constructor(...args: [any]){
         super(...args);
-        //this.createTextIndex().then();
+        this.createTextIndex().then();
     }
 
     private async createTextIndex() {
-        const existingIndexes = await this.getCollection().listIndexes().toArray();
-        const textIndex = existingIndexes.find((index: any) => index.name === "text");
-        if (textIndex) return;
-        await this.getCollection().createIndex({ name: "text", reference: "text" });
+        const collection = this.getCollection();
+        const existingIndexes = await collection.indexes();
+
+        // Vérifie si un index texte existe déjà
+        const textIndexExists = existingIndexes.some(index =>
+            index.key.name === "text" || index.key.reference === "text"
+        );
+
+        if (!textIndexExists) {
+            await collection.createIndex({ name: "text", reference: "text" }, { name: "textIndex" });
+        }
     }
+
 
 
     find(reference: string): Promise<OptionalResult<InventorySparePart>> {

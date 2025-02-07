@@ -6,5 +6,5 @@ export type IInputUseCase = object
     execute(input : TI): Promise<TR>
 }*/
 
-export type IUseCase<TI extends IInputUseCase, TR extends Result<any>> = (input : TI) =>  Promise<TR>
+export type IUseCase<TI extends IInputUseCase | undefined, TR extends Result<any>> = (input : TI) =>  Promise<TR>
 

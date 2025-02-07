@@ -1,18 +1,23 @@
-import {NotificationServices} from "@application/inventoryManagement/services/NotificationServices";
+import {NotificationServices} from "@application/shared/services/NotificationServices";
 import {Siret} from "@domain/shared/value-object/Siret";
 import {InventorySparePart} from "@domain/inventoryManagement/entities/InventorySparePart";
+import { Vehicule } from "@domain/maintenance/entities/Vehicule";
 
-export class DiscordNotificationServices implements NotificationServices{
+export class DiscordNotificationServices implements NotificationServices {
     constructor(private webhookUrl: string) {}
 
-    private send(message : string){
-        fetch(this.webhookUrl, {
+    async notifyMaintenance(vehicule: Vehicule): Promise<void> {
+        await this.send(`Maintenance reminder for vehicule ${vehicule.immatriculation.getValue()}`);
+    }
+
+    private async send(message : string){
+        return fetch(this.webhookUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({content: message}),
-        }).then()
+        })
     }
 
     notifyLowStock(siret: Siret, sparePart: InventorySparePart): void {

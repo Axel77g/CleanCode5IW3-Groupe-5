@@ -5,6 +5,7 @@ import {RegisterMaintenanceEvent} from "@domain/maintenance/events/maintenance/R
 import {UpdateMaintenanceEvent} from "@domain/maintenance/events/maintenance/UpdateMaintenanceEvent";
 import {ApplicationException} from "@shared/ApplicationException";
 import {MaintenanceStatusEnum} from "@domain/maintenance/enums/MaintenanceStatusEnum";
+import {randomUUID} from "node:crypto";
 
 export interface MaintenanceDTO {
     maintenanceId : string,
@@ -33,7 +34,7 @@ export class Maintenance{
     }
 
     static create(object : {
-        maintenanceId : string,
+        maintenanceId ?: string,
         vehiculeImmatriculation: VehiculeImmatriculation,
         garageSiret : Siret,
         status : MaintenanceStatusEnum,
@@ -41,7 +42,7 @@ export class Maintenance{
         recommendation: string,
         date: Date,
     }) : Maintenance | ApplicationException {
-        return new Maintenance(object.maintenanceId, object.vehiculeImmatriculation, object.garageSiret, object.status, object.maintenanceSpareParts, object.recommendation, object.date);
+        return new Maintenance(object.maintenanceId || randomUUID(), object.vehiculeImmatriculation, object.garageSiret, object.status, object.maintenanceSpareParts, object.recommendation, object.date);
     }
 
     static fromObject(payload : MaintenanceDTO) {
@@ -58,6 +59,22 @@ export class Maintenance{
             recommendation: payload.recommendation,
             date: payload.date,
         })
+    }
+
+    update( object : {
+        status : MaintenanceStatusEnum,
+        recommendation: string,
+        maintenanceSpareParts: MaintenanceSparePart[],
+    }) {
+        return new Maintenance(
+            this.maintenanceId,
+            this.vehiculeImmatriculation,
+            this.garageSiret,
+            object.status,
+            this.maintenanceSpareParts,
+            this.recommendation,
+            this.date
+        );
     }
 
     registerEvent(): RegisterMaintenanceEvent {

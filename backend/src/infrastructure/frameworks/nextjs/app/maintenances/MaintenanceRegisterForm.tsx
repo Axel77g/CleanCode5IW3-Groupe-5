@@ -8,6 +8,16 @@ import Input from "@/components/Input";
 import { Button } from "@/components/Button";
 import Select from "@/components/Select";
 import { registerMaintenanceAction } from "@/app/maintenances/actions";
+import ReferenceSelector from "@/components/ReferenceSelector";
+
+interface MaintenanceSparePartProps {
+
+    unitPrice: string,
+    quantity: string,
+    sparePartReference: string,
+
+}
+
 
 interface MaintenanceRegisterFormProps {
     maintenanceId?: string,
@@ -16,11 +26,7 @@ interface MaintenanceRegisterFormProps {
     recommendation?: string,
     status?: MaintenanceStatusEnum,
     date?: Date,
-    maintenanceSpareParts?: {
-        unitPrice?: number,
-        quantity?: number,
-        sparePartReference?: string,
-    }
+    maintenanceSpareParts ?: MaintenanceSparePartProps[]
 }
 
 interface ActionState extends MaintenanceRegisterFormProps {
@@ -36,11 +42,7 @@ const initialState: ActionState = {
     recommendation: "",
     status: MaintenanceStatusEnum.WAITING,
     date: new Date(),
-    maintenanceSpareParts: {
-        unitPrice: 0,
-        quantity: 0,
-        sparePartReference: "",
-    }
+    maintenanceSpareParts: []
 };
 
 const statusOptions = [
@@ -62,6 +64,7 @@ export default function MaintenanceRegisterForm() {
     const [state, formAction] = useActionState<ActionState, FormData>(registerMaintenanceAction, initialState);
     const [garages, setGarages] = useState<{ title: string; value: string }[]>([]);
     const [vehicules, setVehicules] = useState<{ title: string; value: string }[]>([]);
+    const [maintenanceSpareParts, setMaintenanceSpareParts] = useState<MaintenanceSparePartProps[]>([]);
 
     useEffect(() => {
         const fetchGarages = async () => {
@@ -71,7 +74,7 @@ export default function MaintenanceRegisterForm() {
                 const data = await response.json();
                 const formattedGarages = data.map((garage: any) => ({
                     title: garage.name || "Garage sans nom",
-                    value: garage.siret,
+                    value: garage.siret.value,
                 }));
                 setGarages(formattedGarages);
             } catch (error) {
@@ -84,10 +87,9 @@ export default function MaintenanceRegisterForm() {
                 const response = await fetch("/api/vehicules");
                 if (!response.ok) throw new Error("Erreur lors de la récupération des véhicules.");
                 const data = await response.json();
-                console.log(data);
                 const formattedVehicules = data.map((vehicule: any) => ({
                     title: `${vehicule.model || "Véhicule sans modèle"}`,
-                    value: vehicule.immatriculation,
+                    value: vehicule.immatriculation.value,
                 }));
                 setVehicules(formattedVehicules);
             } catch (error) {
@@ -98,6 +100,31 @@ export default function MaintenanceRegisterForm() {
         fetchGarages();
         fetchVehicules();
     }, []);
+
+
+    function handleRemoveMaintenanceSparePart(index: number) {
+        const temp = [...maintenanceSpareParts];
+        temp.splice(index, 1);
+        setMaintenanceSpareParts(temp);
+    }
+
+    function handleAddMaintenanceSparePart(event: any) {
+        event.preventDefault();
+        const temp = [...maintenanceSpareParts];
+        temp.push({
+            unitPrice: "0",
+            quantity: "1",
+            sparePartReference: "",
+        });
+        setMaintenanceSpareParts(temp);
+
+    }
+
+    function handleChangeMaintenanceSparePart(index: number, maintenanceSparePart: MaintenanceSparePartProps) {
+        const temp = [...maintenanceSpareParts];
+        temp[index] = maintenanceSparePart;
+        setMaintenanceSpareParts(temp);
+    }
 
     return (
         <Form action={formAction} title={"Ajouter une maintenance"} state={state}>
@@ -149,6 +176,16 @@ export default function MaintenanceRegisterForm() {
 
                 <div className="col-span-12">
 
+                    { maintenanceSpareParts.map((maintenanceSparePart, index) => (
+                            <MaintenanceSparePartLine
+                                index={index} key={maintenanceSparePart.sparePartReference + index}
+                                maintenanceSparePart={maintenanceSparePart}
+                                onChange={(maintenanceSparePart) => handleChangeMaintenanceSparePart(index, maintenanceSparePart)}
+                                onDelete={() => handleRemoveMaintenanceSparePart(index)}
+                            />
+                        ))
+                    }
+                    <Button  onClick={handleAddMaintenanceSparePart}>Ajouter une piece</Button>
                 </div>
 
                 <div className="col-span-12">
@@ -160,3 +197,20 @@ export default function MaintenanceRegisterForm() {
 }
 
 
+function MaintenanceSparePartLine(props: {index: number,maintenanceSparePart : MaintenanceSparePartProps , onChange : (line : any) => void, onDelete ?: (...args : [any]) => void}){
+
+    function handleChange(e : React.ChangeEvent<HTMLInputElement>){
+        props.onChange({
+            ...props.maintenanceSparePart,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    return <div className={"border-solid border-[1px] border-slate-300 rounded p-4 my-2"}>
+        <ReferenceSelector  label={"Pièce détachée"} reference={props.maintenanceSparePart.sparePartReference}  onChange={(sparePartReference) => props.onChange({...props.maintenanceSparePart, sparePartReference})}/>
+        <input name={`maintenanceSpareParts[${props.index}].sparePartReference`} type={"hidden"} value={props.maintenanceSparePart.sparePartReference} onChange={handleChange} />
+        <Input placeholder={"Quantité"} label={"Quantité"} name={`maintenanceSpareParts[${props.index}].quantity`} type={"number"} value={props.maintenanceSparePart.quantity} onChange={handleChange} />
+        <Input placeholder={"Prix unitaire"} label={"Prix unitaire"} name={`maintenanceSpareParts[${props.index}].price`} type={"number"} value={props.maintenanceSparePart.unitPrice} onChange={handleChange} />
+        <Button onClick={props.onDelete}>Retirer</Button>
+    </div>
+}

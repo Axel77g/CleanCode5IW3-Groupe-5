@@ -14,7 +14,6 @@ import { MaintenanceStatusEnum } from "@domain/maintenance/enums/MaintenanceStat
 export const registerMaintenanceUseCase: UseCaseImplementation<typeof registerMaintenanceRequest, RegisterMaintenanceUseCase> = async (input) => {
     const garageSiret = Siret.create(input.garageSiret);
     if (garageSiret instanceof ApplicationException) return Result.Failure(garageSiret);
-
     const vehiculeImmatriculation = VehiculeImmatriculation.create(input.vehiculeImmatriculation);
     if (vehiculeImmatriculation instanceof ApplicationException) return Result.Failure(vehiculeImmatriculation);
     const useCase = createRegisterMaintenanceUseCase(maintenanceEventRepository, garageRepository, inventorySparePartRepository);

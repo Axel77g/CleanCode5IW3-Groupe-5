@@ -59,6 +59,7 @@ Toute notre application respecte cette séparation dans chacune des couches de l
 - **Repository** -> Abstraction de la logique de persistance, permettant de changer de base de données sans modifier le code métier.
 - **Services (si applicable)** -> Abstraction des services interopérables utilisés par nos `UseCase` (ex: `NotificationService`).
 - **Projections** -> Logique de matérialisation des données, centralisant toutes les logiques post-event des sous-domaines.
+- **Commands** -> Permet d’interagir avec l’application via CLI.
 
 ### Result Pattern
 
@@ -81,6 +82,7 @@ Ensuite, il existe des types d’encapsulation de ces résultats :
 ✅ **Simplifie la gestion des erreurs** et permet de prédire le comportement de l’application.
 
 ## Infrastructure
+
 
 - **common** : Implémentation des abstractions applicatives (`Repository`, `Services`)
     - **Repository** : Deux implémentations, une en mémoire et une en MongoDB.
@@ -105,6 +107,9 @@ Ensuite, il existe des types d’encapsulation de ces résultats :
 - **Next.js**
     - Les `UseCaseImplementation` prennent en entrée les payloads bruts définis dans `requests`.
     - Gestion des requêtes selon les règles de Next.js (**server actions**, **server components**).
+
+- **cli** : Contient l'infrastructure pour le montage des commandes CLI ainsi que toutes les commandes executable via la commande npm run command -- [commande], permet d'intéragir via CLI avec l'application
+
 
 Cette approche via **UseCaseImplementation** nous permet de séparer notre framework de notre application avec un cran supplémentaire.  
 ✅ **Évite la duplication de code**.  

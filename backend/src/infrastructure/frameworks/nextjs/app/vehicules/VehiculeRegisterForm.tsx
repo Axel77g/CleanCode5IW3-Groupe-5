@@ -8,10 +8,9 @@ import { Button } from "@/components/Button";
 import { Form } from "@/components/Form";
 import Select from "@/components/Select";
 import { registerVehiculeAction } from "@/app/vehicules/actions";
-import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
 
 interface VehiculeRegisterFormProps {
-    immatriculation?: VehiculeImmatriculation;
+    immatriculation?: string;
     brand?: string;
     model?: VehiculeModelEnum;
     year?: string;
@@ -90,7 +89,7 @@ export default function VehiculeRegisterForm() {
                     <Select name={"status"} options={status} value={state?.status} label={"Statut du véhicule"} />
                     <Select name={"model"} options={modelTypes} value={state?.model} label={"Modèle du véhicule"} />
                     <Input type="text" name="brand" value={"Triumph"} label={"Marque"} placeholder={"Marque du véhicule"} disabled />
-                    <Input type="text" name="immatriculation" value={state?.immatriculation?.getValue()} label={"Immatriculation"} placeholder={"AA-123-AA"} />
+                    <Input type="text" name="immatriculation" value={state?.immatriculation} label={"Immatriculation"} placeholder={"AA-123-AA"} />
                     <Input type="number" name="year" value={state?.year} label={"Année"} placeholder={"Année du véhicule"} />
                     <Input type="text" name="vin" value={state?.vin} label={"VIN"} placeholder={"Numéro VIN"} />
                     <Input type="number" name="mileage" value={state?.mileage} label={"Kilométrage"} placeholder={"Kilométrage"} />
