@@ -11,6 +11,7 @@ import {Result} from "@shared/Result";
 import {testDriveEventRepository} from "@infrastructureCore/repositories/testDrive/testDriveEventRepository";
 import {driverRepository} from "@infrastructureCore/repositories/testDrive/driverRepository";
 import {UseCaseImplementation} from "@infrastructureCore/useCaseImplementation/UseCaseImplementation";
+import {testDriveRepository} from "@infrastructureCore/repositories/testDrive/testDriveRepository";
 
 export const registerTestDriveUseCase : UseCaseImplementation<typeof registerTestDriveRequest, RegisterTestDriveUseCase> = async (input)=>{
     const driverLicenseId = DriverLicenseId.create(input.driverLicenseId)
@@ -19,7 +20,7 @@ export const registerTestDriveUseCase : UseCaseImplementation<typeof registerTes
     if (vehicleImmatriculation instanceof ApplicationException) return Result.Failure(vehicleImmatriculation)
     const period = Period.create(input.period.startDate, input.period.endDate)
     if (period instanceof ApplicationException) return Result.Failure(period)
-    const useCase = createRegisterTestDriveUseCase(testDriveEventRepository, driverRepository)
+    const useCase = createRegisterTestDriveUseCase(testDriveEventRepository, driverRepository, testDriveRepository)
     return useCase({
         driverLicenseId,
         vehicleImmatriculation,

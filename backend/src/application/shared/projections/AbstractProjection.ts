@@ -4,7 +4,15 @@ import { IEvent } from "@shared/AbstractEvent";
 import { Result, SuccessResult, VoidResult } from "@shared/Result";
 
 export abstract class AbstractProjection {
+    /**
+     * Initialize the projection to listen specific events
+     * @param projectionJobScheduler
+     */
     abstract init(projectionJobScheduler: ProjectionJobScheduler): void
+
+    /**
+     * Bind events type to their handlers
+     */
     abstract bindEvents(): { [key: string]: (event: any) => Promise<VoidResult> }
     async apply(projectionJobs: ProjectionJobWithEvent[]): Promise<SuccessResult<string[][]>> {
         const results: string[][] = [[], []]

@@ -3,6 +3,10 @@ import {EventObserver} from "@infrastructure/common/observers/EventObserver";
 import {ProjectionJob} from "@application/shared/projections/ProjectionJob";
 import {randomUUID} from "node:crypto";
 
+/**
+ * Schedule a projection job when an event is triggered,
+ * This class is responsible for scheduling a projection job when an event is triggered and bind it to a specific projection
+ */
 export class ProjectionJobScheduler{
     constructor(
         private _projectionJobRepository : ProjectionJobRepository,

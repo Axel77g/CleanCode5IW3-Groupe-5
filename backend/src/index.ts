@@ -54,11 +54,7 @@ async function main(){
         email:"jogn@exemple.com"
     })
 
-    console.log(result)
     if(!result.success) return;
-
-
-
 
     const rIncidentUseCase = createRegisterIncidentUseCase(testDriveEventRepository, driverRepository)
     const resultRegisterIncident = await rIncidentUseCase({
@@ -77,7 +73,7 @@ async function main(){
     const period = Period.create(new Date(), new Date())
     if(period instanceof Error) return period
 
-    const rTestDriveUseCase = createRegisterTestDriveUseCase(testDriveEventRepository, driverRepository)
+    const rTestDriveUseCase = createRegisterTestDriveUseCase(testDriveEventRepository, driverRepository, testDriveRepository)
     const resultRegisterTestDrive = await rTestDriveUseCase({
         driverLicenseId,
         vehicleImmatriculation: immatriculation,
