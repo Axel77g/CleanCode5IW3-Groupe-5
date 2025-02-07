@@ -23,8 +23,8 @@ interface RegisterMaintenanceInput extends IInputUseCase {
 export type RegisterMaintenanceUseCase = IUseCase<RegisterMaintenanceInput, Result>;
 
 const registerMaintenanceErrors = {
-    NOT_FOUND_GARAGE: new ApplicationException("RegisterMaintenanceUseCase.NotFoundGarage", "Cannot create maintenance record for not found garages"),
-    CANNOT_CREATE_MAINTENANCE_WITH_NOT_FOUND_REFERENCE: new ApplicationException("RegisterMaintenanceUseCase.CannotCreateMaintenanceWithNotFoundReference", "Cannot create maintenance with not found reference"),
+    NOT_FOUND_GARAGE: new ApplicationException("RegisterMaintenanceUseCase.NotFoundGarage", "Cannot create maintenances record for not found garages"),
+    CANNOT_CREATE_MAINTENANCE_WITH_NOT_FOUND_REFERENCE: new ApplicationException("RegisterMaintenanceUseCase.CannotCreateMaintenanceWithNotFoundReference", "Cannot create maintenances with not found reference"),
 };
 
 export const createRegisterMaintenanceUseCase = (_eventRepository: EventRepository, _garageRepository: GarageRepository, _inventorySparePartRepository : InventorySparePartRepository): RegisterMaintenanceUseCase => {

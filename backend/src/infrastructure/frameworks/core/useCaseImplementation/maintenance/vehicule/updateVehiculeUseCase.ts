@@ -23,6 +23,7 @@ export const updateVehiculeUseCase: UseCaseImplementation<typeof updateVehiculeR
     return useCase({
         immatriculation,
         mileage: input.mileage,
-        maintenanceInterval
+        maintenanceInterval,
+        status: input.status,
     })
 };

@@ -39,7 +39,7 @@ export interface VehiculeBreakdownDTO {
         date: Date,
         maintenanceId ?: string
     }) {
-        return new VehiculeBreakdown(object?.vehiculeBreakdownId || randomUUID(), object.vehiculeImmatriculation, object.description, object.date, object.maintenanceId);
+        return new VehiculeBreakdown(object?.vehiculeBreakdownId || randomUUID(), object.vehiculeImmatriculation, object.description, object.date, object?.maintenanceId);
     }
 
     registerEvent(): RegisterVehiculeBreakDownEvent {

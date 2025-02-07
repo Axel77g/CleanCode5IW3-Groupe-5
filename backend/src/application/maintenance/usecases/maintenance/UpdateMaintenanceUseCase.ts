@@ -15,7 +15,7 @@ interface UpdateMaintenanceUseCaseInput extends IInputUseCase {
 export type UpdateMaintenanceUseCase = IUseCase<UpdateMaintenanceUseCaseInput, Result>;
 
 const updateMaintenanceErrors = {
-    NOT_FOUND_MAINTENANCE: new ApplicationException("UpdateMaintenanceUseCase.NotFoundMaintenance", "Cannot update maintenance record for not found maintenance"),
+    NOT_FOUND_MAINTENANCE: new ApplicationException("UpdateMaintenanceUseCase.NotFoundMaintenance", "Cannot update maintenances record for not found maintenances"),
 }
 
 export const createUpdateMaintenanceUseCase = (_eventRepository: EventRepository, _maintenanceRepository: MaintenanceRepository): UpdateMaintenanceUseCase => {

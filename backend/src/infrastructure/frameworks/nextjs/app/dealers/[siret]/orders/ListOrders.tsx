@@ -8,7 +8,6 @@ import {Button} from "@/components/Button";
 import {OrderStatusDialog} from "@/app/dealers/[siret]/orders/OrderStatusDialog";
 
 export function ListOrders(props: {orders : any[], siretString : string}){
-
     const orderSelected = useRef(null)
     const [isOpen,open, close] = useDialog();
     function handleUpdateStatusOrderClick(order: any){

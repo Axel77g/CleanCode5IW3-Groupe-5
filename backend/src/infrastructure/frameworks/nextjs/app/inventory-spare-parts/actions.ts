@@ -25,7 +25,6 @@ export async function upsertInventorySparePart(prevState:any, formData: FormData
     })
 }
 
-
 export async function getInventorySpareParts(pagination : PaginatedInput, search ?: string){
     const listInventorySparePartUseCase = createListInventorySparePartUseCase(inventorySparePartRepository)
     const result = await listInventorySparePartUseCase({...pagination,search})

@@ -31,7 +31,7 @@ export const createAssignVehiculeBreakdownToMaintenanceUseCase   = (_eventReposi
 
         if (assignBreakdownToMaintenanceEvent instanceof Error) return Result.FailureStr(assignBreakdownToMaintenanceEvent.message)
         const storeResponse = await _eventRepository.storeEvent(assignBreakdownToMaintenanceEvent);
-        if (!storeResponse.success) return Result.FailureStr("Cannot assign breakdown to maintenance")
-        return Result.Success("Breakdown assigned to maintenance")
+        if (!storeResponse.success) return Result.FailureStr("Cannot assign breakdown to maintenances")
+        return Result.Success("Breakdown assigned to maintenances")
     }
 }

@@ -80,5 +80,4 @@ export class Maintenance{
             recommendation: this.recommendation
         })
     }
-
 }

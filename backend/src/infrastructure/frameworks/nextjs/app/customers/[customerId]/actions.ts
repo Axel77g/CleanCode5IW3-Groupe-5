@@ -24,3 +24,11 @@ export async function unregisterCustomerAction(state : UnregisterCustomerActionS
     if(!result.success) return abort(result.error.message)
     return success(result.value)
 }
+
+export async function assignVehiculeToCustomer(prevState: any, formData: FormData){
+    return useServerForm(formData, updateCustomerRequest, async (payload, success, abort)=>{
+        const result = await updateCustomerUseCase(payload)
+        if(!result.success) return abort(result.error.message)
+        return success(result.value)
+    })
+}

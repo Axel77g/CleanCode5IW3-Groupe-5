@@ -1,3 +1,3 @@
-1 - Faire tous les repositories
-2 - Faire tous les usescases (domain, infrastructure)
-3 - Faire toutes les projections
+- ASSIGNER LE VEHICULE A UN CLIENT
+- METTRE MES ROUTES DANS LE .boot
+- GÉRER LA NOTIFICATION POUR LA MAINTENANCE D'UN VÉHICULE

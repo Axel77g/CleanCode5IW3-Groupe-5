@@ -15,7 +15,7 @@ export type ListGarageMaintenanceUseCase = IUseCase<ListGarageMaintenancesUseCas
 
 const ListGarageMaintenanceErrors = {
     GARAGE_NOT_FOUND : NotFoundEntityException.create("Garage not found"),
-    CANNOT_LIST_GARAGE_MAINTENANCE: new ApplicationException("ListGarageMaintenance.CannotListGarageMaintenance", "Cannot list maintenance")
+    CANNOT_LIST_GARAGE_MAINTENANCE: new ApplicationException("ListGarageMaintenance.CannotListGarageMaintenance", "Cannot list maintenances")
 }
 
 export const createListGarageMaintenancesUseCase = (_maintenanceRepository : MaintenanceRepository, _garageRepository : GarageRepository): ListGarageMaintenanceUseCase => {

@@ -6,6 +6,7 @@ import {MaintenanceMapper} from "@infrastructure/common/entityMappers/Maintenanc
 import {ApplicationException} from "@shared/ApplicationException";
 import {PaginatedInput} from "@shared/PaginatedInput";
 import {Siret} from "@domain/shared/value-object/Siret";
+import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
 
 export class MongoMaintenanceRepository extends AbstractMongoRepository implements MaintenanceRepository {
     protected collectionName: string = "maintenances";
@@ -15,7 +16,7 @@ export class MongoMaintenanceRepository extends AbstractMongoRepository implemen
         return this.catchError(
             async () => {
                 session.startTransaction();
-                await this.getCollection().updateOne({ maintenanceId: maintenance.maintenanceId }, { $set: MaintenanceMapper.toPersistence(maintenance) }, { upsert: true });
+                await this.getCollection().updateOne({maintenanceId: maintenance.maintenanceId}, {$set: MaintenanceMapper.toPersistence(maintenance)}, {upsert: true});
                 await session.commitTransaction();
                 return Result.SuccessVoid();
             },
@@ -28,7 +29,7 @@ export class MongoMaintenanceRepository extends AbstractMongoRepository implemen
         return this.catchError(
             async () => {
                 session.startTransaction();
-                await this.getCollection().updateOne({ maintenanceId }, { $set: { status: "done" } });
+                await this.getCollection().updateOne({maintenanceId}, {$set: {status: "done"}});
                 await session.commitTransaction();
                 return Result.SuccessVoid();
             },
@@ -39,7 +40,7 @@ export class MongoMaintenanceRepository extends AbstractMongoRepository implemen
     getByMaintenanceId(maintenanceId: string): Promise<OptionalResult<Maintenance>> {
         return this.catchError(
             async () => {
-                const maintenanceDocument = await this.getCollection().findOne({ maintenanceId: maintenanceId });
+                const maintenanceDocument = await this.getCollection().findOne({maintenanceId: maintenanceId});
                 if (!maintenanceDocument) return Result.SuccessVoid();
                 const maintenance = MaintenanceMapper.toDomain(maintenanceDocument);
                 if (maintenance instanceof ApplicationException) return Result.Failure(maintenance);
@@ -48,23 +49,36 @@ export class MongoMaintenanceRepository extends AbstractMongoRepository implemen
         )
     }
 
-    async listVehiculeMaintenance(vehiculeImmatriculation: string): Promise<VoidResult> {
-        return this.catchError(
-            async () => {
-                const maintenances = await this.getCollection().find({ vehiculeImmatriculation }).toArray();
-                if (maintenances.length === 0) return Result.SuccessVoid();
-                return Result.SuccessVoid();
-            }
-        )
-    }
 
-    listGarageMaintenances(garageSiret: Siret, pagination: PaginatedInput): Promise<PaginatedResult<Maintenance>> {
-        const { page, limit } = pagination;
+    listVehiculeMaintenance(vehiculeImmatriculation: VehiculeImmatriculation, pagination: PaginatedInput): Promise<PaginatedResult<Maintenance>> {
+        const {page, limit} = pagination;
         return this.catchError(async () => {
-            const maintenancesDocuments = await this.getCollection().find({ garageSiret }).skip((page - 1) * limit).limit(limit).toArray();
-            const maintenancesTotal = await this.getCollection().countDocuments({ garageSiret });
+            const maintenancesDocuments = await this.getCollection().find({vehiculeImmatriculation}).skip((page - 1) * limit).limit(limit).toArray();
+            const maintenancesTotal = await this.getCollection().countDocuments({vehiculeImmatriculation});
             const maintenances = MaintenanceMapper.toDomainList(maintenancesDocuments);
             return Result.SuccessPaginated<Maintenance>(maintenances, maintenancesTotal, page, limit);
         })
+    }
+
+    listGarageMaintenances(garageSiret: Siret, pagination: PaginatedInput): Promise<PaginatedResult<Maintenance>> {
+        const {page, limit} = pagination;
+        return this.catchError(async () => {
+            const maintenancesDocuments = await this.getCollection().find({garageSiret}).skip((page - 1) * limit).limit(limit).toArray();
+            const maintenancesTotal = await this.getCollection().countDocuments({garageSiret});
+            const maintenances = MaintenanceMapper.toDomainList(maintenancesDocuments);
+            return Result.SuccessPaginated<Maintenance>(maintenances, maintenancesTotal, page, limit);
+        })
+    }
+
+    async listMaintenance(pagination: PaginatedInput): Promise<PaginatedResult<Maintenance>> {
+        const {limit, page} = pagination
+        return this.catchError(
+            async () => {
+                const maintenancesDocuments = await this.getCollection().find().skip((page - 1) * limit).limit(limit).toArray()
+                const total = await this.getCollection().countDocuments({})
+                const maintenances = MaintenanceMapper.toDomainList(maintenancesDocuments)
+                return Result.SuccessPaginated<Maintenance>(maintenances, total, page, limit)
+            }
+        )
     }
 }

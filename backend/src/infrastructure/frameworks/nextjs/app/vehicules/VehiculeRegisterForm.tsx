@@ -73,7 +73,7 @@ const status = [
     { title: "Disponible", value: VehiculeStatusEnum.AVAILABLE },
     { title: "Vendu", value: VehiculeStatusEnum.SOLD },
     { title: "En préparation", value: VehiculeStatusEnum.IN_PREPARATION },
-    { title: "En maintenance", value: VehiculeStatusEnum.IN_MAINTENANCE },
+    { title: "En maintenances", value: VehiculeStatusEnum.IN_MAINTENANCE },
     { title: "En essai", value: VehiculeStatusEnum.IN_TEST_DRIVE },
     { title: "Réservé", value: VehiculeStatusEnum.RESERVED },
     { title: "Hors service", value: VehiculeStatusEnum.OUT_OF_SERVICE },
@@ -98,10 +98,10 @@ export default function VehiculeRegisterForm() {
 
                 <div className="border-l border-gray-300 pl-4">
                     <label className="block font-semibold text-lg text-gray-700 pb-3">Maintenance</label>
-                    <Input type="number" name="maintenanceInterval.mileage" value={state?.maintenanceInterval?.mileage} label={"Intervalle de maintenance (km)"} placeholder={"Ex: 10 000 km"} />
-                    <Input type="number" name="maintenanceInterval.duration" value={state?.maintenanceInterval?.duration} label={"Intervalle de maintenance (mois)"} placeholder={"Ex: 12 mois"} />
-                    <Input type="date" name="maintenanceInterval.lastMaintenance.date" value={state?.maintenanceInterval?.lastMaintenance?.date} label={"Date de la dernière maintenance"}  placeholder={"01/01/2025"}/>
-                    <Input type="number" name="maintenanceInterval.lastMaintenance.mileage" value={state?.maintenanceInterval?.lastMaintenance?.mileage} label={"Kilométrage de la dernière maintenance"} placeholder={"9000"} />
+                    <Input type="number" name="maintenanceInterval.mileage" value={state?.maintenanceInterval?.mileage} label={"Intervalle de maintenances (km)"} placeholder={"Ex: 10 000 km"} />
+                    <Input type="number" name="maintenanceInterval.duration" value={state?.maintenanceInterval?.duration} label={"Intervalle de maintenances (mois)"} placeholder={"Ex: 12 mois"} />
+                    <Input type="date" name="maintenanceInterval.lastMaintenance.date" value={state?.maintenanceInterval?.lastMaintenance?.date} label={"Date de la dernière maintenances"}  placeholder={"01/01/2025"}/>
+                    <Input type="number" name="maintenanceInterval.lastMaintenance.mileage" value={state?.maintenanceInterval?.lastMaintenance?.mileage} label={"Kilométrage de la dernière maintenances"} placeholder={"9000"} />
                 </div>
 
                 <div className="border-l border-gray-300 pl-4">

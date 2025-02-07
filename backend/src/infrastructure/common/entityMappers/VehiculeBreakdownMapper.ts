@@ -12,6 +12,7 @@ export class VehiculeBreakdownMapper {
             vehiculeImmatriculation: vehiculeImmatriculation,
             description: vehiculeBreakdownRaw.description,
             date: new Date(vehiculeBreakdownRaw.date),
+            maintenanceId: vehiculeBreakdownRaw.maintenanceId
         })
     }
 
@@ -20,7 +21,8 @@ export class VehiculeBreakdownMapper {
               vehiculeBreakdownId: vehiculeBreakdowns.vehiculeBreakdownId,
               vehiculeImmatriculation: vehiculeBreakdowns.vehiculeImmatriculation.getValue(),
               description: vehiculeBreakdowns.description,
-              date: vehiculeBreakdowns.date
+              date: vehiculeBreakdowns.date,
+              maintenanceId: vehiculeBreakdowns.maintenanceId,
        })
     }
 

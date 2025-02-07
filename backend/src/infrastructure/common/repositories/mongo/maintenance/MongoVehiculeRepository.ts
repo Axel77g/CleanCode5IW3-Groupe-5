@@ -58,4 +58,14 @@ export class MongoVehiculeRepository extends AbstractMongoRepository implements 
             }
         )
     }
+
+    getVehiculeNeedForMaintenance(): Promise<Result<Vehicule[]>> {
+        return this.catchError(
+            async () => {
+                const vehiculesDocuments = await this.getCollection().find({ maintenanceInterval: { $ne: null } });
+                const vehicules = VehiculeMapper.toDomainList(await vehiculesDocuments.toArray());
+                return Result.Success<Vehicule[]>(vehicules.filter((vehicule) => vehicule.needMaintenance()));
+            }
+        )
+    }
 }

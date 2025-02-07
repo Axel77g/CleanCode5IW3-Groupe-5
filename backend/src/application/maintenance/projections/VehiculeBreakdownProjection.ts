@@ -13,6 +13,7 @@ export class VehiculeBreakdownProjection extends AbstractProjection {
 
     init(projectionJobScheduler: ProjectionJobScheduler) {
         projectionJobScheduler.schedule(RegisterVehiculeBreakDownEvent.type, this.constructor.name)
+
     }
 
     bindEvents () {

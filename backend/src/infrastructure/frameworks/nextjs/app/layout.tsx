@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
-import {CarFront, Home, Package, Users, Wallet, Wrench} from "lucide-react";
+import {CarFront, Construction, Home, Package, Users, Wallet, Wrench} from "lucide-react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -75,6 +75,13 @@ export default function RootLayout({
                 >
                     <Wrench className="w-5 h-5 text-gray-600"/>
                     <span className="text-sm font-medium text-gray-700">Garages</span>
+                </Link>
+                <Link
+                    href="/maintenances"
+                    className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 hover:shadow transition"
+                >
+                    <Construction className="w-5 h-5 text-gray-600"/>
+                    <span className="text-sm font-medium text-gray-700">Maintenances</span>
                 </Link>
             </nav>
         </aside>

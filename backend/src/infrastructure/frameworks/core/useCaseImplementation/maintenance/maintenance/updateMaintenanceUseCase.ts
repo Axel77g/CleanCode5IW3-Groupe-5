@@ -1,11 +1,11 @@
 // import {UseCaseImplementation} from "@infrastructureCore/useCaseImplementation/UseCaseImplementation";
-// import {updateMaintenanceRequest} from "@infrastructureCore/requests/maintenance/maintenance/updateMaintenanceRequest";
+// import {updateMaintenanceRequest} from "@infrastructureCore/requests/maintenances/maintenances/updateMaintenanceRequest";
 // import {
 //     createUpdateMaintenanceUseCase,
 //     UpdateMaintenanceUseCase
-// } from "@application/maintenance/usecases/maintenance/UpdateMaintenanceUseCase";
-// import {maintenanceEventRepository} from "@infrastructureCore/repositories/maintenance/maintenanceEventRepository";
-// import {maintenanceRepository} from "@infrastructureCore/repositories/maintenance/maintenanceRepository";
+// } from "@application/maintenances/usecases/maintenances/UpdateMaintenanceUseCase";
+// import {maintenanceEventRepository} from "@infrastructureCore/repositories/maintenances/maintenanceEventRepository";
+// import {maintenanceRepository} from "@infrastructureCore/repositories/maintenances/maintenanceRepository";
 //
 //
 //

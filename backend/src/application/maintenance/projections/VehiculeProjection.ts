@@ -47,7 +47,7 @@ export class VehiculeProjection extends AbstractProjection {
         const immatriculation = VehiculeImmatriculation.create(event.payload.immatriculation)
         if (immatriculation instanceof ApplicationException) return Result.FailureStr("Cannot update vehicles")
         const maintenanceInterval = VehiculeMaintenanceInterval.create(event.payload.maintenanceInterval.duration, event.payload.maintenanceInterval.mileage, event.payload.maintenanceInterval.lastMaintenance)
-        if (maintenanceInterval instanceof ApplicationException) return Result.FailureStr("Cannot update vehicule, maintenance interval is not valid")
+        if (maintenanceInterval instanceof ApplicationException) return Result.FailureStr("Cannot update vehicule, maintenances interval is not valid")
         const warranty = Period.create(event.payload.warranty.periodStart, event.payload.warranty.periodEnd)
         if (warranty instanceof ApplicationException) return Result.FailureStr("Cannot update vehicule, warranty is not valid")
         const vehicule = await this._vehiculeRepository.getByImmatriculation(immatriculation)
@@ -61,6 +61,7 @@ export class VehiculeProjection extends AbstractProjection {
             warranty,
         })
 
+        if (updatedVehicule instanceof ApplicationException) return Result.FailureStr("Cannot update vehicules")
         return this._vehiculeRepository.store(updatedVehicule)
     }
 }

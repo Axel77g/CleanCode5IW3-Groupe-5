@@ -2,10 +2,9 @@
 
 import {showVehiculeUseCase} from "@infrastructureCore/useCaseImplementation/maintenance/vehicule/showVehiculeUseCase";
 import {ErrorCallout} from "@/components/ErrorCallout";
-import {Button} from "@/components/Button";
-import Link from "next/link";
 import VehiculeUpdateForm from "@/app/vehicules/[immatriculation]/VehiculeUpdateForm";
 import {UnregisterVehiculeActionButton} from "@/app/vehicules/[immatriculation]/UnregisterVehiculeActionButton";
+import HeadingTile from "@/components/HeadingTitle";
 
 export default async function VehiculeDetailPage(pageProps: {params: any, searchParams:any}) {
     const {immatriculation} = await pageProps.params as {immatriculation: string}
@@ -32,13 +31,12 @@ export default async function VehiculeDetailPage(pageProps: {params: any, search
         },
         status: result.value.status,
     }
-    const vehiculePath = `/vehicules/${immatriculation}`
     return (
         <div>
-            <h1 className={"text-xl font-semibold"}>Détails du véhicule :
+            <HeadingTile className={"text-xl font-semibold"}>Détails du véhicule :
                 <span className="text-gray-500"> {vehicule.model} - {vehicule.immatriculation}</span>
-            </h1>
-            <VehiculeUpdateForm vehicule={vehicule}/>
+            </HeadingTile>
+            <VehiculeUpdateForm vehicule={vehicule} />
 
             <br/>
             <hr/>
@@ -47,12 +45,6 @@ export default async function VehiculeDetailPage(pageProps: {params: any, search
             <div className="flex gap-4">
 
                     <UnregisterVehiculeActionButton immatriculationString={immatriculation}/>
-
-                    <Link href={`${vehiculePath}/breakdowns`}>
-                        <Button>
-                            Accéder aux pannes
-                        </Button>
-                    </Link>
             </div>
         </div>
     )

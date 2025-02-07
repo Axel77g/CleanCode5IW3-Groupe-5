@@ -49,8 +49,10 @@ export class Vehicule {
         INVALID_BRAND: new ApplicationException('Vehicule', 'Brand is not valid, must be Triumph'),
         INVALID_YEAR: new ApplicationException('Vehicule', 'Year is not valid, must be between 1902 and current year'),
         INVALID_MILEAGE: new ApplicationException('Vehicule', 'Mileage is not valid, must be greater than 0'),
+        INVALID_LAST_MILEAGE: new ApplicationException('Vehicule', 'Last maintenances mileage is not valid must be less than current mileage'),
         INVALID_MODEL: new ApplicationException('Vehicule', 'Model is not valid'),
         INVALID_STATUS: new ApplicationException('Vehicule', 'Status is not valid'),
+        INVALID_WARRANTY: new ApplicationException('Vehicule', 'Warranty is not valid, cannot be more than 2 years')
     }
 
     available(): Vehicule | ApplicationException {
@@ -69,7 +71,7 @@ export class Vehicule {
 
     maintenance(): Vehicule | ApplicationException {
         if (this.status === VehiculeStatusEnum.IN_MAINTENANCE) {
-            return new ApplicationException('Vehicule', 'Vehicule is already in maintenance');
+            return new ApplicationException('Vehicule', 'Vehicule is already in maintenances');
         }
         return new Vehicule(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceInterval, VehiculeStatusEnum.IN_MAINTENANCE, this.warranty);
     }
@@ -139,6 +141,13 @@ export class Vehicule {
         status: VehiculeStatusEnum;
         warranty: Period
     }): Vehicule | ApplicationException {
+        if (object.brand !== 'Triumph') return Vehicule.ApplicationExceptions.INVALID_BRAND;
+        if (object.year < 1902 || object.year > new Date().getFullYear()) return Vehicule.ApplicationExceptions.INVALID_YEAR;
+        if (object.mileage <= 0) return Vehicule.ApplicationExceptions.INVALID_MILEAGE;
+        if (object.maintenanceInterval.mileage > object.mileage) return Vehicule.ApplicationExceptions.INVALID_MILEAGE;
+        if (!Object.values(VehiculeModelEnum).includes(object.model)) return Vehicule.ApplicationExceptions.INVALID_MODEL;
+        if (!Object.values(VehiculeStatusEnum).includes(object.status)) return Vehicule.ApplicationExceptions.INVALID_STATUS;
+        if (object.warranty.endDate.getFullYear() - object.warranty.startDate.getFullYear() > 2) return Vehicule.ApplicationExceptions.INVALID_WARRANTY;
         return new Vehicule(object.immatriculation, object.brand, object.model, object.year, object.vin, object.mileage, object.maintenanceInterval, object.status, object.warranty);
     }
 
@@ -178,6 +187,8 @@ export class Vehicule {
         status?: VehiculeStatusEnum
         warranty?: Period,
     }) {
+        if (object.mileage && object?.mileage > this.mileage) return Vehicule.ApplicationExceptions.INVALID_MILEAGE;
+        if (object.maintenanceInterval && object.mileage && object.maintenanceInterval.lastMaintenance.mileage > this.mileage) return Vehicule.ApplicationExceptions.INVALID_LAST_MILEAGE;
         return new Vehicule(
             this.immatriculation,
             this.brand, this.model,
@@ -208,5 +219,9 @@ export class Vehicule {
                 periodEnd: this.warranty.endDate
             }
         })
+    }
+
+    needMaintenance(): boolean {
+        return this.mileage - this.maintenanceInterval.lastMaintenance.mileage >= this.maintenanceInterval.mileage;
     }
 }

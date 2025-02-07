@@ -45,7 +45,7 @@ new ProjectionsWorker(testDriveProjectionJobRepository, testDriveEventRepository
 initProjection(testDriveProjectionScheduler, ...testDriveProjections)
 
 
-/** Schedule the projection for maintenance subdomain */
+/** Schedule the projection for maintenances subdomain */
 const maintenanceProjections = [customerProjection, vehiculeProjection, vehiculeBreakdownProjection, garageProjection]
 const maintenanceProjectionScheduler = new ProjectionJobScheduler(maintenanceProjectionJobRepository, eventObserver)
 new ProjectionsWorker(maintenanceProjectionJobRepository, maintenanceEventRepository, maintenanceProjections)
