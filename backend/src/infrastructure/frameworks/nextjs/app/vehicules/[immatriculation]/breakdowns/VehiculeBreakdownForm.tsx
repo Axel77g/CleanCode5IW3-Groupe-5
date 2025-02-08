@@ -29,6 +29,6 @@ export default function VehiculeBreakdownsForm(props: { vehiculeImmatriculation:
         <input type="hidden" name={"vehiculeImmatriculation"} value={props.vehiculeImmatriculation} />
         <Input placeholder={"Description de la panne"} label={"Description"} name={"description"} type={"textarea"} /> {/* Le type est 'textarea' ici */}
         <Input type="date" name="date" placeholder={"Date de la panne"} value={formState.date} label={"Date de la panne"} />
-        <Button>Ajouter la panne</Button>
+        <Button variant={"submit"}>Ajouter la panne</Button>
     </Form>
 }

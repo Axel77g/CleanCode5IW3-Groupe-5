@@ -25,10 +25,10 @@ export class MongoVehiculeBreakdownRepository extends AbstractMongoRepository im
         )
     }
 
-    getBreakdownByVehicule(vehiculeImmatriculation: VehiculeImmatriculation): Promise<OptionalResult<VehiculeBreakdown>> {
+    getBreakdownByVehicule(vehiculeBreakdownId: string): Promise<OptionalResult<VehiculeBreakdown>> {
         return this.catchError(
            async () => {
-               const vehiculeBreakdownDocument = await this.getCollection().findOne({vehiculeImmatriculation: vehiculeImmatriculation.getValue()});
+               const vehiculeBreakdownDocument = await this.getCollection().findOne({vehiculeBreakdownId: vehiculeBreakdownId});
                if (!vehiculeBreakdownDocument) return Result.SuccessVoid();
                const vehiculeBreakdown = VehiculeBreakdownMapper.toDomain(vehiculeBreakdownDocument);
                 if (vehiculeBreakdown instanceof Error) return Result.Failure(vehiculeBreakdown);

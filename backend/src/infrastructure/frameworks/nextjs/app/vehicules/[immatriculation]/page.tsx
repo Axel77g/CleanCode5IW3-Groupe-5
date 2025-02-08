@@ -33,7 +33,7 @@ export default async function VehiculeDetailPage(pageProps: {params: any, search
     }
     return (
         <div>
-            <HeadingTile className={"text-xl font-semibold"}>Détails du véhicule :
+            <HeadingTile>Détails du véhicule :
                 <span className="text-gray-500"> {vehicule.model} - {vehicule.immatriculation}</span>
             </HeadingTile>
             <VehiculeUpdateForm vehicule={vehicule} />
@@ -43,8 +43,7 @@ export default async function VehiculeDetailPage(pageProps: {params: any, search
             <br/>
 
             <div className="flex gap-4">
-
-                    <UnregisterVehiculeActionButton immatriculationString={immatriculation}/>
+                <UnregisterVehiculeActionButton immatriculationString={immatriculation}/>
             </div>
         </div>
     )

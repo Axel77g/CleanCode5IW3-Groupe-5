@@ -1,10 +1,10 @@
-import { Address, AddressDTO } from "@domain/shared/value-object/Address";
 import { ApplicationException } from "@shared/ApplicationException";
 import { randomUUID } from "node:crypto";
 import { RegisterCustomerEvent } from "../events/customer/RegisterCustomerEvent";
 import { UnregisterCustomerEvent } from "../events/customer/UnregisterCustomerEvent";
 import { UpdateCustomerEvent } from "../events/customer/UpdateCustomerEvent";
 import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
+import {Address, AddressDTO} from "@domain/shared/value-object/Address";
 
 export interface CustomerDTO {
     customerId: string,

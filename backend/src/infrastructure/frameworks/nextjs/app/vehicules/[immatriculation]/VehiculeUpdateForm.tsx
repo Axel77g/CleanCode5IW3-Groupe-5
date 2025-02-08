@@ -108,7 +108,7 @@ export default function VehiculeUpdateForm({vehicule}: { vehicule: VehiculeUpdat
 
 
             <div className={"flex items-center gap-4"}>
-                <Button>Modifier le véhicule</Button>
+                <Button variant={"submit"}>Modifier le véhicule</Button>
 
 
                 <Link href={`${vehiculePath}/breakdowns`}>

@@ -5,7 +5,7 @@ import {VehiculeBreakdownRepository} from "@application/maintenance/repositories
 import {VehiculeBreakdown} from "@domain/maintenance/entities/VehiculeBreakdown";
 
 interface ShowVehiculeBreakdownInput extends IInputUseCase {
-    vehiculeImmatriculation: VehiculeImmatriculation,
+    vehiculeBreakdownId: string,
 }
 
 type ShowVehiculeBreakdownResult = Result<VehiculeBreakdown>
@@ -13,7 +13,7 @@ export type ShowVehiculeBreakdownUseCase = IUseCase<ShowVehiculeBreakdownInput, 
 
 export const createShowVehiculeBreakdownUseCase = (_vehiculeBreakdownRepository: VehiculeBreakdownRepository): ShowVehiculeBreakdownUseCase => {
     return async (input: ShowVehiculeBreakdownInput) => {
-        const findResponse = await _vehiculeBreakdownRepository.getBreakdownByVehicule(input.vehiculeImmatriculation);
+        const findResponse = await _vehiculeBreakdownRepository.getBreakdownByVehicule(input.vehiculeBreakdownId);
         if(!findResponse.success) return findResponse
         if(findResponse.empty) return Result.FailureStr("Breakdown not found")
         return findResponse

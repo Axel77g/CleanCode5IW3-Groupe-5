@@ -44,6 +44,7 @@ export class MongoMaintenanceRepository extends AbstractMongoRepository implemen
         const {page, limit} = pagination;
         return this.catchError(async () => {
             const maintenancesDocuments = await this.getCollection().find({vehiculeImmatriculation}).skip((page - 1) * limit).limit(limit).toArray();
+            console.log(maintenancesDocuments);
             const maintenancesTotal = await this.getCollection().countDocuments({vehiculeImmatriculation});
             const maintenances = MaintenanceMapper.toDomainList(maintenancesDocuments);
             return Result.SuccessPaginated<Maintenance>(maintenances, maintenancesTotal, page, limit);

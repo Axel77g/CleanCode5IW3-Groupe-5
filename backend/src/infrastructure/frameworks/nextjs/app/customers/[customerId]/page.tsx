@@ -6,11 +6,11 @@ import {UnregisterCustomerButton} from "@/app/customers/[customerId]/UnregisterC
 import List from "@/components/List";
 import ListItem from "@/components/ListItem";
 
-export default async function CustomerDetailPage(pageProps: {params: any, searchParams:any}) {
-    const {customerId} = await pageProps.params as {customerId: string}
+export default async function CustomerDetailPage(pageProps: { params: any, searchParams: any }) {
+    const {customerId} = await pageProps.params as { customerId: string }
     const result = await showCustomerUseCase({customerId})
     if (!result.success) return <ErrorCallout>{result.error.message}</ErrorCallout>
-    const customer : CustomerDTO = {
+    const customer: CustomerDTO = {
         customerId: result.value.customerId,
         name: result.value.name,
         phoneNumber: result.value.phoneNumber,
@@ -33,10 +33,7 @@ export default async function CustomerDetailPage(pageProps: {params: any, search
             <hr/>
             <br/>
             <div className="flex items-center gap-4">
-
                 <UnregisterCustomerButton customerIdString={customerId}/>
-
-
             </div>
             <br/>
 
@@ -45,7 +42,8 @@ export default async function CustomerDetailPage(pageProps: {params: any, search
             <List>
                 {
                     customer.vehiculeImmatriculations.map((vehiculeImmatriculation, index) => {
-                        return <ListItem link={`/vehicules/${vehiculeImmatriculation}`} key={index}>{vehiculeImmatriculation}</ListItem>
+                        return <ListItem link={`/vehicules/${vehiculeImmatriculation}`}
+                                         key={index}>{vehiculeImmatriculation}</ListItem>
                     })
                 }
             </List>

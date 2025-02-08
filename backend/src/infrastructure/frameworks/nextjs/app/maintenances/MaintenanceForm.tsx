@@ -1,11 +1,11 @@
 "use client"
 
-import React, { useEffect, useState } from "react";
-import { MaintenanceStatusEnum } from "@domain/maintenance/enums/MaintenanceStatusEnum";
-import { Form } from "@/components/Form";
-import { useActionState } from "react";
+import React, {useEffect, useState} from "react";
+import {MaintenanceStatusEnum} from "@domain/maintenance/enums/MaintenanceStatusEnum";
+import {Form} from "@/components/Form";
+import {useActionState} from "react";
 import Input from "@/components/Input";
-import { Button } from "@/components/Button";
+import {Button} from "@/components/Button";
 import Select from "@/components/Select";
 import {registerMaintenanceAction, updateMaintenanceAction} from "@/app/maintenances/actions";
 import ReferenceSelector from "@/components/ReferenceSelector";
@@ -24,7 +24,7 @@ interface MaintenanceRegisterFormProps {
     recommendation?: string,
     status?: MaintenanceStatusEnum,
     date?: Date,
-    maintenanceSpareParts ?: MaintenanceSparePartProps[]
+    maintenanceSpareParts?: MaintenanceSparePartProps[]
 }
 
 interface ActionState extends MaintenanceRegisterFormProps {
@@ -58,8 +58,8 @@ const statusOptions = [
     },
 ];
 
-export default function MaintenanceForm(props: {maintenance ?: MaintenanceRegisterFormProps}) {
-    const edit =    props.maintenance !== undefined;
+export default function MaintenanceForm(props: { maintenance?: MaintenanceRegisterFormProps }) {
+    const edit = props.maintenance !== undefined;
     initialState = {...initialState, ...props.maintenance};
     const [state, formAction] = useActionState<ActionState, FormData>(edit ? updateMaintenanceAction : registerMaintenanceAction, initialState);
     const [garages, setGarages] = useState<{ title: string; value: string }[]>([]);
@@ -125,9 +125,11 @@ export default function MaintenanceForm(props: {maintenance ?: MaintenanceRegist
         temp[index] = maintenanceSparePart;
         setMaintenanceSpareParts(temp);
     }
+
     return (
-        <Form action={formAction} title={edit ? 'Mettre a jour la maintenance' : "Ajouter une maintenance"} state={state}>
-            <input type="hidden" name="maintenanceId" value={state.maintenanceId} />
+        <Form action={formAction} title={edit ? 'Mettre a jour la maintenance' : "Ajouter une maintenance"}
+              state={state}>
+            <input type="hidden" name="maintenanceId" value={state.maintenanceId}/>
             <div className="grid grid-cols-12 gap-6">
                 <div className="col-span-6">
                     <Select
@@ -182,16 +184,16 @@ export default function MaintenanceForm(props: {maintenance ?: MaintenanceRegist
 
                 <div className="col-span-12">
 
-                    { maintenanceSpareParts.map((maintenanceSparePart, index) => (
-                            <MaintenanceSparePartLine
-                                index={index} key={maintenanceSparePart.sparePartReference + index}
-                                maintenanceSparePart={maintenanceSparePart}
-                                onChange={(maintenanceSparePart) => handleChangeMaintenanceSparePart(index, maintenanceSparePart)}
-                                onDelete={() => handleRemoveMaintenanceSparePart(index)}
-                            />
-                        ))
+                    {maintenanceSpareParts.map((maintenanceSparePart, index) => (
+                        <MaintenanceSparePartLine
+                            index={index} key={maintenanceSparePart.sparePartReference + index}
+                            maintenanceSparePart={maintenanceSparePart}
+                            onChange={(maintenanceSparePart) => handleChangeMaintenanceSparePart(index, maintenanceSparePart)}
+                            onDelete={() => handleRemoveMaintenanceSparePart(index)}
+                        />
+                    ))
                     }
-                    <Button  onClick={handleAddMaintenanceSparePart}>Ajouter une piece</Button>
+                    <Button onClick={handleAddMaintenanceSparePart}>Ajouter une piece</Button>
                 </div>
 
                 <div className="col-span-12">
@@ -205,9 +207,14 @@ export default function MaintenanceForm(props: {maintenance ?: MaintenanceRegist
 }
 
 
-function MaintenanceSparePartLine(props: {index: number,maintenanceSparePart : MaintenanceSparePartProps , onChange : (line : any) => void, onDelete ?: (...args : [any]) => void}){
+function MaintenanceSparePartLine(props: {
+    index: number,
+    maintenanceSparePart: MaintenanceSparePartProps,
+    onChange: (line: any) => void,
+    onDelete?: (...args: [any]) => void
+}) {
 
-    function handleChange(e : React.ChangeEvent<HTMLInputElement>){
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         props.onChange({
             ...props.maintenanceSparePart,
             [e.target.name]: e.target.value
@@ -215,10 +222,18 @@ function MaintenanceSparePartLine(props: {index: number,maintenanceSparePart : M
     }
 
     return <div className={"border-solid border-[1px] border-slate-300 rounded p-4 my-2"}>
-        <ReferenceSelector  label={"Pièce détachée"} reference={props.maintenanceSparePart.sparePartReference}  onChange={(sparePartReference) => props.onChange({...props.maintenanceSparePart, sparePartReference})}/>
-        <input name={`maintenanceSpareParts[${props.index}].sparePartReference`} type={"hidden"} value={props.maintenanceSparePart.sparePartReference} onChange={handleChange} />
-        <Input placeholder={"Quantité"} label={"Quantité"} name={`maintenanceSpareParts[${props.index}].quantity`} type={"number"} value={props.maintenanceSparePart.quantity} onChange={handleChange} />
-        <Input placeholder={"Prix unitaire"} label={"Prix unitaire"} name={`maintenanceSpareParts[${props.index}].unitPrice`} type={"number"} value={props.maintenanceSparePart.unitPrice} onChange={handleChange} />
+        <ReferenceSelector label={"Pièce détachée"} reference={props.maintenanceSparePart.sparePartReference}
+                           onChange={(sparePartReference) => props.onChange({
+                               ...props.maintenanceSparePart,
+                               sparePartReference
+                           })}/>
+        <input name={`maintenanceSpareParts[${props.index}].sparePartReference`} type={"hidden"}
+               value={props.maintenanceSparePart.sparePartReference} onChange={handleChange}/>
+        <Input placeholder={"Quantité"} label={"Quantité"} name={`maintenanceSpareParts[${props.index}].quantity`}
+               type={"number"} value={props.maintenanceSparePart.quantity} onChange={handleChange}/>
+        <Input placeholder={"Prix unitaire"} label={"Prix unitaire"}
+               name={`maintenanceSpareParts[${props.index}].unitPrice`} type={"number"}
+               value={props.maintenanceSparePart.unitPrice} onChange={handleChange}/>
         <Button onClick={props.onDelete}>Retirer</Button>
     </div>
 }
