@@ -45,7 +45,7 @@ export class MongoVehiculeBreakdownRepository extends AbstractMongoRepository im
                     .skip((page - 1) * limit)
                     .limit(limit)
                     .toArray();
-                const total = await this.getCollection().countDocuments({vehiculeImmatriculation: vehiculeImmatriculation})
+                const total = await this.getCollection().countDocuments({vehiculeImmatriculation: vehiculeImmatriculation.getValue()})
                 const breakdowns = VehiculeBreakdownMapper.toDomainList(breakdownsDocuments);
                 return Result.SuccessPaginated<VehiculeBreakdown>(breakdowns, total, page, limit);
             }

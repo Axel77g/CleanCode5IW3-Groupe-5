@@ -74,4 +74,17 @@ export class MongoCustomerRepository extends AbstractMongoRepository implements 
             );
         });
     }
+
+    getCustomerByVehiculeImmatriculation(vehiculeImmatriculation: VehiculeImmatriculation): Promise<OptionalResult<Customer>> {
+        return this.catchError(
+            async () => {
+                const customerDocument = await this.getCollection()
+                    .findOne({ vehiculeImmatriculations: { $elemMatch: { $eq: vehiculeImmatriculation.getValue() } } });
+                if (!customerDocument) return Result.SuccessVoid();
+                const customer = CustomerMapper.toDomain(customerDocument);
+                if (customer instanceof ApplicationException) return Result.Failure(customer);
+                return Result.Success<Customer>(customer);
+            }
+        )
+    }
 }

@@ -124,7 +124,7 @@ export class Customer {
             this.phoneNumber,
             this.email,
             this.address,
-            this.vehiculeImmatriculations.filter(vehicule => vehicule !== vehiculeImmatriculation)
+            this.vehiculeImmatriculations.filter(vehicule => vehicule.getValue() !== vehiculeImmatriculation.getValue())
         )
     }
 

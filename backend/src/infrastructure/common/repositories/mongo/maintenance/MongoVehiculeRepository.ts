@@ -29,7 +29,7 @@ export class MongoVehiculeRepository extends AbstractMongoRepository implements 
         return this.catchError(
             async () => {
                 session.startTransaction();
-                await this.getCollection().deleteOne({ immatriculation: immatriculation });
+                await this.getCollection().deleteOne({ immatriculation: immatriculation.getValue() });
                 await session.commitTransaction();
                 return Result.SuccessVoid();
             }

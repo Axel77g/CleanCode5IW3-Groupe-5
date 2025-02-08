@@ -10,4 +10,5 @@ export interface CustomerRepository extends IRepository {
     store(customer: Customer): Promise<VoidResult>;
     delete(customerId: string): Promise<VoidResult>;
     listCustomerVehicules(customerId: string, pagination: PaginatedInput): Promise<PaginatedResult<VehiculeImmatriculation>>;
+    getCustomerByVehiculeImmatriculation(vehiculeImmatriculation: VehiculeImmatriculation): Promise<OptionalResult<Customer>>;
 }
