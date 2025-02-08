@@ -16,7 +16,6 @@ interface CustomerRegisterFormProps {
         postalCode?: string | undefined;
         street?: string | undefined;
     };
-    // @TODO : Add vehiculeImmatriculations
 }
 
 interface ActionState extends CustomerRegisterFormProps {
