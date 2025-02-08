@@ -16,13 +16,8 @@ jobs:
         node-version: '20'
 
     - run: npm install
-      working-directory: backend
     - run: npm run eslint
-      working-directory: backend
     - run: npm run build
-      working-directory: backend
-
-
 
   test:
     needs: build
@@ -33,6 +28,4 @@ jobs:
       with:
         node-version: '20'
     - run: npm install
-      working-directory: backend
     - run: npm run test
-      working-directory: backend
