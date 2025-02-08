@@ -43,8 +43,7 @@ export class MongoMaintenanceRepository extends AbstractMongoRepository implemen
     listVehiculeMaintenance(vehiculeImmatriculation: VehiculeImmatriculation, pagination: PaginatedInput): Promise<PaginatedResult<Maintenance>> {
         const {page, limit} = pagination;
         return this.catchError(async () => {
-            const maintenancesDocuments = await this.getCollection().find({vehiculeImmatriculation}).skip((page - 1) * limit).limit(limit).toArray();
-            console.log(maintenancesDocuments);
+            const maintenancesDocuments = await this.getCollection().find({vehiculeImmatriculation : vehiculeImmatriculation.getValue()}).skip((page - 1) * limit).limit(limit).toArray();
             const maintenancesTotal = await this.getCollection().countDocuments({vehiculeImmatriculation});
             const maintenances = MaintenanceMapper.toDomainList(maintenancesDocuments);
             return Result.SuccessPaginated<Maintenance>(maintenances, maintenancesTotal, page, limit);
@@ -64,14 +63,14 @@ export class MongoMaintenanceRepository extends AbstractMongoRepository implemen
                     .limit(limit)
                     .toArray();
 
-                const maintenancesTotal = await this.getCollection().countDocuments({ garageSiret });
+                const maintenancesTotal = await this.getCollection().countDocuments({ garageSiret: garageSiret.getValue() });
                 const maintenances = MaintenanceMapper.toDomainList(maintenancesDocuments);
 
                 return Result.SuccessPaginated(maintenances, maintenancesTotal, page, limit);
             }) as Promise<ListGarageMaintenancesResult<T>>;
         } else {
             return this.catchError(async () => {
-                const maintenancesDocuments = await this.getCollection().find({ garageSiret }).toArray();
+                const maintenancesDocuments = await this.getCollection().find({ garageSiret: garageSiret.getValue() }).toArray();
                 const maintenances = MaintenanceMapper.toDomainList(maintenancesDocuments);
 
                 return Result.Success(maintenances);
