@@ -9,6 +9,7 @@ import {
 import {Result, VoidResult} from "@shared/Result";
 import {ApplicationException, NotFoundEntityException} from "@shared/ApplicationException";
 import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
+import {DriverPutDocumentEvent} from "@domain/testDrive/Events/DriverPutDocumentEvent";
 
 export class DriversProjection extends AbstractProjection {
     constructor(private _driverRepository: DriverRepository) {
@@ -19,12 +20,14 @@ export class DriversProjection extends AbstractProjection {
     init(projectionJobScheduler: ProjectionJobScheduler) {
         projectionJobScheduler.schedule(DriverCreatedEvent.type, this.constructor.name)
         projectionJobScheduler.schedule(DriverUpdatedEvent.type, this.constructor.name)
+        projectionJobScheduler.schedule(DriverPutDocumentEvent.type, this.constructor.name)
     }
 
     bindEvents(){
         return {
             [DriverCreatedEvent.type]: this.applyDriverCreatedEvent,
-            [DriverUpdatedEvent.type]: this.applyDriverUpdatedEvent
+            [DriverUpdatedEvent.type]: this.applyDriverUpdatedEvent,
+            [DriverPutDocumentEvent.type]: this.applyDriverPutDocumentEvent
         }
     }
 
@@ -48,7 +51,27 @@ export class DriversProjection extends AbstractProjection {
             email: event.payload.email || driverResponse.value.email,
             birthDate: driverResponse.value.birthDate,
             driverLicensedAt: driverResponse.value.driverLicensedAt,
-            documents: []
+            documents: driverResponse.value.documents
+        })
+        if(driver instanceof ApplicationException) return Result.Failure(driver)
+        await this._driverRepository.store(driver)
+        return Result.SuccessVoid()
+    }
+
+    async applyDriverPutDocumentEvent(event : DriverPutDocumentEvent) : Promise<VoidResult> {
+        const driverLicenseId = DriverLicenseId.create(event.payload.driverLicenseId)
+        if(driverLicenseId instanceof ApplicationException) return Result.Failure(driverLicenseId)
+        const driverResponse = await  this._driverRepository.getByLicenseId(driverLicenseId)
+        if(!driverResponse.success) return driverResponse
+        if(driverResponse.empty) return Result.Failure(NotFoundEntityException.create("Driver not found during update projection, this should not happen, please check the event store"))
+        const driver = Driver.create({
+            driverLicenseId: driverResponse.value.driverLicenseId,
+            firstName: driverResponse.value.firstName,
+            lastName: driverResponse.value.lastName,
+            email: driverResponse.value.email,
+            birthDate: driverResponse.value.birthDate,
+            driverLicensedAt: driverResponse.value.driverLicensedAt,
+            documents: event.payload.documents
         })
         if(driver instanceof ApplicationException) return Result.Failure(driver)
         await this._driverRepository.store(driver)
