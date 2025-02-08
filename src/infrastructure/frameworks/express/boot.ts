@@ -157,6 +157,13 @@ import {
 import {
     unregisterGarageUseCase
 } from "@infrastructureCore/useCaseImplementation/maintenance/garage/unregisterGarageUseCase";
+import {putDriverDocumentsUseCase} from "@infrastructureCore/useCaseImplementation/testDrive/putDriverDocumentsUseCase";
+import {putDriverDocumentsRequest} from "@infrastructureCore/requests/testDrive/putDriverDocumentsRequest";
+
+import multer from "multer";
+const upload = multer({
+    limits: { fileSize: 10 * 1024 * 1024 },
+});
 
 export const boot = () => {
     // Inventory Management Subdomain
@@ -181,6 +188,7 @@ export const boot = () => {
     get('/drivers/:driverLicenseId', showDriverUseCase, showDriverRequest);
     post('/drivers', registerDriverUseCase, registerDriverRequest);
     patch('/drivers/:driverLicenseId', patchDriverUseCase, patchDriverRequest);
+    put('/drivers/:driverLicenseId/documents', putDriverDocumentsUseCase, putDriverDocumentsRequest, [upload.array('files')]);
 
     get('/drivers/:driverLicenseId/incidents', listDriverIncidentsUseCase, paginatedWithDriverLicenseIdRequest);
     get("/incidents", listDriverIncidentsUseCase, paginatedWithDriverLicenseIdRequest);

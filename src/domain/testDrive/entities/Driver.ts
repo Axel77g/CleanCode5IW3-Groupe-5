@@ -3,6 +3,7 @@ import {DriverDocuments} from "../value-object/DriverDocuments";
 import {ApplicationException} from "@shared/ApplicationException";
 import {DriverCreatedEvent} from "@domain/testDrive/Events/DriverCreatedEvent";
 import {DriverUpdatedEvent} from "@domain/testDrive/Events/DriverUpdatedEvent";
+import {DriverPutDocumentEvent} from "@domain/testDrive/Events/DriverPutDocumentEvent";
 
 export interface DriverDTO{
     driverLicenseId: string;
@@ -29,6 +30,31 @@ export class Driver{
         public readonly driverLicensedAt: Date,
         public readonly documents : DriverDocuments[]
     ) {}
+
+
+    addDocument(document: DriverDocuments){
+        return new Driver(
+            this.driverLicenseId,
+            this.firstName,
+            this.lastName,
+            this.email,
+            this.birthDate,
+            this.driverLicensedAt,
+            [...this.documents, document]
+        )
+    }
+
+    removeDocument(document: DriverDocuments){
+        return new Driver(
+            this.driverLicenseId,
+            this.firstName,
+            this.lastName,
+            this.email,
+            this.birthDate,
+            this.driverLicensedAt,
+            this.documents.filter(doc => doc.hash !== document.hash)
+        )
+    }
 
 
     static fromObject(object: DriverDTO) : Driver | ApplicationException {
@@ -101,6 +127,19 @@ export class Driver{
             firstName: this.firstName,
             lastName: this.lastName,
             email: this.email
+        })
+    }
+
+    putDocumentsEvent(): DriverPutDocumentEvent {
+        return new DriverPutDocumentEvent({
+            driverLicenseId: this.driverLicenseId.getValue(),
+            documents: this.documents.map(doc => ({
+                name: doc.name,
+                type: doc.type,
+                description: doc.description,
+                hash: doc.hash,
+                extension: doc.extension
+            }))
         })
     }
 

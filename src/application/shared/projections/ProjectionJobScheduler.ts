@@ -1,6 +1,6 @@
 import {ProjectionJobRepository} from "@application/shared/repositories/ProjectionJobRepository";
-import {EventObserver} from "@infrastructure/common/observers/EventObserver";
 import {ProjectionJob} from "@application/shared/projections/ProjectionJob";
+import {IEventObserver} from "@application/shared/observers/IEventObserver";
 import {randomUUID} from "node:crypto";
 
 /**
@@ -10,7 +10,7 @@ import {randomUUID} from "node:crypto";
 export class ProjectionJobScheduler{
     constructor(
         private _projectionJobRepository : ProjectionJobRepository,
-        private _eventObserver: EventObserver)
+        private _eventObserver: IEventObserver)
     {}
     schedule(eventType: string, projectionName : string){
         this._eventObserver.subscribe(eventType, async ({eventId}) => {

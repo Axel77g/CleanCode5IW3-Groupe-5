@@ -111,18 +111,26 @@ export function registerRoute<T extends ZodSchema<any>>(
     method: 'get' | 'post' | 'put' | 'delete' | 'patch',
     path: string,
     useCaseImplementation: UseCaseImplementation<T>,
-    inputSchema: T
+    inputSchema: T,
+    middlewares: any[] = []
 ) {
 
     createPostManItem(method, path, inputSchema);
-    server[method](path, async (req: Request, res: ExpressResponse) => {
+    server[method](path, ...middlewares , async (req: Request, res: ExpressResponse) => {
         try {
+            // Check if the body as a key json if it case it will replace the body for this request (use by request in multipart/form-data with file)
+            const json = req.body?.json ? JSON.parse(req.body.json) : {};
+            const body = json || req.body;
             const input = inputSchema.parse({
-                ...req.body,
+                ...body,
                 ...req.query,
                 ...req.params
             });
-            const result = await useCaseImplementation(input);
+
+            const files = req?.files ? Object.values(req?.files).map((multerFile : any) =>{
+                return new File([multerFile.buffer], multerFile.originalname, {type: multerFile.mimetype})
+            }) : [];
+            const result = await useCaseImplementation(input, files as File[]);
             let response;
 
             const errorCase : Record<string, (e : Error) => Response> = {
@@ -149,22 +157,22 @@ export function registerRoute<T extends ZodSchema<any>>(
 
 
 
-export function get<T extends ZodSchema<any>>(path: string, useCaseImplementation: UseCaseImplementation<T>, inputSchema: T) {
-    registerRoute('get', path, useCaseImplementation, inputSchema);
+export function get<T extends ZodSchema<any>>(path: string, useCaseImplementation: UseCaseImplementation<T>, inputSchema: T, middlewares: any[] = []) {
+    registerRoute('get', path, useCaseImplementation, inputSchema, middlewares);
 }
 
-export function post<T extends ZodSchema<any>>(path: string, useCaseImplementation: UseCaseImplementation<T>, inputSchema: T) {
-    registerRoute('post', path, useCaseImplementation, inputSchema);
+export function post<T extends ZodSchema<any>>(path: string, useCaseImplementation: UseCaseImplementation<T>, inputSchema: T, middlewares: any[] = []) {
+    registerRoute('post', path, useCaseImplementation, inputSchema, middlewares);
 }
 
-export function put<T extends ZodSchema<any>>(path: string, useCaseImplementation: UseCaseImplementation<T>, inputSchema: T) {
-    registerRoute('put', path, useCaseImplementation, inputSchema);
+export function put<T extends ZodSchema<any>>(path: string, useCaseImplementation: UseCaseImplementation<T>, inputSchema: T, middlewares: any[] = []) {
+    registerRoute('put', path, useCaseImplementation, inputSchema, middlewares);
 }
 
-export function patch<T extends ZodSchema<any>>(path: string, useCaseImplementation: UseCaseImplementation<T>, inputSchema: T) {
-    registerRoute('patch', path, useCaseImplementation, inputSchema);
+export function patch<T extends ZodSchema<any>>(path: string, useCaseImplementation: UseCaseImplementation<T>, inputSchema: T, middlewares: any[] = []) {
+    registerRoute('patch', path, useCaseImplementation, inputSchema, middlewares);
 }
 
-export function del<T extends ZodSchema<any>>(path: string, useCaseImplementation: UseCaseImplementation<T>, inputSchema: T) {
-    registerRoute('delete', path, useCaseImplementation, inputSchema);
+export function del<T extends ZodSchema<any>>(path: string, useCaseImplementation: UseCaseImplementation<T>, inputSchema: T, middlewares: any[] = []) {
+    registerRoute('delete', path, useCaseImplementation, inputSchema, middlewares);
 }
