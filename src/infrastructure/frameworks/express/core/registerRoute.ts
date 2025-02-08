@@ -119,7 +119,7 @@ export function registerRoute<T extends ZodSchema<any>>(
     server[method](path, ...middlewares , async (req: Request, res: ExpressResponse) => {
         try {
             // Check if the body as a key json if it case it will replace the body for this request (use by request in multipart/form-data with file)
-            const json = req.body?.json ? JSON.parse(req.body.json) : {};
+            const json = req.body?.json ? JSON.parse(req.body.json) : null;
             const body = json || req.body;
             const input = inputSchema.parse({
                 ...body,

@@ -5,6 +5,7 @@ import {ErrorCallout} from "@/components/ErrorCallout";
 import {
     AssignVehicleBreakdownForm
 } from "@/app/vehicles/[immatriculation]/breakdowns/[vehicleBreakdownId]/AssignVehicleBreakdownForm";
+import Link from "next/link";
 
 export default async function CustomerDetailPage(pageProps: { params: any, searchParams: any }) {
     const {vehicleBreakdownId, immatriculation} = await pageProps.params
@@ -19,8 +20,9 @@ export default async function CustomerDetailPage(pageProps: { params: any, searc
             <div className="flex flex-col gap-2">
                 <ul>
                     <li>Description : <b>{value.description}</b></li>
-                    <li>Date de maintenance : <b>{value.date.toLocaleDateString()}</b></li>
+                    <li>Date de la panne : <b>{value.date.toLocaleDateString()}</b></li>
                     <li>Immatriculation du véhicule : <b>{value.vehicleImmatriculation.getValue()}</b></li>
+                    <li> Statut : {result.value.maintenanceId ? <Link className={"text-blue-500"} href={`/maintenances/${result.value.maintenanceId}`}>Assignée à la maintenance #{result.value.maintenanceId}</Link> : <b>Non assignée</b>}</li>
                 </ul>
                 <AssignVehicleBreakdownForm vehicleBreakdownId={vehicleBreakdownId} immatriculation={immatriculation}/>
             </div>

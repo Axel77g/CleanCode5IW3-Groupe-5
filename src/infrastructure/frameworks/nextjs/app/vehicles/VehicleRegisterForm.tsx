@@ -26,8 +26,8 @@ interface VehicleRegisterFormProps {
     };
     status?: VehicleStatusEnum;
     warranty?: {
-        periodStart?: string;
-        periodEnd?: string;
+        startDate?: string;
+        endDate?: string;
     };
 }
 
@@ -105,8 +105,8 @@ export default function VehicleRegisterForm() {
 
                 <div className="border-l border-gray-300 pl-4">
                     <label className="block font-semibold text-lg text-gray-700 pb-3">Garantie</label>
-                    <Input type="date" name="warranty.startDate" value={state?.warranty?.periodStart} label={"Début de la garantie"} placeholder={"01/01/2025"}/>
-                    <Input type="date" name="warranty.endDate" value={state?.warranty?.periodEnd}label={"Fin de la garantie"} placeholder={"01/01/2027"} />
+                    <Input type="date" name="warranty.startDate" value={state?.warranty?.startDate} label={"Début de la garantie"} placeholder={"01/01/2025"}/>
+                    <Input type="date" name="warranty.endDate" value={state?.warranty?.endDate} label={"Fin de la garantie"} placeholder={"01/01/2027"} />
                 </div>
             </div>
 

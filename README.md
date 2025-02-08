@@ -3,15 +3,40 @@
 ## Fonctionnalités Importantes :
 
 - Gestions des véhicules et des pannes
-- Gestion de la maintenance + Notifications Maintenance (via cron et commandes CLI)
+- Gestion des maintenances + Notifications maintenance (via cron et commandes CLI)
 - Gestions des clients et des conducteurs
 - Gestions des essais et des incidents lors des essais
-- Gestions des stocks concessionnaires et commandes de pieces + Notifications stock bas
+- Gestions des stocks concessionnaires et commandes de pièces + Notifications stock bas
 - Upload de fichiers
 - Commandes CLI
 - API REST express
 - Application Next JS
 - Tests du domaine (sous domaine testDrive et inventoryManagement pour exemple) 
+
+## Installation
+
+Installer les dépendances de chaque framework : 
+```bash
+npm install
+cd src/infrastructure/frameworks/express
+npm install
+cd ../nextjs
+npm install
+```
+
+## Lancements
+
+API Express : (port 3000)
+```bash
+npm run dev:express
+```
+
+Ou
+
+Application Next JS : (port 8080)
+```bash
+npm run dev:next
+```
 
 ## Séparation en sous-domaines
 

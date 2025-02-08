@@ -50,63 +50,13 @@ export class Vehicle {
         INVALID_BRAND: new ApplicationException('INVALID_BRAND', 'Brand is not valid, must be Triumph'),
         INVALID_YEAR: new ApplicationException('INVALID_YEAR', 'Year is not valid, must be between 1902 and current year'),
         INVALID_MILEAGE: new ApplicationException('INVALID_MILEAGE', 'Mileage is not valid, must be greater than 0'),
+        CANNOT_HAVE_A_MILEAGE_LESS_THAN_PREVIOUS: new ApplicationException('CANNOT_HAVE_A_MILEAGE_LESS_THAN_PREVIOUS', 'Mileage cannot be less than previous mileage'),
         INVALID_LAST_MILEAGE: new ApplicationException('INVALID_LAST_MILEAGE', 'Last maintenances mileage is not valid must be less than current mileage'),
         INVALID_MODEL: new ApplicationException('INVALID_MODEL', 'Model is not valid'),
         INVALID_STATUS: new ApplicationException('INVALID_STATUS', 'Status is not valid'),
         INVALID_WARRANTY: new ApplicationException('INVALID_WARRANTY', 'Warranty is not valid, cannot be more than 2 years')
     }
 
-    available(): Vehicle | ApplicationException {
-        if (this.status === VehicleStatusEnum.AVAILABLE) {
-            return new ApplicationException('Vehicle', 'Vehicle is already available');
-        }
-        return new Vehicle(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceInterval, VehicleStatusEnum.AVAILABLE, this.warranty);
-    }
-
-    sold(): Vehicle | ApplicationException {
-        if (this.status === VehicleStatusEnum.SOLD) {
-            return new ApplicationException('Vehicle', 'Vehicle is already sold');
-        }
-        return new Vehicle(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceInterval, VehicleStatusEnum.SOLD, this.warranty);
-    }
-
-    maintenance(): Vehicle | ApplicationException {
-        if (this.status === VehicleStatusEnum.IN_MAINTENANCE) {
-            return new ApplicationException('Vehicle', 'Vehicle is already in maintenances');
-        }
-        return new Vehicle(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceInterval, VehicleStatusEnum.IN_MAINTENANCE, this.warranty);
-    }
-
-    testDrive(): Vehicle | ApplicationException {
-        if (this.status === VehicleStatusEnum.IN_TEST_DRIVE) {
-            return new ApplicationException('Vehicle', 'Vehicle is already in test drive');
-        }
-        return new Vehicle(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceInterval, VehicleStatusEnum.IN_TEST_DRIVE, this.warranty);
-    }
-
-    reserved(): Vehicle | ApplicationException {
-        if (this.status === VehicleStatusEnum.RESERVED) {
-            return new ApplicationException('Vehicle', 'Vehicle is already reserved');
-        }
-        return new Vehicle(this.immatriculation, this.brand, this.model, this.year, this.vin, this.mileage, this.maintenanceInterval, VehicleStatusEnum.RESERVED, this.warranty);
-    }
-
-    applyStatus(status: VehicleStatusEnum): Vehicle | ApplicationException {
-        switch (status) {
-            case VehicleStatusEnum.AVAILABLE:
-                return this.available();
-            case VehicleStatusEnum.SOLD:
-                return this.sold();
-            case VehicleStatusEnum.IN_MAINTENANCE:
-                return this.maintenance();
-            case VehicleStatusEnum.IN_TEST_DRIVE:
-                return this.testDrive();
-            case VehicleStatusEnum.RESERVED:
-                return this.reserved();
-            default:
-                return Vehicle.ApplicationExceptions.INVALID_STATUS;
-        }
-    }
 
     static fromObject(vehicle: VehicleDTO): Vehicle | ApplicationException {
         const immatriculation = VehicleImmatriculation.create(vehicle.immatriculation);
@@ -188,7 +138,7 @@ export class Vehicle {
         status?: VehicleStatusEnum
         warranty?: Period,
     }) {
-        if (object.maintenanceInterval && object.maintenanceInterval.mileage > this.mileage) return Vehicle.ApplicationExceptions.INVALID_LAST_MILEAGE;
+        if (object.maintenanceInterval && object.maintenanceInterval.mileage > this.mileage) return Vehicle.ApplicationExceptions.CANNOT_HAVE_A_MILEAGE_LESS_THAN_PREVIOUS;
         if (object.maintenanceInterval && object.mileage && object.maintenanceInterval.lastMaintenance.mileage > this.mileage) return Vehicle.ApplicationExceptions.INVALID_LAST_MILEAGE;
         return new Vehicle(
             this.immatriculation,

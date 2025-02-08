@@ -6,7 +6,7 @@ import {stringToNumber} from "@infrastructureCore/requests/stringToNumber";
 
 export const registerVehicleRequest = z.object({
     immatriculation: z.string(),
-    model: z.nativeEnum(VehicleModelEnum),
+    model: z.nativeEnum(VehicleModelEnum,{message: "Invalid Model"}),
     year: stringToNumber,
     vin: z.string(),
     mileage: stringToNumber,
@@ -18,7 +18,7 @@ export const registerVehicleRequest = z.object({
             mileage: stringToNumber,
         }).optional(),
     }),
-    status: z.nativeEnum(VehicleStatusEnum),
+    status: z.nativeEnum(VehicleStatusEnum, {message: "Invalid status"}),
     warranty: z.object({
         startDate: dateParser,
         endDate: dateParser,
