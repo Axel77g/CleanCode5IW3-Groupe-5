@@ -127,8 +127,6 @@ export function registerRoute<T extends ZodSchema<any>>(
                 ...req.params
             });
 
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
             const files = req?.files ? Object.values(req?.files).map((multerFile : any) =>{
                 return new File([multerFile.buffer], multerFile.originalname, {type: multerFile.mimetype})
             }) : [];
