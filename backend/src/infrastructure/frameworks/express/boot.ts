@@ -67,8 +67,8 @@ import {
 } from "@infrastructureCore/useCaseImplementation/maintenance/customer/unregisterCustomerUseCase";
 import {listCustomerUseCase} from "@infrastructureCore/useCaseImplementation/maintenance/customer/listCustomerUseCase";
 import {
-    listCustomerVehiculesUseCase
-} from "@infrastructureCore/useCaseImplementation/maintenance/customer/listCustomerVehiculesUseCase";
+    listCustomerVehiclesUseCase
+} from "@infrastructureCore/useCaseImplementation/maintenance/customer/listCustomerVehiclesUseCase";
 import {
     paginatedWithCustomerIdRequest
 } from "@infrastructureCore/requests/maintenance/customer/paginatedWithCustomerIdRequest";
@@ -106,54 +106,54 @@ import {
 } from "@infrastructureCore/useCaseImplementation/maintenance/maintenance/updateMaintenanceUseCase";
 import {updateMaintenanceRequest} from "@infrastructureCore/requests/maintenance/maintenance/updateMaintenanceRequest";
 import {
-    listVehiculesUseCase
-} from "@infrastructureCore/useCaseImplementation/maintenance/vehicule/listVehiculesUseCase";
+    listVehiclesUseCase
+} from "@infrastructureCore/useCaseImplementation/maintenance/vehicle/listVehiclesUseCase";
 import {
-    registerVehiculeUseCase
-} from "@infrastructureCore/useCaseImplementation/maintenance/vehicule/registerVehiculeUseCase";
-import {registerVehiculeRequest} from "@infrastructureCore/requests/maintenance/vehicule/registerVehiculeRequest";
-import {immatriculationRequest} from "@infrastructureCore/requests/maintenance/vehicule/vehiculeImmatriculationRequest";
-import {showVehiculeUseCase} from "@infrastructureCore/useCaseImplementation/maintenance/vehicule/showVehiculeUseCase";
+    registerVehicleUseCase
+} from "@infrastructureCore/useCaseImplementation/maintenance/vehicle/registerVehicleUseCase";
+import {registerVehicleRequest} from "@infrastructureCore/requests/maintenance/vehicle/registerVehicleRequest";
+import {immatriculationRequest} from "@infrastructureCore/requests/maintenance/vehicle/vehicleImmatriculationRequest";
+import {showVehicleUseCase} from "@infrastructureCore/useCaseImplementation/maintenance/vehicle/showVehicleUseCase";
 import {
-    unregisterVehiculeUseCase
-} from "@infrastructureCore/useCaseImplementation/maintenance/vehicule/unregisterVehiculeUseCase";
+    unregisterVehicleUseCase
+} from "@infrastructureCore/useCaseImplementation/maintenance/vehicle/unregisterVehicleUseCase";
 import {
-    updateVehiculeUseCase
-} from "@infrastructureCore/useCaseImplementation/maintenance/vehicule/updateVehiculeUseCase";
-import {updateVehiculeRequest} from "@infrastructureCore/requests/maintenance/vehicule/updateVehiculeRequest";
+    updateVehicleUseCase
+} from "@infrastructureCore/useCaseImplementation/maintenance/vehicle/updateVehicleUseCase";
+import {updateVehicleRequest} from "@infrastructureCore/requests/maintenance/vehicle/updateVehicleRequest";
 import {
-    listVehiculeMaintenanceUseCase
-} from "@infrastructureCore/useCaseImplementation/maintenance/vehicule/listVehiculeMaintenanceUseCase";
+    listVehicleMaintenanceUseCase
+} from "@infrastructureCore/useCaseImplementation/maintenance/vehicle/listVehicleMaintenanceUseCase";
 import {
     paginatedWithImmatriculationRequest
-} from "@infrastructureCore/requests/maintenance/vehicule/paginatedWithImmatriculationRequest";
+} from "@infrastructureCore/requests/maintenance/vehicle/paginatedWithImmatriculationRequest";
 import {
-    listVehiculesBreakdownUseCase
-} from "@infrastructureCore/useCaseImplementation/maintenance/vehicule/listVehiculesBreakdownUseCase";
+    listVehiclesBreakdownUseCase
+} from "@infrastructureCore/useCaseImplementation/maintenance/vehicle/listVehiclesBreakdownUseCase";
 import {
-    assignVehiculeToCustomerRequest
-} from "@infrastructureCore/requests/maintenance/vehicule/assignVehiculeToCustomerRequest";
+    assignVehicleToCustomerRequest
+} from "@infrastructureCore/requests/maintenance/vehicle/assignVehicleToCustomerRequest";
 import {
-    assignVehiculeToCustomerUseCase
-} from "@infrastructureCore/useCaseImplementation/maintenance/vehicule/assignVehiculeToCustomerUseCase";
+    assignVehicleToCustomerUseCase
+} from "@infrastructureCore/useCaseImplementation/maintenance/vehicle/assignVehicleToCustomerUseCase";
 import {
-    showVehiculeBreakdownUseCase
-} from "@infrastructureCore/useCaseImplementation/maintenance/vehiculeBreakdown/showVehiculeBreakdownUseCase";
+    showVehicleBreakdownUseCase
+} from "@infrastructureCore/useCaseImplementation/maintenance/vehicleBreakdown/showVehicleBreakdownUseCase";
 import {
-    showVehiculeBreakdownRequest
-} from "@infrastructureCore/requests/maintenance/vehiculeBreakdown/showVehiculeBreakdownRequest";
+    showVehicleBreakdownRequest
+} from "@infrastructureCore/requests/maintenance/vehicleBreakdown/showVehicleBreakdownRequest";
 import {
-    registerVehiculeBreakdownRequest
-} from "@infrastructureCore/requests/maintenance/vehiculeBreakdown/registerVehiculeBreakdownRequest";
+    registerVehicleBreakdownRequest
+} from "@infrastructureCore/requests/maintenance/vehicleBreakdown/registerVehicleBreakdownRequest";
 import {
-    registerVehiculeBreakdownUseCase
-} from "@infrastructureCore/useCaseImplementation/maintenance/vehiculeBreakdown/registerVehiculeBreakdownUseCase";
+    registerVehicleBreakdownUseCase
+} from "@infrastructureCore/useCaseImplementation/maintenance/vehicleBreakdown/registerVehicleBreakdownUseCase";
 import {
-    assignVehiculeBreakdownToMaintenanceUseCase
-} from "@infrastructureCore/useCaseImplementation/maintenance/vehiculeBreakdown/assignVehiculeBreakdownToMaintenanceUseCase";
+    assignVehicleBreakdownToMaintenanceUseCase
+} from "@infrastructureCore/useCaseImplementation/maintenance/vehicleBreakdown/assignVehicleBreakdownToMaintenanceUseCase";
 import {
-    assignVehiculeBreakdownToMaintenanceRequest
-} from "@infrastructureCore/requests/maintenance/vehiculeBreakdown/assignVehiculeBreakdownToMaintenanceRequest";
+    assignVehicleBreakdownToMaintenanceRequest
+} from "@infrastructureCore/requests/maintenance/vehicleBreakdown/assignVehicleBreakdownToMaintenanceRequest";
 import {
     unregisterGarageUseCase
 } from "@infrastructureCore/useCaseImplementation/maintenance/garage/unregisterGarageUseCase";
@@ -195,7 +195,7 @@ export const boot = () => {
     post('/customers', registerCustomerUseCase,  registerCustomerRequest);
     del('/customers/:customerId', unregisterCustomerUseCase, customerIdRequest);
     patch('/customers/:customerId', updateCustomerUseCase,  updateCustomerRequest);
-    get("/customers/:customerId/vehicles", listCustomerVehiculesUseCase, paginatedWithCustomerIdRequest);
+    get("/customers/:customerId/vehicles", listCustomerVehiclesUseCase, paginatedWithCustomerIdRequest);
 
     get("/garages", listGarageUseCase , paginatedRequest);
     get("/garages/:siret", showGarageUseCase , siretRequest);
@@ -208,18 +208,18 @@ export const boot = () => {
     get("/maintenances/:maintenanceId", showMaintenanceUseCase, showMaintenanceRequest);
     patch("/maintenances/:maintenanceId", updateMaintenanceUseCase, updateMaintenanceRequest);
 
-    get("/vehicles", listVehiculesUseCase, paginatedRequest);
-    post("/vehicles", registerVehiculeUseCase, registerVehiculeRequest);
-    get("/vehicles/:immatriculation", showVehiculeUseCase, immatriculationRequest);
-    del("/vehicles/:immatriculation", unregisterVehiculeUseCase, immatriculationRequest);
-    patch("/vehicles/:immatriculation", updateVehiculeUseCase, updateVehiculeRequest);
-    get('/vehicles/:immatriculation/maintenances', listVehiculeMaintenanceUseCase, paginatedWithImmatriculationRequest)
-    get('/vehicles/:immatriculation/breakdowns', listVehiculesBreakdownUseCase, paginatedWithImmatriculationRequest)
-    post("/vehicles/:vehiculeImmatriculation/assign-customer", assignVehiculeToCustomerUseCase, assignVehiculeToCustomerRequest);
+    get("/vehicles", listVehiclesUseCase, paginatedRequest);
+    post("/vehicles", registerVehicleUseCase, registerVehicleRequest);
+    get("/vehicles/:immatriculation", showVehicleUseCase, immatriculationRequest);
+    del("/vehicles/:immatriculation", unregisterVehicleUseCase, immatriculationRequest);
+    patch("/vehicles/:immatriculation", updateVehicleUseCase, updateVehicleRequest);
+    get('/vehicles/:immatriculation/maintenances', listVehicleMaintenanceUseCase, paginatedWithImmatriculationRequest)
+    get('/vehicles/:immatriculation/breakdowns', listVehiclesBreakdownUseCase, paginatedWithImmatriculationRequest)
+    post("/vehicles/:vehicleImmatriculation/assign-customer", assignVehicleToCustomerUseCase, assignVehicleToCustomerRequest);
 
-    get("/vehicle-breakdowns/:vehiculeBreakdownId", showVehiculeBreakdownUseCase, showVehiculeBreakdownRequest)
-    post("/vehicle-breakdowns", registerVehiculeBreakdownUseCase, registerVehiculeBreakdownRequest)
-    post("/vehicle-breakdowns/:vehiculeBreakdownId/assign-maintenance", assignVehiculeBreakdownToMaintenanceUseCase, assignVehiculeBreakdownToMaintenanceRequest)
+    get("/vehicle-breakdowns/:vehicleBreakdownId", showVehicleBreakdownUseCase, showVehicleBreakdownRequest)
+    post("/vehicle-breakdowns", registerVehicleBreakdownUseCase, registerVehicleBreakdownRequest)
+    post("/vehicle-breakdowns/:vehicleBreakdownId/assign-maintenance", assignVehicleBreakdownToMaintenanceUseCase, assignVehicleBreakdownToMaintenanceRequest)
 
     savePostManCollection({
         baseUrl: 'http://localhost:3000',

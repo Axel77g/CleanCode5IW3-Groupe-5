@@ -1,14 +1,14 @@
 import {Maintenance, MaintenanceDTO} from "@domain/maintenance/entities/Maintenance";
 import {MappedEntity} from "@infrastructure/common/entityMappers/MappedEntity";
-import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
+import {VehicleImmatriculation} from "@domain/maintenance/value-object/VehicleImmatriculation";
 import {ApplicationException} from "@shared/ApplicationException";
 import {Siret} from "@domain/shared/value-object/Siret";
 import {MaintenanceSparePart} from "@domain/maintenance/value-object/MaintenanceSparePart";
 
 export class MaintenanceMapper {
     public static toDomain(maintenance: any): Maintenance | ApplicationException {
-        const vehiculeImmatriculation = VehiculeImmatriculation.create(maintenance.vehiculeImmatriculation);
-        if (vehiculeImmatriculation instanceof ApplicationException) return vehiculeImmatriculation;
+        const vehicleImmatriculation = VehicleImmatriculation.create(maintenance.vehicleImmatriculation);
+        if (vehicleImmatriculation instanceof ApplicationException) return vehicleImmatriculation;
         const garageSiret = maintenance.garageSiret !== null ? Siret.create(maintenance.garageSiret) : null;
         if(garageSiret instanceof ApplicationException) return garageSiret;
 
@@ -23,7 +23,7 @@ export class MaintenanceMapper {
 
         return Maintenance.create({
             maintenanceId: maintenance.maintenanceId,
-            vehiculeImmatriculation,
+            vehicleImmatriculation,
             garageSiret,
             status : maintenance.status,
             maintenanceSpareParts : maintenanceSpareParts as MaintenanceSparePart[],
@@ -41,7 +41,7 @@ export class MaintenanceMapper {
     public static toPersistence(maintenance: Maintenance): MappedEntity<MaintenanceDTO> {
         return new MappedEntity<MaintenanceDTO>({
             maintenanceId: maintenance.maintenanceId,
-            vehiculeImmatriculation: maintenance.vehiculeImmatriculation.getValue(),
+            vehicleImmatriculation: maintenance.vehicleImmatriculation.getValue(),
             garageSiret: maintenance.garageSiret?.getValue() || null,
             status: maintenance.status,
             maintenanceSpareParts: maintenance.maintenanceSpareParts,

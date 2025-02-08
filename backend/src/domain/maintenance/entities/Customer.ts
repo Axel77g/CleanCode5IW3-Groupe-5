@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { RegisterCustomerEvent } from "../events/customer/RegisterCustomerEvent";
 import { UnregisterCustomerEvent } from "../events/customer/UnregisterCustomerEvent";
 import { UpdateCustomerEvent } from "../events/customer/UpdateCustomerEvent";
-import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
+import {VehicleImmatriculation} from "@domain/maintenance/value-object/VehicleImmatriculation";
 import {Address, AddressDTO} from "@domain/shared/value-object/Address";
 
 export interface CustomerDTO {
@@ -12,7 +12,7 @@ export interface CustomerDTO {
     phoneNumber: string;
     email: string;
     address: AddressDTO;
-    vehiculeImmatriculations: string[];
+    vehicleImmatriculations: string[];
 }
 
 export class Customer {
@@ -22,7 +22,7 @@ export class Customer {
         public readonly phoneNumber: string,
         public readonly email: string,
         public readonly address: Address,
-        public readonly vehiculeImmatriculations : VehiculeImmatriculation[]
+        public readonly vehicleImmatriculations : VehicleImmatriculation[]
     ) { }
 
     static fromObject(object: CustomerDTO): Customer | ApplicationException {
@@ -31,9 +31,9 @@ export class Customer {
             return address;
         }
 
-        const vehiculeImmatriculations = object.vehiculeImmatriculations.map(vehiculeImmatriculation => VehiculeImmatriculation.create(vehiculeImmatriculation))
-        if(vehiculeImmatriculations.some(vehicule => vehicule instanceof ApplicationException)) {
-            return vehiculeImmatriculations.find(vehicule => vehicule instanceof ApplicationException) as ApplicationException
+        const vehicleImmatriculations = object.vehicleImmatriculations.map(vehicleImmatriculation => VehicleImmatriculation.create(vehicleImmatriculation))
+        if(vehicleImmatriculations.some(vehicle => vehicle instanceof ApplicationException)) {
+            return vehicleImmatriculations.find(vehicle => vehicle instanceof ApplicationException) as ApplicationException
         }
 
         return Customer.create({
@@ -42,7 +42,7 @@ export class Customer {
             phoneNumber: object.phoneNumber,
             email: object.email,
             address,
-            vehiculeImmatriculations : vehiculeImmatriculations as VehiculeImmatriculation[]
+            vehicleImmatriculations : vehicleImmatriculations as VehicleImmatriculation[]
         })
     }
 
@@ -52,7 +52,7 @@ export class Customer {
         phoneNumber: string,
         email: string,
         address: Address,
-        vehiculeImmatriculations: VehiculeImmatriculation[]
+        vehicleImmatriculations: VehicleImmatriculation[]
     }) {
         return new Customer(
             object.customerId,
@@ -60,7 +60,7 @@ export class Customer {
             object.phoneNumber,
             object.email,
             object.address,
-            object.vehiculeImmatriculations
+            object.vehicleImmatriculations
         );
     }
 
@@ -71,7 +71,7 @@ export class Customer {
             phoneNumber: this.phoneNumber,
             email: this.email,
             address: this.address,
-            vehiculeImmatriculations: this.vehiculeImmatriculations.map(vehiculeImmatriculation => vehiculeImmatriculation.getValue())
+            vehicleImmatriculations: this.vehicleImmatriculations.map(vehicleImmatriculation => vehicleImmatriculation.getValue())
         });
     }
 
@@ -96,7 +96,7 @@ export class Customer {
             object.phoneNumber ?? this.phoneNumber,
             object.email ?? this.email,
             this.address,
-            this.vehiculeImmatriculations
+            this.vehicleImmatriculations
         )
     }
 
@@ -106,25 +106,25 @@ export class Customer {
         })
     }
 
-    addVehicule(vehiculeImmatriculation: VehiculeImmatriculation): Customer {
+    addVehicle(vehicleImmatriculation: VehicleImmatriculation): Customer {
         return new Customer(
             this.customerId,
             this.name,
             this.phoneNumber,
             this.email,
             this.address,
-            [...this.vehiculeImmatriculations, vehiculeImmatriculation]
+            [...this.vehicleImmatriculations, vehicleImmatriculation]
         )
     }
 
-    removeVehicule(vehiculeImmatriculation: VehiculeImmatriculation): Customer {
+    removeVehicle(vehicleImmatriculation: VehicleImmatriculation): Customer {
         return new Customer(
             this.customerId,
             this.name,
             this.phoneNumber,
             this.email,
             this.address,
-            this.vehiculeImmatriculations.filter(vehicule => vehicule.getValue() !== vehiculeImmatriculation.getValue())
+            this.vehicleImmatriculations.filter(vehicle => vehicle.getValue() !== vehicleImmatriculation.getValue())
         )
     }
 

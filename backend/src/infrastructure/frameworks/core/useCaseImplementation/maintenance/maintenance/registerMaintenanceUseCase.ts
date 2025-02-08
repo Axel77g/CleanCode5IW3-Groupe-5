@@ -8,9 +8,9 @@ import { MaintenanceSparePart } from "@domain/maintenance/value-object/Maintenan
 import { maintenanceEventRepository } from "@infrastructureCore/repositories/maintenance/maintenanceEventRepository";
 import { garageRepository } from "@infrastructureCore/repositories/maintenance/garageRepository";
 import { inventorySparePartRepository } from "@infrastructureCore/repositories/inventoryManagement/inventorySparePartRepository";
-import { VehiculeImmatriculation } from "@domain/maintenance/value-object/VehiculeImmatriculation";
+import { VehicleImmatriculation } from "@domain/maintenance/value-object/VehicleImmatriculation";
 import { MaintenanceStatusEnum } from "@domain/maintenance/enums/MaintenanceStatusEnum";
-import {vehiculeRepository} from "@infrastructureCore/repositories/maintenance/vehiculeRepository";
+import {vehicleRepository} from "@infrastructureCore/repositories/maintenance/vehicleRepository";
 import {
     createCheckSparesPartsReferenceExist
 } from "@application/inventoryManagement/usecases/inventorySparePart/CheckSparesPartsReferencesExistUseCase";
@@ -18,12 +18,12 @@ import {
 export const registerMaintenanceUseCase: UseCaseImplementation<typeof registerMaintenanceRequest, RegisterMaintenanceUseCase> = async (input) => {
     const garageSiret = Siret.create(input.siret);
     if (garageSiret instanceof ApplicationException) return Result.Failure(garageSiret);
-    const vehiculeImmatriculation = VehiculeImmatriculation.create(input.vehiculeImmatriculation);
-    if (vehiculeImmatriculation instanceof ApplicationException) return Result.Failure(vehiculeImmatriculation);
+    const vehicleImmatriculation = VehicleImmatriculation.create(input.vehicleImmatriculation);
+    if (vehicleImmatriculation instanceof ApplicationException) return Result.Failure(vehicleImmatriculation);
     const checkUseCase = createCheckSparesPartsReferenceExist(inventorySparePartRepository);
-    const useCase = createRegisterMaintenanceUseCase(maintenanceEventRepository, garageRepository, checkUseCase, vehiculeRepository);
+    const useCase = createRegisterMaintenanceUseCase(maintenanceEventRepository, garageRepository, checkUseCase, vehicleRepository);
     return useCase({
-        vehiculeImmatriculation,
+        vehicleImmatriculation,
         garageSiret,
         status: input.status as MaintenanceStatusEnum,
         maintenanceSpareParts: input.maintenanceSpareParts as MaintenanceSparePart[],

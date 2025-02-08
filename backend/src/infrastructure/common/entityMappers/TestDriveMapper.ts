@@ -1,4 +1,4 @@
-import { VehiculeImmatriculation } from "@domain/maintenance/value-object/VehiculeImmatriculation";
+import { VehicleImmatriculation } from "@domain/maintenance/value-object/VehicleImmatriculation";
 import { TestDrive, TestDriveDTO } from "@domain/testDrive/entities/TestDrive";
 import { DriverLicenseId } from "@domain/testDrive/value-object/DriverLicenseId";
 import { Period } from "@domain/testDrive/value-object/Period";
@@ -10,7 +10,7 @@ export class TestDriveMapper {
         const driverLicenseId = DriverLicenseId.create(testDrive.driverLicenseId)
         if (driverLicenseId instanceof Error) return driverLicenseId
 
-        const vehicleImmatriculation = VehiculeImmatriculation.create(testDrive.vehicleImmatriculation)
+        const vehicleImmatriculation = VehicleImmatriculation.create(testDrive.vehicleImmatriculation)
         if (vehicleImmatriculation instanceof Error) return vehicleImmatriculation
 
         const period = Period.create(testDrive.periodStart, testDrive.periodEnd)

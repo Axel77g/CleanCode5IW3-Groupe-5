@@ -6,10 +6,10 @@ import { UnregisterCustomerEvent } from "@domain/maintenance/events/customer/Unr
 import { UpdateCustomerEvent } from "@domain/maintenance/events/customer/UpdateCustomerEvent";
 import { Result, VoidResult } from "@shared/Result";
 import { CustomerRepository } from "../repositories/CustomerRepository";
-import {AssignVehiculeToCustomerEvent} from "@domain/maintenance/events/vehicule/AssignVehiculeToCustomerEvent";
-import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
+import {AssignVehicleToCustomerEvent} from "@domain/maintenance/events/vehicle/AssignVehicleToCustomerEvent";
+import {VehicleImmatriculation} from "@domain/maintenance/value-object/VehicleImmatriculation";
 import {ApplicationException} from "@shared/ApplicationException";
-import {UnregisterVehiculeEvent} from "@domain/maintenance/events/vehicule/UnregisterVehiculeEvent";
+import {UnregisterVehicleEvent} from "@domain/maintenance/events/vehicle/UnregisterVehicleEvent";
 
 export class CustomerProjection extends AbstractProjection {
     constructor(private _customerRepository: CustomerRepository) {
@@ -20,8 +20,8 @@ export class CustomerProjection extends AbstractProjection {
         projectionJobScheduler.schedule(RegisterCustomerEvent.type, this.constructor.name)
         projectionJobScheduler.schedule(UpdateCustomerEvent.type, this.constructor.name)
         projectionJobScheduler.schedule(UnregisterCustomerEvent.type, this.constructor.name)
-        projectionJobScheduler.schedule(AssignVehiculeToCustomerEvent.type, this.constructor.name)
-        projectionJobScheduler.schedule(UnregisterVehiculeEvent.type, this.constructor.name)
+        projectionJobScheduler.schedule(AssignVehicleToCustomerEvent.type, this.constructor.name)
+        projectionJobScheduler.schedule(UnregisterVehicleEvent.type, this.constructor.name)
     }
 
     bindEvents() {
@@ -29,8 +29,8 @@ export class CustomerProjection extends AbstractProjection {
             [RegisterCustomerEvent.type]: this.applyRegisterEvent,
             [UpdateCustomerEvent.type]: this.applyUpdateEvent,
             [UnregisterCustomerEvent.type]: this.applyUnregisteredEvent,
-            [AssignVehiculeToCustomerEvent.type]: this.applyAssignVehiculeToCustomerEvent,
-            [UnregisterVehiculeEvent.type]: this.applyUnregisteredVehicleEvent
+            [AssignVehicleToCustomerEvent.type]: this.applyAssignVehicleToCustomerEvent,
+            [UnregisterVehicleEvent.type]: this.applyUnregisteredVehicleEvent
         }
     }
 
@@ -53,21 +53,21 @@ export class CustomerProjection extends AbstractProjection {
             email: event.payload.email,
             phoneNumber: event.payload.phoneNumber,
             address: event.payload.address,
-            vehiculeImmatriculations: []
+            vehicleImmatriculations: []
         })
         if (customer instanceof ApplicationException) return Result.FailureStr("Cannot update customer");
         await this._customerRepository.store(customer)
         return Result.SuccessVoid()
     }
 
-    async applyAssignVehiculeToCustomerEvent(event: AssignVehiculeToCustomerEvent): Promise<VoidResult> {
+    async applyAssignVehicleToCustomerEvent(event: AssignVehicleToCustomerEvent): Promise<VoidResult> {
         const customerResponse = await this._customerRepository.find(event.payload.customerId);
         if (!customerResponse.success) return customerResponse
         if (customerResponse.empty) return Result.FailureStr("Customer not found")
-        const vehiculeImmatriculation = VehiculeImmatriculation.create(event.payload.immatriculation)
-        if (vehiculeImmatriculation instanceof ApplicationException) return Result.FailureStr("Cannot assign vehicule to customer")
+        const vehicleImmatriculation = VehicleImmatriculation.create(event.payload.immatriculation)
+        if (vehicleImmatriculation instanceof ApplicationException) return Result.FailureStr("Cannot assign vehicle to customer")
 
-        const oldCustomerResponse = await this._customerRepository.getCustomerByVehiculeImmatriculation(vehiculeImmatriculation)
+        const oldCustomerResponse = await this._customerRepository.getCustomerByVehicleImmatriculation(vehicleImmatriculation)
         if(!oldCustomerResponse.success) return oldCustomerResponse
 
         console.log(oldCustomerResponse.value?.customerId,"OLD CUSTOMER")
@@ -76,17 +76,17 @@ export class CustomerProjection extends AbstractProjection {
         if(!oldCustomerResponse.empty)
         {
             if(oldCustomerResponse.value.customerId === event.payload.customerId) return Result.SuccessVoid()
-            await this._customerRepository.store(oldCustomerResponse.value.removeVehicule(vehiculeImmatriculation))
+            await this._customerRepository.store(oldCustomerResponse.value.removeVehicle(vehicleImmatriculation))
         }
-        return this._customerRepository.store(customerResponse.value.addVehicule(vehiculeImmatriculation))
+        return this._customerRepository.store(customerResponse.value.addVehicle(vehicleImmatriculation))
     }
 
-    async applyUnregisteredVehicleEvent(event : UnregisterVehiculeEvent){
-        const vehiculeImmatriculation = VehiculeImmatriculation.create(event.payload.immatriculation)
-        if (vehiculeImmatriculation instanceof ApplicationException) return Result.FailureStr("Cannot unasign vehicule to customer")
-        const customerResponse = await this._customerRepository.getCustomerByVehiculeImmatriculation(vehiculeImmatriculation)
+    async applyUnregisteredVehicleEvent(event : UnregisterVehicleEvent){
+        const vehicleImmatriculation = VehicleImmatriculation.create(event.payload.immatriculation)
+        if (vehicleImmatriculation instanceof ApplicationException) return Result.FailureStr("Cannot unasign vehicle to customer")
+        const customerResponse = await this._customerRepository.getCustomerByVehicleImmatriculation(vehicleImmatriculation)
         if(!customerResponse.success) return customerResponse
-        if(customerResponse.empty) return Result.FailureStr("No customer linked to this vehicule")
-        return this._customerRepository.store(customerResponse.value.removeVehicule(vehiculeImmatriculation))
+        if(customerResponse.empty) return Result.FailureStr("No customer linked to this vehicle")
+        return this._customerRepository.store(customerResponse.value.removeVehicle(vehicleImmatriculation))
     }
 }

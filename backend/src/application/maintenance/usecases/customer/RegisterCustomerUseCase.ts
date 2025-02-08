@@ -32,7 +32,7 @@ export const createRegisterCustomerUseCase = (_eventRepository: EventRepository,
             phoneNumber: input.phoneNumber,
             email: input.email,
             address: input.address,
-            vehiculeImmatriculations: []
+            vehicleImmatriculations: []
         })
         if(customer instanceof ApplicationException) return Result.Failure(customer)
         const storeResponse = await _eventRepository.storeEvent(customer.registerEvent());

@@ -22,7 +22,7 @@ export default async function CustomerDetailPage(pageProps: { params: any, searc
             postalCode: result.value.address.postalCode,
             country: result.value.address.country
         },
-        vehiculeImmatriculations: result.value.vehiculeImmatriculations.map(vehiculeImmatriculation => vehiculeImmatriculation.getValue()) || []
+        vehicleImmatriculations: result.value.vehicleImmatriculations.map(vehicleImmatriculation => vehicleImmatriculation.getValue()) || []
     }
     return (
         <div>
@@ -34,10 +34,10 @@ export default async function CustomerDetailPage(pageProps: { params: any, searc
             <Form title={"Liste des véhicules du client"}>
                 <List>
                     {
-                        customer.vehiculeImmatriculations.map((vehiculeImmatriculation, index) => {
-                            return <ListItem link={`/vehicules/${vehiculeImmatriculation}`}
+                        customer.vehicleImmatriculations.map((vehicleImmatriculation, index) => {
+                            return <ListItem link={`/vehicles/${vehicleImmatriculation}`}
                                              key={index}>
-                                #{vehiculeImmatriculation}
+                                #{vehicleImmatriculation}
                             </ListItem>
                         })
                     }

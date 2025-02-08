@@ -6,12 +6,12 @@ import {EventRepository} from "@application/shared/repositories/EventRepository"
 import {ApplicationException, NotFoundEntityException} from "@shared/ApplicationException";
 import {TestDrive} from "@domain/testDrive/entities/TestDrive";
 import {DriverRepository} from "@application/testDrive/repositories/DriverRepository";
-import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
+import {VehicleImmatriculation} from "@domain/maintenance/value-object/VehicleImmatriculation";
 import {TestDriveRepository} from "@application/testDrive/repositories/TestDriveRepository";
 
 interface RegisterTestDriveInput extends IInputUseCase {
     driverLicenseId: DriverLicenseId;
-    vehicleImmatriculation : VehiculeImmatriculation,
+    vehicleImmatriculation : VehicleImmatriculation,
     period : Period
 }
 
@@ -19,7 +19,7 @@ export type RegisterTestDriveUseCase = IUseCase<RegisterTestDriveInput, Result>
 
 const registerTestDriveErrors = {
     DRIVER_NOT_FOUND: NotFoundEntityException.create("Driver not found"),
-    TEST_DRIVE_OVERLAP: new ApplicationException("registerTestDrive.TestDriveOverlap","Cannot register test drive, The vehicule is not available for this period")
+    TEST_DRIVE_OVERLAP: new ApplicationException("registerTestDrive.TestDriveOverlap","Cannot register test drive, The vehicle is not available for this period")
 }
 
 export const createRegisterTestDriveUseCase = (_eventRepository: EventRepository, _driverRepository : DriverRepository, _testDriveRepository: TestDriveRepository): RegisterTestDriveUseCase => {
@@ -28,9 +28,9 @@ export const createRegisterTestDriveUseCase = (_eventRepository: EventRepository
         if(!driverResponse.success) return driverResponse
         if(driverResponse.empty) return Result.Failure(registerTestDriveErrors.DRIVER_NOT_FOUND)
 
-        const vehiculeDisponibilitiesResponse = await _testDriveRepository.getVehiculeDisponibilities(input.vehicleImmatriculation)
-        if(!vehiculeDisponibilitiesResponse.success) return vehiculeDisponibilitiesResponse
-        if(!vehiculeDisponibilitiesResponse.value.isAvailable(input.period)) return Result.Failure(registerTestDriveErrors.TEST_DRIVE_OVERLAP)
+        const vehicleDisponibilitiesResponse = await _testDriveRepository.getVehicleDisponibilities(input.vehicleImmatriculation)
+        if(!vehicleDisponibilitiesResponse.success) return vehicleDisponibilitiesResponse
+        if(!vehicleDisponibilitiesResponse.value.isAvailable(input.period)) return Result.Failure(registerTestDriveErrors.TEST_DRIVE_OVERLAP)
 
         const testDrive = TestDrive.create({
             driverLicenseId: input.driverLicenseId,

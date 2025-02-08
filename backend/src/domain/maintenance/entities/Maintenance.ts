@@ -1,4 +1,4 @@
-import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
+import {VehicleImmatriculation} from "@domain/maintenance/value-object/VehicleImmatriculation";
 import {MaintenanceSparePart} from "@domain/maintenance/value-object/MaintenanceSparePart";
 import {Siret} from "@domain/shared/value-object/Siret";
 import {RegisterMaintenanceEvent} from "@domain/maintenance/events/maintenance/RegisterMaintenanceEvent";
@@ -11,7 +11,7 @@ import {Price} from "@domain/shared/value-object/Price";
 export interface MaintenanceDTO {
     maintenanceId : string,
     garageSiret : string | null,
-    vehiculeImmatriculation: string,
+    vehicleImmatriculation: string,
     maintenanceSpareParts : MaintenanceSparePart[],
     recommendation: string,
     status: MaintenanceStatusEnum,
@@ -21,7 +21,7 @@ export interface MaintenanceDTO {
 export class Maintenance{
     private constructor(
         public readonly maintenanceId : string,
-        public readonly vehiculeImmatriculation: VehiculeImmatriculation,
+        public readonly vehicleImmatriculation: VehicleImmatriculation,
         public readonly garageSiret : Siret | null,
         public readonly status : MaintenanceStatusEnum,
         public readonly maintenanceSpareParts : MaintenanceSparePart[],
@@ -36,25 +36,25 @@ export class Maintenance{
 
     static create(object : {
         maintenanceId ?: string,
-        vehiculeImmatriculation: VehiculeImmatriculation,
+        vehicleImmatriculation: VehicleImmatriculation,
         garageSiret : Siret | null,
         status : MaintenanceStatusEnum,
         maintenanceSpareParts : MaintenanceSparePart[],
         recommendation: string,
         date: Date,
     }) : Maintenance | ApplicationException {
-        return new Maintenance(object.maintenanceId || randomUUID(), object.vehiculeImmatriculation, object.garageSiret, object.status, object.maintenanceSpareParts, object.recommendation, object.date);
+        return new Maintenance(object.maintenanceId || randomUUID(), object.vehicleImmatriculation, object.garageSiret, object.status, object.maintenanceSpareParts, object.recommendation, object.date);
     }
 
     static fromObject(payload : MaintenanceDTO) {
-        const vehiculeImmatriculation = VehiculeImmatriculation.create(payload.vehiculeImmatriculation);
-        if(vehiculeImmatriculation instanceof ApplicationException) return vehiculeImmatriculation;
+        const vehicleImmatriculation = VehicleImmatriculation.create(payload.vehicleImmatriculation);
+        if(vehicleImmatriculation instanceof ApplicationException) return vehicleImmatriculation;
         const garageSiret = payload.garageSiret ? Siret.create(payload.garageSiret) : null;
         if(garageSiret instanceof ApplicationException) return garageSiret;
         return this.create({
             maintenanceId: payload.maintenanceId,
             garageSiret,
-            vehiculeImmatriculation,
+            vehicleImmatriculation,
             status: payload.status,
             maintenanceSpareParts: payload.maintenanceSpareParts,
             recommendation: payload.recommendation,
@@ -76,7 +76,7 @@ export class Maintenance{
         const garageSiret = object.garageSiret === null ? null : object.garageSiret || this.garageSiret;
         return new Maintenance(
             this.maintenanceId,
-            this.vehiculeImmatriculation,
+            this.vehicleImmatriculation,
             garageSiret,
             object.status || this.status,
             object.maintenanceSpareParts || this.maintenanceSpareParts,
@@ -89,7 +89,7 @@ export class Maintenance{
         return new RegisterMaintenanceEvent({
             maintenanceId: this.maintenanceId,
             garageSiret: this.garageSiret?.getValue() || null,
-            vehiculeImmatriculation: this.vehiculeImmatriculation.getValue(),
+            vehicleImmatriculation: this.vehicleImmatriculation.getValue(),
             maintenanceSpareParts: this.maintenanceSpareParts,
             recommendation: this.recommendation,
             status: this.status,

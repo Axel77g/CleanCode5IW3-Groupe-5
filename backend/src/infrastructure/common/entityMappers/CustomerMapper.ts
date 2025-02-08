@@ -10,7 +10,7 @@ export class CustomerMapper {
             phoneNumber: customer.phoneNumber,
             email: customer.email,
             address: customer.address,
-            vehiculeImmatriculations: customer.vehiculeImmatriculations.map(vehiculeImmatriculation => vehiculeImmatriculation.getValue()),
+            vehicleImmatriculations: customer.vehicleImmatriculations.map(vehicleImmatriculation => vehicleImmatriculation.getValue()),
         })
     }
 
@@ -21,7 +21,7 @@ export class CustomerMapper {
             phoneNumber: customer.phoneNumber,
             email: customer.email,
             address: customer.address,
-            vehiculeImmatriculations : customer.vehiculeImmatriculations
+            vehicleImmatriculations : customer.vehicleImmatriculations
         })
     }
 

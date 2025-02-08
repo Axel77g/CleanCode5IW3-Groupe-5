@@ -64,7 +64,7 @@ describe('InMemoryDataCollection', () => {
         collection.add(sample1);
         collection.add(sample2);
 
-        const filteredCollection = collection.filter((e) => e.numberVal == sample1.numberVal);
+        const filteredCollection = collection.filter((element) => element.numberVal == sample1.numberVal);
         expect(filteredCollection.count()).toBe(1);
         expect(filteredCollection.toArray()).toEqual([sample1]);
     });

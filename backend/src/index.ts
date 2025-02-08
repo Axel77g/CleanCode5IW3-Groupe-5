@@ -15,7 +15,7 @@ import {createRegisterTestDriveUseCase} from "./application/testDrive/usecases/t
 import {Period} from "./domain/testDrive/value-object/Period";
 import {IncidentsProjection} from "./application/testDrive/projections/IncidentsProjection";
 import {MongoIncidentRepository} from "./infrastructure/common/repositories/mongo/testDrive/MongoIncidentRepository";
-import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
+import {VehicleImmatriculation} from "@domain/maintenance/value-object/VehicleImmatriculation";
 
 const url = 'mongodb://localhost:27017';
 const client = new MongoClient(url, {
@@ -65,7 +65,7 @@ async function main(){
 
     if(!resultRegisterIncident.success) return console.error(resultRegisterIncident)
 
-    const immatriculation = VehiculeImmatriculation.create("AA-123-AA")
+    const immatriculation = VehicleImmatriculation.create("AA-123-AA")
     if(immatriculation instanceof Error) return console.error(immatriculation)
 
     const period = Period.create(new Date(), new Date())

@@ -2,7 +2,7 @@ import {AbstractEvent} from "@shared/AbstractEvent";
 
 
 export interface AssignBreakdownToMaintenanceEventPayload {
-    vehiculeBreakDownId: string,
+    vehicleBreakDownId: string,
     maintenanceId: string
 }
 
@@ -14,7 +14,7 @@ export class AssignBreakdownToMaintenanceEvent extends AbstractEvent{
 
     constructor(payload: AssignBreakdownToMaintenanceEventPayload) {
         super();
-        this.streamId = `vehicule-breakdown-${payload.vehiculeBreakDownId}`;
+        this.streamId = `vehicle-breakdown-${payload.vehicleBreakDownId}`;
         this.payload = payload;
     }
 }

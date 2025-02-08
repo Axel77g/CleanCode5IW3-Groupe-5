@@ -20,7 +20,7 @@ interface MaintenanceSparePartProps {
 interface MaintenanceRegisterFormProps {
     maintenanceId?: string,
     siret?: string,
-    vehiculeImmatriculation?: string,
+    vehicleImmatriculation?: string,
     recommendation?: string,
     status?: MaintenanceStatusEnum,
     date?: Date,
@@ -36,7 +36,7 @@ let initialState: ActionState = {
     message: "",
     success: false,
     siret: "",
-    vehiculeImmatriculation: "",
+    vehicleImmatriculation: "",
     recommendation: "",
     status: MaintenanceStatusEnum.WAITING,
     date: new Date(),
@@ -63,7 +63,7 @@ export default function MaintenanceForm(props: { maintenance?: MaintenanceRegist
     initialState = {...initialState, ...props.maintenance};
     const [state, formAction] = useActionState<ActionState, FormData>(edit ? updateMaintenanceAction : registerMaintenanceAction, initialState);
     const [garages, setGarages] = useState<{ title: string; value: string }[]>([]);
-    const [vehicules, setVehicules] = useState<{ title: string; value: string }[]>([]);
+    const [vehicles, setVehicles] = useState<{ title: string; value: string }[]>([]);
     const [maintenanceSpareParts, setMaintenanceSpareParts] = useState<MaintenanceSparePartProps[]>(state.maintenanceSpareParts || []);
 
     useEffect(() => {
@@ -82,23 +82,23 @@ export default function MaintenanceForm(props: { maintenance?: MaintenanceRegist
             }
         };
 
-        const fetchVehicules = async () => {
+        const fetchVehicles = async () => {
             try {
-                const response = await fetch("/api/vehicules");
+                const response = await fetch("/api/vehicles");
                 if (!response.ok) throw new Error("Erreur lors de la récupération des véhicules.");
                 const data = await response.json();
-                const formattedVehicules = data.map((vehicule: any) => ({
-                    title: `${vehicule.model || "Véhicule sans modèle"}`,
-                    value: vehicule.immatriculation.value,
+                const formattedVehicles = data.map((vehicle: any) => ({
+                    title: `${vehicle.model || "Véhicule sans modèle"}`,
+                    value: vehicle.immatriculation.value,
                 }));
-                setVehicules(formattedVehicules);
+                setVehicles(formattedVehicles);
             } catch (error) {
                 console.error("Erreur lors du chargement des véhicules :", error);
             }
         };
 
         fetchGarages();
-        fetchVehicules();
+        fetchVehicles();
     }, []);
 
 
@@ -143,10 +143,10 @@ export default function MaintenanceForm(props: { maintenance?: MaintenanceRegist
 
                 <div className="col-span-6">
                     <Select
-                        name="vehiculeImmatriculation"
+                        name="vehicleImmatriculation"
                         label="Véhicule"
-                        options={vehicules}
-                        value={state.vehiculeImmatriculation}
+                        options={vehicles}
+                        value={state.vehicleImmatriculation}
                         disabled={edit}
 
                     />

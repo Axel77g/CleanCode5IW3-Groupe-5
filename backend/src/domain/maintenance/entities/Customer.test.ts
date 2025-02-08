@@ -35,7 +35,7 @@ export const generateCustomerDTO = (overrides: Partial<CustomerDTO> = {}): Custo
         phoneNumber: "123-456-7890",
         email: generateRandomEmail(),
         address: generateAddressDTO(),
-        vehiculeImmatriculations: [],
+        vehicleImmatriculations: [],
         ...overrides,
     };
 };

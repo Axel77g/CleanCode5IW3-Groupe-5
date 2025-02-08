@@ -4,10 +4,12 @@ import {abort, ActionResponse, success, useServerForm} from "@/hooks/useServerFo
 import {updateCustomerRequest} from "@infrastructureCore/requests/maintenance/customer/updateCustomerRequest";
 import {updateCustomerUseCase} from "@infrastructureCore/useCaseImplementation/maintenance/customer/updateCustomerUseCase";
 import {unregisterCustomerUseCase} from "@infrastructureCore/useCaseImplementation/maintenance/customer/unregisterCustomerUseCase";
-import {assignVehiculeToCustomerRequest} from "@infrastructureCore/requests/maintenance/vehicule/assignVehiculeToCustomerRequest";
 import {
-    assignVehiculeToCustomerUseCase
-} from "@infrastructureCore/useCaseImplementation/maintenance/vehicule/assignVehiculeToCustomerUseCase";
+    assignVehicleToCustomerUseCase
+} from "@infrastructureCore/useCaseImplementation/maintenance/vehicle/assignVehicleToCustomerUseCase";
+import {
+    assignVehicleToCustomerRequest
+} from "@infrastructureCore/requests/maintenance/vehicle/assignVehicleToCustomerRequest";
 
 export interface UnregisterCustomerActionState extends ActionResponse{
     customerIdString:string
@@ -27,9 +29,9 @@ export async function unregisterCustomerAction(state : UnregisterCustomerActionS
     return success(result.value)
 }
 
-export async function assignVehiculeToCustomer(prevState: any, formData: FormData){
-    return useServerForm(formData, assignVehiculeToCustomerRequest, async (payload, success, abort)=>{
-    const result = await assignVehiculeToCustomerUseCase(payload)
+export async function assignVehicleToCustomer(prevState: any, formData: FormData){
+    return useServerForm(formData, assignVehicleToCustomerRequest, async (payload, success, abort)=>{
+    const result = await assignVehicleToCustomerUseCase(payload)
     if(!result.success) return abort(result.error.message)
     return success(result.value)
     })

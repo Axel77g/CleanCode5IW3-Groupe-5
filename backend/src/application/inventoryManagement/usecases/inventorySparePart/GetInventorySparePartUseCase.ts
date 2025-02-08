@@ -7,7 +7,6 @@ import {InventorySparePartRepository} from "@application/inventoryManagement/rep
 interface GetInventorySparePartInput extends IInputUseCase{
     reference: string,
 }
-
 type GetInventorySparePartResult = Result<InventorySparePart>
 
 export type GetInventorySparePartUseCase = IUseCase<GetInventorySparePartInput, GetInventorySparePartResult>

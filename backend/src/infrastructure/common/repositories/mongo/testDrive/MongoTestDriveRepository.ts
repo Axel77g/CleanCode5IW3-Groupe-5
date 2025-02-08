@@ -1,5 +1,5 @@
 import { TestDriveRepository } from "@application/testDrive/repositories/TestDriveRepository";
-import { VehiculeImmatriculation } from "@domain/maintenance/value-object/VehiculeImmatriculation";
+import { VehicleImmatriculation } from "@domain/maintenance/value-object/VehicleImmatriculation";
 import {TestDrive} from "@domain/testDrive/entities/TestDrive";
 import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
 import {Period} from "@domain/testDrive/value-object/Period";
@@ -8,7 +8,7 @@ import {PaginatedInput} from "@shared/PaginatedInput";
 import {PaginatedResult, Result, VoidResult} from "@shared/Result";
 import {AbstractMongoRepository} from "../AbstractMongoRepository";
 import {ApplicationException} from "@shared/ApplicationException";
-import {VehiculeDisponibilityAggregate} from "@domain/testDrive/aggregates/VehiculeDisponibilityAggregate";
+import {VehicleDisponibilityAggregate} from "@domain/testDrive/aggregates/VehicleDisponibilityAggregate";
 
 export class MongoTestDriveRepository extends AbstractMongoRepository implements TestDriveRepository {
 
@@ -41,7 +41,7 @@ export class MongoTestDriveRepository extends AbstractMongoRepository implements
         )
     }
 
-     getVehiculeDisponibilities(immatriculation: VehiculeImmatriculation): Promise<Result<VehiculeDisponibilityAggregate>> {
+     getVehicleDisponibilities(immatriculation: VehicleImmatriculation): Promise<Result<VehicleDisponibilityAggregate>> {
         return this.catchError(async()=>{
             const testDrivePeriodsDocuments = await this.getCollection().find({
                 vehicleImmatriculation: immatriculation.getValue(),
@@ -58,7 +58,7 @@ export class MongoTestDriveRepository extends AbstractMongoRepository implements
                 return period
             }).filter(Boolean) as Period[]
 
-            return Result.Success(new VehiculeDisponibilityAggregate(testDrivePeriods))
+            return Result.Success(new VehicleDisponibilityAggregate(testDrivePeriods))
         })
      }
 

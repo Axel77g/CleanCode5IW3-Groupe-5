@@ -65,7 +65,7 @@ export default function RootLayout({
                     <span className="text-sm font-medium text-gray-700">Clients</span>
                 </Link>
                 <Link
-                    href="/vehicules"
+                    href="/vehicles"
                     className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 hover:shadow transition"
                 >
                     <CarFront className="w-5 h-5 text-gray-600"/>

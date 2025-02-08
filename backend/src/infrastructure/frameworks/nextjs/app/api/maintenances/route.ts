@@ -1,7 +1,7 @@
 import {NextRequest} from "next/server";
 import {
-    listVehiculeMaintenanceUseCase
-} from "@infrastructureCore/useCaseImplementation/maintenance/vehicule/listVehiculeMaintenanceUseCase";
+    listVehicleMaintenanceUseCase
+} from "@infrastructureCore/useCaseImplementation/maintenance/vehicle/listVehicleMaintenanceUseCase";
 
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     }
     const immatriculation = searchParams.get("immatriculation")
     if (!immatriculation) return new Response("Immatriculation is required", {status: 422})
-    const result = await listVehiculeMaintenanceUseCase({
+    const result = await listVehicleMaintenanceUseCase({
         ...pagination,
         immatriculation,
     })

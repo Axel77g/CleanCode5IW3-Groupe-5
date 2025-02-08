@@ -3,22 +3,21 @@ import { Customer } from "@domain/maintenance/entities/Customer";
 import { PaginatedInput } from "@shared/PaginatedInput";
 import { OptionalResult, PaginatedResult, Result, VoidResult } from "@shared/Result";
 import { AbstractInMemoryRepository } from "../AbstractInMemoryRepository";
-import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
-import {VehiculeVin} from "@domain/maintenance/value-object/VehiculeVin";
+import {VehicleImmatriculation} from "@domain/maintenance/value-object/VehicleImmatriculation";
 
 export class InMemoryCustomerRepository extends AbstractInMemoryRepository<Customer> implements CustomerRepository {
 
-    async listCustomerVehicules(customerId: string, pagination: PaginatedInput): Promise<PaginatedResult<VehiculeImmatriculation>> {
+    async listCustomerVehicles(customerId: string, pagination: PaginatedInput): Promise<PaginatedResult<VehicleImmatriculation>> {
         const customer = this.collection.findOne('customerId', customerId)
         if (!customer) return Result.FailureStr("Cannot find customer")
-        const vehicules = customer.vehiculeImmatriculations
-        const total = vehicules.length
+        const vehicles = customer.vehicleImmatriculations
+        const total = vehicles.length
         const page = pagination.page
         const limit = pagination.limit
         const start = (page - 1) * limit
         const end = start + limit
-        const paginatedVehicules = vehicules.slice(start, end)
-        return Result.SuccessPaginated<VehiculeImmatriculation>(paginatedVehicules, total, page, limit)
+        const paginatedVehicles = vehicles.slice(start, end)
+        return Result.SuccessPaginated<VehicleImmatriculation>(paginatedVehicles, total, page, limit)
     }
 
     async listCustomers(pagination: PaginatedInput): Promise<PaginatedResult<Customer>> {
@@ -48,9 +47,9 @@ export class InMemoryCustomerRepository extends AbstractInMemoryRepository<Custo
         return Result.SuccessVoid()
     }
 
-    async getCustomerByVehiculeImmatriculation(vehiculeImmatriculation: VehiculeImmatriculation): Promise<OptionalResult<Customer>> {
+    async getCustomerByVehicleImmatriculation(vehicleImmatriculation: VehicleImmatriculation): Promise<OptionalResult<Customer>> {
         const customers = this.collection.toArray()
-        const foundCustomer = customers.find(customer => customer.vehiculeImmatriculations.some(vehicule => vehicule.getValue() === vehiculeImmatriculation.getValue()))
+        const foundCustomer = customers.find(customer => customer.vehicleImmatriculations.some(vehicle => vehicle.getValue() === vehicleImmatriculation.getValue()))
         if(!foundCustomer) return Result.SuccessVoid()
         return Result.Success(foundCustomer)
     }

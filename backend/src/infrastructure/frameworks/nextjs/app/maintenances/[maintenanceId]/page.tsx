@@ -16,7 +16,7 @@ export default async function MaintenancePage(pageProps: {params: Promise<any>})
             quantity: `${sparePart.quantity}`,
             sparePartReference : sparePart.sparePartReference})),
         siret: value.garageSiret?.getValue() || "",
-        vehiculeImmatriculation: value.vehiculeImmatriculation.getValue(),
+        vehicleImmatriculation: value.vehicleImmatriculation.getValue(),
         recommendation: value.recommendation,
         status: value.status,
     }

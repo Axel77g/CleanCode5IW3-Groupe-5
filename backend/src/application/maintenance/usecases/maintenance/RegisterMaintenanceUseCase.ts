@@ -7,14 +7,14 @@ import {ApplicationException, NotFoundEntityException} from "@shared/Application
 import { EventRepository } from "@application/shared/repositories/EventRepository";
 import { GarageRepository } from "@application/maintenance/repositories/GarageRepository";
 import { MaintenanceStatusEnum } from "@domain/maintenance/enums/MaintenanceStatusEnum";
-import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
-import {VehiculeRepository} from "@application/maintenance/repositories/VehiculeRepository";
+import {VehicleImmatriculation} from "@domain/maintenance/value-object/VehicleImmatriculation";
+import {VehicleRepository} from "@application/maintenance/repositories/VehicleRepository";
 import {
     CheckSparesPartsReferencesExistUseCase
 } from "@application/inventoryManagement/usecases/inventorySparePart/CheckSparesPartsReferencesExistUseCase";
 
 interface RegisterMaintenanceInput extends IInputUseCase {
-    vehiculeImmatriculation: VehiculeImmatriculation,
+    vehicleImmatriculation: VehicleImmatriculation,
     garageSiret: Siret,
     status: MaintenanceStatusEnum,
     maintenanceSpareParts: MaintenanceSparePart[],
@@ -27,18 +27,18 @@ export type RegisterMaintenanceUseCase = IUseCase<RegisterMaintenanceInput, Resu
 const registerMaintenanceErrors = {
     NOT_FOUND_GARAGE: NotFoundEntityException.create("Cannot create maintenances record for not found garages"),
     CANNOT_CREATE_MAINTENANCE_WITH_NOT_FOUND_REFERENCE:  NotFoundEntityException.create("Cannot create maintenances with not found reference"),
-    NOT_FOUND_VEHICULE:  NotFoundEntityException.create("Cannot create maintenances record for not found vehicules")
+    NOT_FOUND_Vehicle:  NotFoundEntityException.create("Cannot create maintenances record for not found vehicles")
 };
 
-export const createRegisterMaintenanceUseCase = (_eventRepository: EventRepository, _garageRepository: GarageRepository, _checkSparesPartsReferencesExitUseCase : CheckSparesPartsReferencesExistUseCase, _vehiculeRepository : VehiculeRepository): RegisterMaintenanceUseCase => {
+export const createRegisterMaintenanceUseCase = (_eventRepository: EventRepository, _garageRepository: GarageRepository, _checkSparesPartsReferencesExitUseCase : CheckSparesPartsReferencesExistUseCase, _vehicleRepository : VehicleRepository): RegisterMaintenanceUseCase => {
     return async (input: RegisterMaintenanceInput) => {
         const garage = await _garageRepository.getBySiret(input.garageSiret);
         if (!garage.success) return garage;
         if (garage.empty) return Result.Failure(registerMaintenanceErrors.NOT_FOUND_GARAGE);
 
-        const vehicule = await _vehiculeRepository.getByImmatriculation(input.vehiculeImmatriculation);
-        if (!vehicule.success) return vehicule;
-        if (vehicule.empty) return Result.Failure(registerMaintenanceErrors.NOT_FOUND_VEHICULE);
+        const vehicle = await _vehicleRepository.getByImmatriculation(input.vehicleImmatriculation);
+        if (!vehicle.success) return vehicle;
+        if (vehicle.empty) return Result.Failure(registerMaintenanceErrors.NOT_FOUND_Vehicle);
 
         const sparesPartsExistsResponse = await _checkSparesPartsReferencesExitUseCase({
             spareParts: input.maintenanceSpareParts
@@ -48,7 +48,7 @@ export const createRegisterMaintenanceUseCase = (_eventRepository: EventReposito
 
 
         const maintenance = Maintenance.create({
-            vehiculeImmatriculation: input.vehiculeImmatriculation,
+            vehicleImmatriculation: input.vehicleImmatriculation,
             garageSiret: input.garageSiret,
             status: input.status,
             maintenanceSpareParts: input.maintenanceSpareParts,

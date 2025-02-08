@@ -9,7 +9,7 @@ import {MaintenanceMapper} from "@infrastructure/common/entityMappers/Maintenanc
 import {ApplicationException} from "@shared/ApplicationException";
 import {PaginatedInput} from "@shared/PaginatedInput";
 import {Siret} from "@domain/shared/value-object/Siret";
-import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
+import {VehicleImmatriculation} from "@domain/maintenance/value-object/VehicleImmatriculation";
 
 export class MongoMaintenanceRepository extends AbstractMongoRepository implements MaintenanceRepository {
     protected collectionName: string = "maintenances";
@@ -40,11 +40,11 @@ export class MongoMaintenanceRepository extends AbstractMongoRepository implemen
     }
 
 
-    listVehiculeMaintenance(vehiculeImmatriculation: VehiculeImmatriculation, pagination: PaginatedInput): Promise<PaginatedResult<Maintenance>> {
+    listVehicleMaintenance(vehicleImmatriculation: VehicleImmatriculation, pagination: PaginatedInput): Promise<PaginatedResult<Maintenance>> {
         const {page, limit} = pagination;
         return this.catchError(async () => {
-            const maintenancesDocuments = await this.getCollection().find({vehiculeImmatriculation : vehiculeImmatriculation.getValue()}).skip((page - 1) * limit).limit(limit).toArray();
-            const maintenancesTotal = await this.getCollection().countDocuments({vehiculeImmatriculation : vehiculeImmatriculation.getValue()});
+            const maintenancesDocuments = await this.getCollection().find({vehicleImmatriculation : vehicleImmatriculation.getValue()}).skip((page - 1) * limit).limit(limit).toArray();
+            const maintenancesTotal = await this.getCollection().countDocuments({vehicleImmatriculation : vehicleImmatriculation.getValue()});
             const maintenances = MaintenanceMapper.toDomainList(maintenancesDocuments);
             return Result.SuccessPaginated<Maintenance>(maintenances, maintenancesTotal, page, limit);
         })

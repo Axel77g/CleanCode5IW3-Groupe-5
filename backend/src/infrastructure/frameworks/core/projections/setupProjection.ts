@@ -24,9 +24,9 @@ import {
     maintenanceProjectionJobRepository
 } from "@infrastructureCore/repositories/maintenance/maintenanceProjectionJobRepository";
 import {maintenanceEventRepository} from "@infrastructureCore/repositories/maintenance/maintenanceEventRepository";
-import {vehiculeProjection} from "@infrastructureCore/projections/maintenance/vehiculeProjection";
+import {vehicleProjection} from "@infrastructureCore/projections/maintenance/vehicleProjection";
 import {garageProjection} from "@infrastructureCore/projections/maintenance/garageProjection";
-import {vehiculeBreakdownProjection} from "@infrastructureCore/projections/maintenance/vehiculeBreakdownProjection";
+import {vehicleBreakdownProjection} from "@infrastructureCore/projections/maintenance/vehicleBreakdownProjection";
 import {maintenanceProjection} from "@infrastructureCore/projections/maintenance/maintenanceProjection";
 
 function initProjection(scheduler: ProjectionJobScheduler, ...projections: AbstractProjection[]) {
@@ -58,8 +58,8 @@ initProjection(testDriveProjectionScheduler, ...testDriveProjections)
 /** Schedule the projection for maintenances subdomain */
 const maintenanceProjections = [
     customerProjection,
-    vehiculeProjection,
-    vehiculeBreakdownProjection,
+    vehicleProjection,
+    vehicleBreakdownProjection,
     garageProjection,
     maintenanceProjection
 ]

@@ -6,7 +6,7 @@ import {Button} from "@/components/Button";
 import {useActionState} from "react";
 import {updateCustomerAction} from "@/app/customers/[customerId]/actions";
 import {useDialog} from "@/hooks/useDialog";
-import {AssignVehiculeDialog} from "@/app/customers/[customerId]/AssignVehiculeDialog";
+import {AssignVehicleDialog} from "@/app/customers/[customerId]/AssignVehicleDialog";
 
 interface CustomerPatchFormProps {
     customerId?: string;
@@ -60,7 +60,7 @@ export default function CustomerPatchForm({ customer }: { customer: CustomerPatc
                 </div>
             </Form>
 
-            <AssignVehiculeDialog isOpen={isOpen} onClose={close} customer={customer} />
+            <AssignVehicleDialog isOpen={isOpen} onClose={close} customer={customer} />
         </>
     );
 }

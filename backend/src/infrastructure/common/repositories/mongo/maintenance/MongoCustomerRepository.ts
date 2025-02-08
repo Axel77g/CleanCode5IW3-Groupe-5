@@ -5,7 +5,7 @@ import { AbstractMongoRepository } from '@infrastructure/common/repositories/mon
 import {ApplicationException } from "@shared/ApplicationException";
 import { PaginatedInput } from '@shared/PaginatedInput';
 import { OptionalResult, PaginatedResult, Result, VoidResult } from '@shared/Result';
-import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
+import {VehicleImmatriculation} from "@domain/maintenance/value-object/VehicleImmatriculation";
 
 export class MongoCustomerRepository extends AbstractMongoRepository implements CustomerRepository {
     protected collectionName: string = 'customers';
@@ -60,26 +60,26 @@ export class MongoCustomerRepository extends AbstractMongoRepository implements 
         );
     }
 
-    listCustomerVehicules(customerId: string, pagination: PaginatedInput): Promise<PaginatedResult<VehiculeImmatriculation>> {
+    listCustomerVehicles(customerId: string, pagination: PaginatedInput): Promise<PaginatedResult<VehicleImmatriculation>> {
         const { page, limit } = pagination;
         return this.catchError(async () => {
             const customerDocument = await this.getCollection().findOne({ customerId });
             if (!customerDocument) return Result.FailureStr("Customer not found");
             const customer = CustomerMapper.toDomain(customerDocument);
             if (customer instanceof ApplicationException) return Result.Failure(customer);
-            const vehicules = customer.vehiculeImmatriculations;
-            const vehiculesTotal = vehicules.length;
-            const vehiculesPaginated = vehicules.slice((page - 1) * limit, page * limit);
-            return Result.SuccessPaginated<VehiculeImmatriculation>(vehiculesPaginated, vehiculesTotal, page, limit
+            const vehicles = customer.vehicleImmatriculations;
+            const vehiclesTotal = vehicles.length;
+            const vehiclesPaginated = vehicles.slice((page - 1) * limit, page * limit);
+            return Result.SuccessPaginated<VehicleImmatriculation>(vehiclesPaginated, vehiclesTotal, page, limit
             );
         });
     }
 
-    getCustomerByVehiculeImmatriculation(vehiculeImmatriculation: VehiculeImmatriculation): Promise<OptionalResult<Customer>> {
+    getCustomerByVehicleImmatriculation(vehicleImmatriculation: VehicleImmatriculation): Promise<OptionalResult<Customer>> {
         return this.catchError(
             async () => {
                 const customerDocument = await this.getCollection()
-                    .findOne({ vehiculeImmatriculations: { $elemMatch: { $eq: vehiculeImmatriculation.getValue() } } });
+                    .findOne({ vehicleImmatriculations: { $elemMatch: { $eq: vehicleImmatriculation.getValue() } } });
                 if (!customerDocument) return Result.SuccessVoid();
                 const customer = CustomerMapper.toDomain(customerDocument);
                 if (customer instanceof ApplicationException) return Result.Failure(customer);

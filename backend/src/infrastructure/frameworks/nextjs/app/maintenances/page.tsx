@@ -20,7 +20,7 @@ export default async function MaintenancesPage(pageProps: {searchParams: any}) {
                 value.map(
                     (maintenance, index) =>
                         <ListItem key={index} link={`/maintenances/${maintenance.maintenanceId}`}>
-                            <div>Maintenance véhicule : {maintenance.vehiculeImmatriculation.getValue()} - {maintenance.date.toLocaleDateString()}</div>
+                            <div>Maintenance véhicule : {maintenance.vehicleImmatriculation.getValue()} - {maintenance.date.toLocaleDateString()}</div>
                         </ListItem>
                 )
             }
