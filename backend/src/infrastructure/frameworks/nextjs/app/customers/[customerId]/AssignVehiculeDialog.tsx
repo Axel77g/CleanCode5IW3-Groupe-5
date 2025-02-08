@@ -41,8 +41,12 @@ export function AssignVehiculeDialog(props: {isOpen: boolean, customer : any, on
         <HeadingTile>Client | {props.customer.name}</HeadingTile>
         <Form action={action} title={"Assigner un véhicule"} state={state}>
             <input type={"hidden"} name={"customerId"} value={props.customer.customerId}/>
-            <Select name={"vehiculeImmatriculation"} label={"Véhicule"} options={vehicules}/>
-            <Button>Assigner</Button>
+            <Select
+                name={"vehiculeImmatriculation"}
+                label={"Véhicule"}
+                options={vehicules}
+            />
+            <Button>Assigner à la maintenance</Button>
         </Form>
     </Dialog>
 }

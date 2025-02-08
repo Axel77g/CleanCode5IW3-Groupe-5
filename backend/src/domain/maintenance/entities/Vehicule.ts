@@ -108,13 +108,6 @@ export class Vehicule {
         }
     }
 
-    validBrand(brand: string): boolean | ApplicationException {
-        if (brand !== 'Triumph') {
-            return new ApplicationException('Vehicule', 'Brand is not valid, must be Triumph');
-        }
-        return true;
-    }
-
     static fromObject(vehicule: VehiculeDTO): Vehicule | ApplicationException {
         const immatriculation = VehiculeImmatriculation.create(vehicule.immatriculation);
         if (immatriculation instanceof ApplicationException) return immatriculation;
@@ -195,7 +188,7 @@ export class Vehicule {
         status?: VehiculeStatusEnum
         warranty?: Period,
     }) {
-        if (object.mileage && object?.mileage < this.mileage) return new ApplicationException("NONE", "Mileage cannot be greater than current mileage");
+        if (object.maintenanceInterval && object.maintenanceInterval.mileage > this.mileage) return Vehicule.ApplicationExceptions.INVALID_LAST_MILEAGE;
         if (object.maintenanceInterval && object.mileage && object.maintenanceInterval.lastMaintenance.mileage > this.mileage) return Vehicule.ApplicationExceptions.INVALID_LAST_MILEAGE;
         return new Vehicule(
             this.immatriculation,

@@ -26,7 +26,8 @@ interface RegisterVehiculeInput extends IInputUseCase {
 export type RegisterVehiculeUseCase = IUseCase<RegisterVehiculeInput, Result>
 
 const registeredVehiculeErrors = {
-    VEHICULE_ALREADY_EXISTS: new ApplicationException("RegisterVehiculeUseCase", "Vehicule already exists with this immatriculation")
+    VEHICULE_ALREADY_EXISTS: new ApplicationException("RegisterVehiculeUseCase", "Vehicule already exists with this immatriculation"),
+    VEHICULE_VIN_ALREADY_EXISTS: new ApplicationException("RegisterVehiculeUseCase", "Vehicule already exists with this vin"),
 }
 
 export const createRegisterVehiculeUseCase = (_eventRepository: EventRepository, _vehiculeRepository: VehiculeRepository): RegisterVehiculeUseCase => {
@@ -34,6 +35,11 @@ export const createRegisterVehiculeUseCase = (_eventRepository: EventRepository,
         const existingVehicule = await _vehiculeRepository.getByImmatriculation(input.immatriculation)
         if(!existingVehicule.success) return existingVehicule
         if(!existingVehicule.empty) return Result.Failure(registeredVehiculeErrors.VEHICULE_ALREADY_EXISTS)
+
+        const existingVin = await _vehiculeRepository.getByVin(input.vin)
+        if(!existingVin.success) return existingVin
+        if(!existingVin.empty) return Result.Failure(registeredVehiculeErrors.VEHICULE_VIN_ALREADY_EXISTS)
+
         const vehicule = Vehicule.create(input)
         if(vehicule instanceof ApplicationException) return Result.Failure(vehicule)
         const storeResponse = await _eventRepository.storeEvent(vehicule.registerEvent());

@@ -13,7 +13,7 @@ export type ShowVehiculeBreakdownUseCase = IUseCase<ShowVehiculeBreakdownInput, 
 
 export const createShowVehiculeBreakdownUseCase = (_vehiculeBreakdownRepository: VehiculeBreakdownRepository): ShowVehiculeBreakdownUseCase => {
     return async (input: ShowVehiculeBreakdownInput) => {
-        const findResponse = await _vehiculeBreakdownRepository.getBreakdownByVehicule(input.vehiculeBreakdownId);
+        const findResponse = await _vehiculeBreakdownRepository.getBreakdownById(input.vehiculeBreakdownId);
         if(!findResponse.success) return findResponse
         if(findResponse.empty) return Result.FailureStr("Breakdown not found")
         return findResponse

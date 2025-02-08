@@ -3,6 +3,7 @@ import { EventRepository } from "@application/shared/repositories/EventRepositor
 import { NotFoundEntityException } from "@shared/ApplicationException";
 import { IInputUseCase, IUseCase } from "@shared/IUseCase";
 import { Result } from "@shared/Result";
+import {Address} from "@domain/shared/value-object/Address";
 
 interface UpdateCustomerInput extends IInputUseCase {
     customerId: string,

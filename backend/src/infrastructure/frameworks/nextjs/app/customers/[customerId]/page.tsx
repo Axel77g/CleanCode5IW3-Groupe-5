@@ -5,6 +5,7 @@ import {showCustomerUseCase} from "@infrastructureCore/useCaseImplementation/mai
 import {UnregisterCustomerButton} from "@/app/customers/[customerId]/UnregisterCustomerButton";
 import List from "@/components/List";
 import ListItem from "@/components/ListItem";
+import {Form} from "@/components/Form";
 
 export default async function CustomerDetailPage(pageProps: { params: any, searchParams: any }) {
     const {customerId} = await pageProps.params as { customerId: string }
@@ -29,6 +30,19 @@ export default async function CustomerDetailPage(pageProps: { params: any, searc
             <CustomerPatchForm
                 customer={customer}
             />
+
+            <Form title={"Liste des véhicules du client"}>
+                <List>
+                    {
+                        customer.vehiculeImmatriculations.map((vehiculeImmatriculation, index) => {
+                            return <ListItem link={`/vehicules/${vehiculeImmatriculation}`}
+                                             key={index}>
+                                #{vehiculeImmatriculation}
+                            </ListItem>
+                        })
+                    }
+                </List>
+            </Form>
             <br/>
             <hr/>
             <br/>
@@ -36,17 +50,6 @@ export default async function CustomerDetailPage(pageProps: { params: any, searc
                 <UnregisterCustomerButton customerIdString={customerId}/>
             </div>
             <br/>
-
-            <h2>Véhicules</h2>
-
-            <List>
-                {
-                    customer.vehiculeImmatriculations.map((vehiculeImmatriculation, index) => {
-                        return <ListItem link={`/vehicules/${vehiculeImmatriculation}`}
-                                         key={index}>{vehiculeImmatriculation}</ListItem>
-                    })
-                }
-            </List>
         </div>
     )
 }

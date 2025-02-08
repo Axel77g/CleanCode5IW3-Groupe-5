@@ -6,6 +6,7 @@ import {OptionalResult, PaginatedResult, Result, VoidResult} from '@shared/Resul
 import { AbstractMongoRepository } from '../AbstractMongoRepository';
 import {ApplicationException} from "@shared/ApplicationException";
 import {PaginatedInput} from "@shared/PaginatedInput";
+import {VehiculeVin} from "@domain/maintenance/value-object/VehiculeVin";
 
 export class MongoVehiculeRepository extends AbstractMongoRepository implements VehiculeRepository {
     protected collectionName: string = "vehicules";
@@ -39,6 +40,18 @@ export class MongoVehiculeRepository extends AbstractMongoRepository implements 
         return this.catchError(
             async () => {
                 const vehiculeDocument = await this.getCollection().findOne({ immatriculation: immatriculation.getValue() });
+                if (!vehiculeDocument) return Result.SuccessVoid();
+                const vehicule = VehiculeMapper.toDomain(vehiculeDocument);
+                if (vehicule instanceof ApplicationException) return Result.Failure(vehicule);
+                return Result.Success<Vehicule>(vehicule);
+            }
+        )
+    }
+
+    getByVin(vin: VehiculeVin): Promise<OptionalResult<Vehicule>> {
+        return this.catchError(
+            async () => {
+                const vehiculeDocument = await this.getCollection().findOne({ vin: vin.getValue() });
                 if (!vehiculeDocument) return Result.SuccessVoid();
                 const vehicule = VehiculeMapper.toDomain(vehiculeDocument);
                 if (vehicule instanceof ApplicationException) return Result.Failure(vehicule);
