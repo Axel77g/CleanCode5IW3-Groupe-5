@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "install:express": "cd src/infrastructure/frameworks/express && npm install",
     "dev:express": "cd src/infrastructure/frameworks/express && npm run dev",
+    "install:next": "cd src/infrastructure/frameworks/nextjs && npm install",
+    "install:all": "npm install && npm run install:express && npm run install:next",
     "dev:next": "cd src/infrastructure/frameworks/nextjs && npm run dev",
     "test": "jest",
     "build": "tsc",

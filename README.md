@@ -17,11 +17,7 @@
 
 Installer les dépendances de chaque framework : 
 ```bash
-npm install
-cd src/infrastructure/frameworks/express
-npm install
-cd ../nextjs
-npm install
+npm run install:all
 ```
 
 ## Lancements

@@ -15,7 +15,7 @@ jobs:
       with:
         node-version: '20'
 
-    - run: npm install
+    - run: npm run install:all
     - run: npm run eslint
     - run: npm run build
 
