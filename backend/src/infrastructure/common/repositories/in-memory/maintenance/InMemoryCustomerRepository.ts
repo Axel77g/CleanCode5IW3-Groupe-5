@@ -4,8 +4,10 @@ import { PaginatedInput } from "@shared/PaginatedInput";
 import { OptionalResult, PaginatedResult, Result, VoidResult } from "@shared/Result";
 import { AbstractInMemoryRepository } from "../AbstractInMemoryRepository";
 import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
+import {VehiculeVin} from "@domain/maintenance/value-object/VehiculeVin";
 
 export class InMemoryCustomerRepository extends AbstractInMemoryRepository<Customer> implements CustomerRepository {
+
     async listCustomerVehicules(customerId: string, pagination: PaginatedInput): Promise<PaginatedResult<VehiculeImmatriculation>> {
         const customer = this.collection.findOne('customerId', customerId)
         if (!customer) return Result.FailureStr("Cannot find customer")
@@ -45,6 +47,15 @@ export class InMemoryCustomerRepository extends AbstractInMemoryRepository<Custo
         this.collection.upsert('customerId', customer.customerId, customer)
         return Result.SuccessVoid()
     }
+
+    async getCustomerByVehiculeImmatriculation(vehiculeImmatriculation: VehiculeImmatriculation): Promise<OptionalResult<Customer>> {
+        const customers = this.collection.toArray()
+        const foundCustomer = customers.find(customer => customer.vehiculeImmatriculations.some(vehicule => vehicule.getValue() === vehiculeImmatriculation.getValue()))
+        if(!foundCustomer) return Result.SuccessVoid()
+        return Result.Success(foundCustomer)
+    }
+
+
 
 
 }

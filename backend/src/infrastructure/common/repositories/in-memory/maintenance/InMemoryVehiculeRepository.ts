@@ -4,9 +4,11 @@ import { VehiculeImmatriculation } from "@domain/maintenance/value-object/Vehicu
 import {OptionalResult, PaginatedResult, Result, VoidResult} from "@shared/Result";
 import { AbstractInMemoryRepository } from "../AbstractInMemoryRepository";
 import {PaginatedInput} from "@shared/PaginatedInput";
+import { VehiculeVin } from "@domain/maintenance/value-object/VehiculeVin";
 
 
 export class InMemoryVehiculeRepository extends AbstractInMemoryRepository<Vehicule> implements VehiculeRepository {
+
     async getVehiculeNeedForMaintenance(): Promise<Result<Vehicule[]>> {
         const vehicles = this.collection.toArray()
         const filteredVehicles = vehicles.filter(vehicule => vehicule.needMaintenance())
@@ -25,6 +27,11 @@ export class InMemoryVehiculeRepository extends AbstractInMemoryRepository<Vehic
 
     async getByImmatriculation(immatriculation: VehiculeImmatriculation): Promise<OptionalResult<Vehicule>> {
         const vehicule = this.collection.findOne('immatriculation', immatriculation);
+        return vehicule ? Result.Success(vehicule) : Result.SuccessVoid();
+    }
+
+    async getByVin(vin: VehiculeVin): Promise<OptionalResult<Vehicule>> {
+        const vehicule = this.collection.findOne('vin', vin);
         return vehicule ? Result.Success(vehicule) : Result.SuccessVoid();
     }
 
