@@ -58,7 +58,7 @@ export class MongoMaintenanceRepository extends AbstractMongoRepository implemen
             const { page, limit } = pagination;
             return this.catchError(async () => {
                 const maintenancesDocuments = await this.getCollection()
-                    .find({ garageSiret })
+                    .find({ garageSiret: garageSiret.getValue() })
                     .skip((page - 1) * limit)
                     .limit(limit)
                     .toArray();

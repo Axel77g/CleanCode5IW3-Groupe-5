@@ -3,6 +3,7 @@ import {
 } from "@infrastructureCore/useCaseImplementation/maintenance/maintenance/showMaintenanceUseCase";
 import {ErrorCallout} from "@/components/ErrorCallout";
 import MaintenanceForm from "@/app/maintenances/MaintenanceForm";
+import HeadingTile from "@/components/HeadingTitle";
 
 export default async function MaintenancePage(pageProps: {params: Promise<any>}) {
     const response = await showMaintenanceUseCase(await pageProps.params)
@@ -20,6 +21,10 @@ export default async function MaintenancePage(pageProps: {params: Promise<any>})
         status: value.status,
     }
     return <div>
+        <HeadingTile>Maintenance {maintenance.maintenanceId}</HeadingTile>
+        <br/>
+        <p><b className={"font-bold"}>Prix total : </b> {value.totalPrice.getFormattedValue()}</p>
+        <br/>
         <MaintenanceForm maintenance={maintenance}/>
     </div>
 }

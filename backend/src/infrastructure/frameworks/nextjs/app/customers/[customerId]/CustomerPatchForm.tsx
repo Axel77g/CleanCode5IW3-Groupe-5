@@ -1,12 +1,10 @@
 "use client";
 
 import {Form} from "@/components/Form";
-import {useRef} from "react";
 import Input from "@/components/Input";
 import {Button} from "@/components/Button";
 import {useActionState} from "react";
 import {updateCustomerAction} from "@/app/customers/[customerId]/actions";
-import {UnregisterCustomerButton} from "@/app/customers/[customerId]/UnregisterCustomerButton";
 import {useDialog} from "@/hooks/useDialog";
 import {AssignVehiculeDialog} from "@/app/customers/[customerId]/AssignVehiculeDialog";
 

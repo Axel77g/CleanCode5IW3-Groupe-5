@@ -3,9 +3,22 @@ import { Customer } from "@domain/maintenance/entities/Customer";
 import { PaginatedInput } from "@shared/PaginatedInput";
 import { OptionalResult, PaginatedResult, Result, VoidResult } from "@shared/Result";
 import { AbstractInMemoryRepository } from "../AbstractInMemoryRepository";
-import {Vehicule} from "@domain/maintenance/entities/Vehicule";
+import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
 
 export class InMemoryCustomerRepository extends AbstractInMemoryRepository<Customer> implements CustomerRepository {
+    async listCustomerVehicules(customerId: string, pagination: PaginatedInput): Promise<PaginatedResult<VehiculeImmatriculation>> {
+        const customer = this.collection.findOne('customerId', customerId)
+        if (!customer) return Result.FailureStr("Cannot find customer")
+        const vehicules = customer.vehiculeImmatriculations
+        const total = vehicules.length
+        const page = pagination.page
+        const limit = pagination.limit
+        const start = (page - 1) * limit
+        const end = start + limit
+        const paginatedVehicules = vehicules.slice(start, end)
+        return Result.SuccessPaginated<VehiculeImmatriculation>(paginatedVehicules, total, page, limit)
+    }
+
     async listCustomers(pagination: PaginatedInput): Promise<PaginatedResult<Customer>> {
         const { page, limit } = pagination
         const customers = this.collection.paginate(page, limit).toArray()
@@ -33,7 +46,5 @@ export class InMemoryCustomerRepository extends AbstractInMemoryRepository<Custo
         return Result.SuccessVoid()
     }
 
-    listCustomerVehicules(customerId: string): Promise<PaginatedResult<Vehicule>> {
-        throw new Error("Method not implemented.");
-    }
+
 }

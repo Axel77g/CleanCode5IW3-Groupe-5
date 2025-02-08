@@ -6,6 +6,7 @@ import List from "@/components/List";
 import ListItem from "@/components/ListItem";
 import {Button} from "@/components/Button";
 import {OrderStatusDialog} from "@/app/dealers/[siret]/orders/OrderStatusDialog";
+import Chip from "@/components/Chip";
 
 export function ListOrders(props: {orders : any[], siretString : string}){
     const orderSelected = useRef(null)
@@ -20,7 +21,9 @@ export function ListOrders(props: {orders : any[], siretString : string}){
             {
                 props.orders.map(order=>(
                     <ListItem key={order.orderId} link={`/dealers/${props.siretString}/orders`}>
-                        {order.orderId} - {order.orderedAt} - {order.status} - <Button onClick={() => handleUpdateStatusOrderClick(order)}>Modifier le status</Button>
+                        {new Date(order.orderedAt).toLocaleDateString(
+                            "fr-FR"
+                        )} - {order.status} - <Chip>{order.totalPrice}</Chip>  <Button onClick={() => handleUpdateStatusOrderClick(order)}>Modifier le status</Button>
                         </ListItem>
                     ))
             }

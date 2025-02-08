@@ -19,8 +19,9 @@ import {garageRepository} from "@infrastructureCore/repositories/maintenance/gar
 
 
 export const updateMaintenanceUseCase : UseCaseImplementation<typeof updateMaintenanceRequest, UpdateMaintenanceUseCase> = async (input) => {
-    if(input.siret == "-1") input.siret = undefined
-    const garageSiret = input.siret ? Siret.create(input.siret) : null
+    let siretVal : null | string | undefined = input.siret
+    if(siretVal == "-1") siretVal = null
+    const garageSiret = siretVal ? Siret.create(siretVal) : null
     if(garageSiret instanceof ApplicationException) return Result.Failure(garageSiret);
     const checkUseCase = createCheckSparesPartsReferenceExist(inventorySparePartRepository);
     const useCase = createUpdateMaintenanceUseCase(maintenanceEventRepository, maintenanceRepository,garageRepository,checkUseCase)

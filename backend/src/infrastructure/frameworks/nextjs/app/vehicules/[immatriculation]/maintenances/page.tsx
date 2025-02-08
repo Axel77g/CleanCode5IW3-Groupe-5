@@ -24,10 +24,11 @@ export default async function VehiculeMaintenancesPage(pageProps: { params: any,
             <HeadingTile>Liste des maintenances du véhicule <span className="text-gray-500">({immatriculation})</span></HeadingTile>
             <div>
                 {value.map(maintenance => (
-                    <ListItem key={maintenance.maintenanceId} link={"#"}>
+                    <ListItem key={maintenance.maintenanceId} link={`/maintenances/${maintenance.maintenanceId}`}>
                         <Chip>{maintenance.maintenanceId}</Chip>
                         <span className={"font-bold"}>({maintenance.vehiculeImmatriculation.getValue()})</span>
-                        - {maintenance.date.toLocaleDateString()}
+                        - {maintenance.date.toLocaleDateString() + " "}
+                        - Prix total : {maintenance.totalPrice.getFormattedValue()}
                     </ListItem>
                 ))}
             </div>

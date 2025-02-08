@@ -90,7 +90,7 @@ export default function RootLayout({
 
         {/* Main Content */}
         <main className="flex-1 p-6 bg-gray-50 overflow-auto max-h-screen">
-            <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 min-h-full">
+            <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 min-h-full flex flex-col gap-3">
                 {children}
             </div>
         </main>

@@ -12,7 +12,10 @@ export default async function DealerOrderPage(pageProps: { params: Promise<{sire
     const result = await showOrderHistoryUseCase({siret})
     if(!result.success) return <ErrorCallout>{result.error.message}</ErrorCallout>
     function getOrderDTO(order : Order) : any {
-        return JSON.parse(JSON.stringify(order))
+        return {
+            ...JSON.parse(JSON.stringify(order)),
+            totalPrice : order.totalPrice.getFormattedValue(),
+        }
     }
     return <div>
         <HeadingTile>Commandes du concessionnaire {siret}</HeadingTile>

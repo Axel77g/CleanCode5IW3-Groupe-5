@@ -15,6 +15,9 @@ import {dealerRepository} from "@infrastructureCore/repositories/inventoryManage
 import {
     inventorySparePartRepository
 } from "@infrastructureCore/repositories/inventoryManagement/inventorySparePartRepository";
+import {
+    createCheckSparesPartsReferenceExist
+} from "@application/inventoryManagement/usecases/inventorySparePart/CheckSparesPartsReferencesExistUseCase";
 
 export const registerOrderUseCase : UseCaseImplementation<typeof registerOrderRequest, RegisterOrderUseCase> = async (input) =>{
     const dealerSiret = Siret.create(input.dealerSiret)
@@ -22,7 +25,8 @@ export const registerOrderUseCase : UseCaseImplementation<typeof registerOrderRe
     const orderLines = input.orderLines.map((line) =>  OrderLine.create(line))
     const error = orderLines.find(line => line instanceof ApplicationException) as ApplicationException | undefined
     if(error) return Result.Failure(error)
-    const useCase = createRegisterOrderUseCase(inventoryManagementEventRepository, dealerRepository, inventorySparePartRepository)
+    const checkSparePartReferencesExistUseCase = createCheckSparesPartsReferenceExist(inventorySparePartRepository)
+    const useCase = createRegisterOrderUseCase(inventoryManagementEventRepository, dealerRepository,checkSparePartReferencesExistUseCase)
     return useCase({
         ...input,
         dealer: dealerSiret,

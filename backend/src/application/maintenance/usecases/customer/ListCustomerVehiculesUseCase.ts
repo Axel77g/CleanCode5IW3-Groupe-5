@@ -1,15 +1,15 @@
 import {PaginatedResult, Result} from "@shared/Result";
 import {PaginatedInput} from "@shared/PaginatedInput";
-import {Vehicule} from "@domain/maintenance/entities/Vehicule";
 import {CustomerRepository} from "@application/maintenance/repositories/CustomerRepository";
 import {ApplicationException, NotFoundEntityException} from "@shared/ApplicationException";
 import {IUseCase} from "@shared/IUseCase";
+import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
 
 interface ListCustomerVehiculeInput extends PaginatedInput {
     customerId: string;
 }
 
-export type ListCustomerVehiculesUseCase = IUseCase<ListCustomerVehiculeInput, PaginatedResult<Vehicule>>
+export type ListCustomerVehiculesUseCase = IUseCase<ListCustomerVehiculeInput, PaginatedResult<VehiculeImmatriculation>>
 
 const ListCustomerVehiculesErrors = {
     CUSTOMER_NOT_FOUND: NotFoundEntityException.create("Customer not found"),

@@ -7,6 +7,11 @@ import {PaginatedInput} from "@shared/PaginatedInput";
 
 
 export class InMemoryVehiculeRepository extends AbstractInMemoryRepository<Vehicule> implements VehiculeRepository {
+    async getVehiculeNeedForMaintenance(): Promise<Result<Vehicule[]>> {
+        const vehicles = this.collection.toArray()
+        const filteredVehicles = vehicles.filter(vehicule => vehicule.needMaintenance())
+        return Result.Success(filteredVehicles);
+    }
 
     async store(vehicule: Vehicule): Promise<VoidResult> {
         this.collection.add(vehicule);

@@ -11,8 +11,18 @@ export default async function DealerShowPage(pageProps : {searchProps: any, para
     const result = await showDealerUseCase({siret})
     if(!result.success) return <ErrorCallout>{result.error.message}</ErrorCallout>
     const {value} = result
-    return <div>
-        <div className={'font-semibold text-2xl'}> #{value.siret.getValue()} {value.name}</div>
+    return <>
+        <div className={'font-semibold text-2xl'}> Informations de la concession</div>
+
+        <ul>
+            <li>
+                Nom : <b>{value.name}</b>
+            </li>
+            <li>
+                siret: <b>{value.siret.getValue()}</b>
+
+            </li>
+        </ul>
 
         <h4 className={"text-xl"}>Adresse</h4>
         <ul>
@@ -21,16 +31,17 @@ export default async function DealerShowPage(pageProps : {searchProps: any, para
             <li>Code postal : <b>{value.address.postalCode}</b></li>
             <li>Rue : <b>{value.address.street}</b></li>
         </ul>
+        <hr/>
+        <div className="flex gap-4">
 
-        <br/>
+            <UnregisterActionButton siretString={siret}/>
 
-        <UnregisterActionButton siretString={siret}/>
-
-        <Link href={`/dealers/${siret}/stock`} >
-            <Button >Voir le stock</Button>
-        </Link>
-        <Link href={`/dealers/${siret}/orders`} >
-            <Button >Voir les des commandes</Button>
-        </Link>
-    </div>
+            <Link href={`/dealers/${siret}/stock`} >
+                <Button >Voir le stock</Button>
+            </Link>
+            <Link href={`/dealers/${siret}/orders`} >
+                <Button >Voir les commandes</Button>
+            </Link>
+        </div>
+    </>
 }

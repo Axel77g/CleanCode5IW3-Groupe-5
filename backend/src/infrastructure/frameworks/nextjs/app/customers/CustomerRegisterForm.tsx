@@ -1,6 +1,5 @@
 "use client";
 
-import { AddressDTO } from "@domain/shared/value-object/Address";
 import { useActionState } from "react";
 import { registerCustomerAction } from "@/app/customers/actions";
 import Input from "@/components/Input";

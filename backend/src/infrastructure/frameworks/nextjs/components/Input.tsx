@@ -21,7 +21,7 @@ const Input = (props: {
         "flex gap-2 items-center px-2 py-2 text-gray-900 border border-gray-300 rounded-lg shadow-sm max-w-[300px]",
         focused ? "border-2 border-blue-500" : "",
         props.disabled ? "bg-gray-200 cursor-not-allowed" : ""
-    ].join(" ");
+    ].join(" ")
 
     function handleFocus() {
         if (props.disabled) return;
@@ -35,7 +35,10 @@ const Input = (props: {
     }
 
     return (
-        <div className="flex flex-col mb-4" ref={inputContainerRef} onClick={handleFocus}>
+        <div className={[
+            "flex flex-col mb-4",
+            props.type === 'hidden' ? 'hidden' : ''
+        ].join(" ")} ref={inputContainerRef} onClick={handleFocus}>
             <label className="mb-2 text-sm font-semibold text-gray-700" htmlFor={props.name}>
                 {props.label}
             </label>

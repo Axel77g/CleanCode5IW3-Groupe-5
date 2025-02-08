@@ -3,19 +3,30 @@ import {MappedEntity} from "@infrastructure/common/entityMappers/MappedEntity";
 import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
 import {ApplicationException} from "@shared/ApplicationException";
 import {Siret} from "@domain/shared/value-object/Siret";
+import {MaintenanceSparePart} from "@domain/maintenance/value-object/MaintenanceSparePart";
 
 export class MaintenanceMapper {
     public static toDomain(maintenance: any): Maintenance | ApplicationException {
         const vehiculeImmatriculation = VehiculeImmatriculation.create(maintenance.vehiculeImmatriculation);
         if (vehiculeImmatriculation instanceof ApplicationException) return vehiculeImmatriculation;
-        const garageSiret = Boolean(maintenance.garageSiret) ? Siret.create(maintenance.garageSiret) : null;
+        const garageSiret = maintenance.garageSiret !== null ? Siret.create(maintenance.garageSiret) : null;
         if(garageSiret instanceof ApplicationException) return garageSiret;
+
+        const maintenanceSpareParts : (ApplicationException | MaintenanceSparePart)[]  = maintenance.maintenanceSpareParts.map((part: any) => {
+            return MaintenanceSparePart.create({
+                sparePartReference: part.sparePartReference,
+                quantity: part.quantity,
+                unitPrice: part.unitPrice
+            })
+        })
+        if(maintenanceSpareParts.some(part => part instanceof ApplicationException)) return new ApplicationException("Maintenance.mapper.invalid.spareSpart","Invalid maintenance spare parts");
+
         return Maintenance.create({
             maintenanceId: maintenance.maintenanceId,
             vehiculeImmatriculation,
             garageSiret,
             status : maintenance.status,
-            maintenanceSpareParts : maintenance.maintenanceSpareParts,
+            maintenanceSpareParts : maintenanceSpareParts as MaintenanceSparePart[],
             recommendation : maintenance.recommendation,
             date : maintenance.date
         });

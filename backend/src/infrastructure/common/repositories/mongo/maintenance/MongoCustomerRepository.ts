@@ -5,7 +5,7 @@ import { AbstractMongoRepository } from '@infrastructure/common/repositories/mon
 import {ApplicationException } from "@shared/ApplicationException";
 import { PaginatedInput } from '@shared/PaginatedInput';
 import { OptionalResult, PaginatedResult, Result, VoidResult } from '@shared/Result';
-import {Vehicule} from "@domain/maintenance/entities/Vehicule";
+import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
 
 export class MongoCustomerRepository extends AbstractMongoRepository implements CustomerRepository {
     protected collectionName: string = 'customers';
@@ -60,15 +60,17 @@ export class MongoCustomerRepository extends AbstractMongoRepository implements 
         );
     }
 
-    listCustomerVehicules(customerId: string, pagination: PaginatedInput): Promise<PaginatedResult<Vehicule>> {
+    listCustomerVehicules(customerId: string, pagination: PaginatedInput): Promise<PaginatedResult<VehiculeImmatriculation>> {
         const { page, limit } = pagination;
         return this.catchError(async () => {
             const customerDocument = await this.getCollection().findOne({ customerId });
             if (!customerDocument) return Result.FailureStr("Customer not found");
-            const vehicules = customerDocument.vehiculeImmatriculations;
+            const customer = CustomerMapper.toDomain(customerDocument);
+            if (customer instanceof ApplicationException) return Result.Failure(customer);
+            const vehicules = customer.vehiculeImmatriculations;
             const vehiculesTotal = vehicules.length;
             const vehiculesPaginated = vehicules.slice((page - 1) * limit, page * limit);
-            return Result.SuccessPaginated<Vehicule>(vehiculesPaginated, vehiculesTotal, page, limit
+            return Result.SuccessPaginated<VehiculeImmatriculation>(vehiculesPaginated, vehiculesTotal, page, limit
             );
         });
     }

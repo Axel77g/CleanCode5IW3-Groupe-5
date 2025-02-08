@@ -38,13 +38,13 @@ export function OrderStatusDialog(props: {isOpen: boolean, order : any, onClose:
     const [state, action] = useActionState(updateOrderStatus, initialState)
     if(!props.order) return null
     return <Dialog isOpen={props.isOpen} onClose={props.onClose}>
-        <HeadingTile>Commande #{props.order.orderId}</HeadingTile>
+        <HeadingTile>Commande du {new Date(props.order.orderedAt).toLocaleDateString("fr-FR")}</HeadingTile>
 
         <p>
-            Commandé le {props.order.orderedAt}
+            Commandé le {new Date(props.order.orderedAt).toLocaleDateString("fr-FR")}
         </p>
         <p>
-            Livraison le {props.order.deliveredAt}
+            Livraison le {new Date(props.order.deliveredAt).toLocaleDateString("fr-FR")}
         </p>
         <div className="my-5">
             <p className={"font-bold"}>

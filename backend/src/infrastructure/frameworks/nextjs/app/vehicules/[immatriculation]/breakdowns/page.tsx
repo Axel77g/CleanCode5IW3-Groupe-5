@@ -9,7 +9,6 @@ import {
 import Pagination from "@/components/Pagination";
 import VehiculeBreakdownsForm from "@/app/vehicules/[immatriculation]/breakdowns/VehiculeBreakdownForm";
 import HeadingTile from "@/components/HeadingTitle";
-import {useDialog} from "@/hooks/useDialog";
 
 export default async function VehiculeBreakdownListPage(pageProps: { params: any, searchParams: any }) {
     const {immatriculation} = await pageProps.params as { immatriculation: string }

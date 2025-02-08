@@ -16,19 +16,18 @@ export default async function DriverTestDrivesPage(pageProps : {searchParams: an
     const result = await listDriverTestsDrivesUseCase({driverLicenseId,...paginationQuery})
     if(!result.success) return <ErrorCallout>{result.error.message}</ErrorCallout>
     const {value, ...pagination} = result
-    return <div>
+    return <>
         <List>
             {
                 value.map(testDrive => (
-                    <ListItem link="test" key={testDrive.testDriveId}>
-                        <Chip>#{testDrive.vehicleImmatriculation.getValue()}</Chip> {testDrive.period.startDate.toISOString()} - {testDrive.period.endDate.toISOString()}
+                    <ListItem link="#" key={testDrive.testDriveId}>
+                        <Chip>#{testDrive.vehicleImmatriculation.getValue()}</Chip> Du {testDrive.period.startDate.toLocaleDateString("fr-FR")} au {testDrive.period.endDate.toLocaleDateString("fr-FR")}
                     </ListItem>
                 ))
             }
         </List>
-
         <Pagination {...pagination}/>
         <hr/>
         <DriverTestDriveForm driverLicenseId={driverLicenseId}/>
-    </div>
+    </>
 }

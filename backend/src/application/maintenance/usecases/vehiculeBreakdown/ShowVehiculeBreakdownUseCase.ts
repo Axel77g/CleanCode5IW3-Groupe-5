@@ -1,5 +1,4 @@
 import {IInputUseCase, IUseCase} from "@shared/IUseCase";
-import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
 import {Result} from "@shared/Result";
 import {VehiculeBreakdownRepository} from "@application/maintenance/repositories/VehiculeBreakdownRepository";
 import {VehiculeBreakdown} from "@domain/maintenance/entities/VehiculeBreakdown";

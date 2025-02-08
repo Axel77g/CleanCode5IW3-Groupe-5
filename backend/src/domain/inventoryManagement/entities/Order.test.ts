@@ -22,9 +22,9 @@ describe("Order", () => {
                 orderedAt: new Date("2023-01-03"),
                 deliveredAt: new Date("2023-01-01"),
             });
-            const order = Order.create({
+            const order = Order.fromObject({
                 ...dto,
-                siret: generateSiret()
+                siret: generateSiret().getValue()
             });
             expect(order).toBeInstanceOf(ApplicationException);
             assertError(order as ApplicationException, Order.errors.INVALID_DATE);
@@ -32,9 +32,9 @@ describe("Order", () => {
 
         it("should return an ApplicationException when no order lines are provided", () => {
             const dto = generateOrderDTO({ lines: [] });
-            const order = Order.create({
+            const order = Order.fromObject({
                 ...dto,
-                siret: generateSiret(),
+                siret: generateSiret().getValue()
             });
             expect(order).toBeInstanceOf(ApplicationException);
             assertError(order as ApplicationException, Order.errors.NO_LINES);

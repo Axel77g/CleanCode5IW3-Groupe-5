@@ -9,7 +9,6 @@ import {UpdateVehiculeEvent} from "@domain/maintenance/events/vehicule/UpdateVeh
 import {VehiculeMaintenanceInterval} from "@domain/maintenance/value-object/VehiculeMaintenanceInterval";
 import {ApplicationException} from "@shared/ApplicationException";
 import {Period} from "@domain/testDrive/value-object/Period";
-import {AssignVehiculeToCustomerEvent} from "@domain/maintenance/events/vehicule/AssignVehiculeToCustomerEvent";
 
 export class VehiculeProjection extends AbstractProjection {
     constructor(private _vehiculeRepository: VehiculeRepository) {

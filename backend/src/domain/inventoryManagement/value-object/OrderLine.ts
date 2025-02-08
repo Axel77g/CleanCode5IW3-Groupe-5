@@ -25,4 +25,8 @@ export class OrderLine{
 
         return new OrderLine(payload.reference, payload.quantity, payload.unitPrice);
     }
+
+    get price() : number {
+        return this.quantity * this.unitPrice;
+    }
 }

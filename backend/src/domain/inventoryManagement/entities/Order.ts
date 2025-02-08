@@ -5,6 +5,7 @@ import {OrderStatusEnum} from "../enums/OrderStatusEnum";
 import {ApplicationException} from "@shared/ApplicationException";
 import {RegisterOrderEvent} from "@domain/inventoryManagement/events/RegisterOrderEvent";
 import {UpdateOrderStatusEvent} from "@domain/inventoryManagement/events/UpdateOrderStatusEvent";
+import {Price} from "@domain/shared/value-object/Price";
 
 
 export interface OrderDTO {
@@ -41,6 +42,11 @@ export class Order {
         public readonly status : OrderStatusEnum = OrderStatusEnum.PENDING,
         public readonly statusHistory : OrderStatusHistory[] = []
     ) { }
+
+    get totalPrice() : Price{
+        const value = this.lines.reduce((acc, line) => acc + line.price, 0);
+        return Price.create(Math.max(0,value)) as Price;
+    }
 
     complete() : Order | ApplicationException {
         if(this.status === OrderStatusEnum.CANCELED){

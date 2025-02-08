@@ -6,6 +6,7 @@ import {UpdateMaintenanceEvent} from "@domain/maintenance/events/maintenance/Upd
 import {ApplicationException} from "@shared/ApplicationException";
 import {MaintenanceStatusEnum} from "@domain/maintenance/enums/MaintenanceStatusEnum";
 import {randomUUID} from "node:crypto";
+import {Price} from "@domain/shared/value-object/Price";
 
 export interface MaintenanceDTO {
     maintenanceId : string,
@@ -59,6 +60,11 @@ export class Maintenance{
             recommendation: payload.recommendation,
             date: payload.date,
         })
+    }
+
+    get totalPrice() : Price {
+        const value = this.maintenanceSpareParts.reduce((acc, part) => acc + part.price, 0);
+        return Price.create(Math.max(value,0)) as Price;
     }
 
     update( object : {

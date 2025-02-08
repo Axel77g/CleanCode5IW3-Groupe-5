@@ -17,23 +17,20 @@ export default async function DealersListPage(pageProps: {searchParams: any}) {
     const {value,...pagination} = response
     return (
         <>
-            <List>
-                {
-                    value.map(dealer=>(
-                        <ListItem link={`/dealers/${dealer.siret.getValue()}`}>
-                            <Chip>{dealer.siret.getValue()}</Chip>
-                            {dealer.name}
-                        </ListItem>
-                    ))
-                }
-            </List>
-            <Pagination {...pagination} />
-
-
-            <br/>
+            <div>
+                <List>
+                    {
+                        value.map(dealer=>(
+                            <ListItem link={`/dealers/${dealer.siret.getValue()}`}>
+                                <Chip>{dealer.siret.getValue()}</Chip>
+                                {dealer.name}
+                            </ListItem>
+                        ))
+                    }
+                </List>
+                <Pagination {...pagination} />
+            </div>
             <hr/>
-            <br/>
-
             <DealerRegisterForm/>
         </>
     )
