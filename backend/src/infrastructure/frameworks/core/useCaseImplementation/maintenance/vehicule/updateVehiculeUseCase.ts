@@ -13,11 +13,11 @@ import {VehiculeMaintenanceInterval} from "@domain/maintenance/value-object/Vehi
 export const updateVehiculeUseCase: UseCaseImplementation<typeof updateVehiculeRequest, UpdateVehiculeUseCase> = async (input) => {
     const immatriculation = VehiculeImmatriculation.create(input.immatriculation);
     if (immatriculation instanceof ApplicationException) return Result.Failure(immatriculation);
-    const maintenanceInterval = VehiculeMaintenanceInterval.create(
-        input.maintenanceInterval.duration
-        , input.maintenanceInterval.mileage
-        , input.maintenanceInterval.lastMaintenance
-    )
+    const maintenanceInterval = input.maintenanceInterval ? VehiculeMaintenanceInterval.create(
+        input.maintenanceInterval?.duration
+        , input.maintenanceInterval?.mileage
+        , input.maintenanceInterval?.lastMaintenance
+    ) : undefined
     if(maintenanceInterval instanceof ApplicationException) return Result.Failure(maintenanceInterval)
     const useCase = createUpdateVehiculeUseCase(maintenanceEventRepository, vehiculeRepository);
     return useCase({

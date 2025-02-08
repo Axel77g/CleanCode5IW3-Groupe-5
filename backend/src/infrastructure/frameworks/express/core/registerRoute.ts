@@ -140,6 +140,7 @@ export function registerRoute<T extends ZodSchema<any>>(
             if (e instanceof ZodError) {
                 res.status(422).json({ error: e.errors });
             } else {
+                console.error(e);
                 res.status(500).json({ error: 'Internal Server Error' });
             }
         }

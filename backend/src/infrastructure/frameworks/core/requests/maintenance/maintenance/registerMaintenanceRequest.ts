@@ -2,7 +2,6 @@ import { z } from 'zod'
 import {stringToNumber} from "@infrastructureCore/requests/stringToNumber";
 import {siretZodObject} from "@infrastructureCore/requests/inventoryManagement/siretRequest";
 export const registerMaintenanceRequest = z.object({
-    maintenanceId: z.string(),
     vehiculeImmatriculation: z.string(),
     ...siretZodObject,
     status: z.string(),

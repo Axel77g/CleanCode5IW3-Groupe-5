@@ -47,7 +47,7 @@ export interface VehiculeBreakdownDTO {
     }
 
     assignToMaintenance(maintenanceId: string) : VehiculeBreakdown | ApplicationException{
-        if(!this.maintenanceId) return new ApplicationException("VehicleBreackdown.cannotAssignToMaintenanceWithoutMaintenanceId","Cannot assign a breakdown to a maintenance without a maintenance id");
+        if(!maintenanceId) return new ApplicationException("VehicleBreackdown.cannotAssignToMaintenanceWithoutMaintenanceId","Cannot assign a breakdown to a maintenance without a maintenance id");
         return new VehiculeBreakdown(
             this.vehiculeBreakdownId,
             this.vehiculeImmatriculation,

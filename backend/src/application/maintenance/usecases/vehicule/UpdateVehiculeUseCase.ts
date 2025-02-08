@@ -5,7 +5,6 @@ import {VehiculeRepository} from "@application/maintenance/repositories/Vehicule
 import {VehiculeImmatriculation} from "@domain/maintenance/value-object/VehiculeImmatriculation";
 import {VehiculeStatusEnum} from "@domain/maintenance/enums/VehiculeStatusEnum";
 import {VehiculeMaintenanceInterval} from "@domain/maintenance/value-object/VehiculeMaintenanceInterval";
-import {Vehicule} from "@domain/maintenance/entities/Vehicule";
 
 interface UpdateVehiculeInput extends IInputUseCase {
     immatriculation: VehiculeImmatriculation;

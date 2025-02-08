@@ -62,15 +62,16 @@ export class Maintenance{
     }
 
     update( object : {
-        garageSiret : Siret | null,
-        status : MaintenanceStatusEnum,
-        recommendation: string,
-        maintenanceSpareParts: MaintenanceSparePart[],
+        garageSiret ?: Siret | null,
+        status ?: MaintenanceStatusEnum,
+        recommendation ?: string,
+        maintenanceSpareParts ?: MaintenanceSparePart[],
     }) {
+        const garageSiret = object.garageSiret === null ? null : object.garageSiret || this.garageSiret;
         return new Maintenance(
             this.maintenanceId,
             this.vehiculeImmatriculation,
-            object.garageSiret,
+            garageSiret,
             object.status || this.status,
             object.maintenanceSpareParts || this.maintenanceSpareParts,
             object.recommendation || this.recommendation,

@@ -1,4 +1,4 @@
-import {string, z} from 'zod';
+import { z} from 'zod';
 import { stringToNumber } from "@infrastructureCore/requests/stringToNumber";
 import { dateParser } from "@infrastructureCore/requests/dateParser";
 import {VehiculeStatusEnum} from "@domain/maintenance/enums/VehiculeStatusEnum";
@@ -12,7 +12,7 @@ export const updateVehiculeRequest = z.object({
         lastMaintenance: z.object({
             date: dateParser,
             mileage: stringToNumber ,
-        }),
-    }),
-    status: z.nativeEnum(VehiculeStatusEnum),
+        })
+    }).optional(),
+    status: z.nativeEnum(VehiculeStatusEnum).optional(),
 });

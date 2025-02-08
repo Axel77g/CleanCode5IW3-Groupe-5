@@ -8,7 +8,7 @@ export class MaintenanceMapper {
     public static toDomain(maintenance: any): Maintenance | ApplicationException {
         const vehiculeImmatriculation = VehiculeImmatriculation.create(maintenance.vehiculeImmatriculation);
         if (vehiculeImmatriculation instanceof ApplicationException) return vehiculeImmatriculation;
-        const garageSiret = Siret.create(maintenance.garageSiret);
+        const garageSiret = Boolean(maintenance.garageSiret) ? Siret.create(maintenance.garageSiret) : null;
         if(garageSiret instanceof ApplicationException) return garageSiret;
         return Maintenance.create({
             maintenanceId: maintenance.maintenanceId,

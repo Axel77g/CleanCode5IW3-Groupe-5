@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 export const registerGarageRequest = z.object({
     ...siretZodObject,
-    name: z.string(),
+    name: z.string().min(3),
     address: z.object({
         street: z.string(),
         city: z.string(),

@@ -6,9 +6,9 @@ import { Result } from "@shared/Result";
 
 interface UpdateCustomerInput extends IInputUseCase {
     customerId: string,
-    name: string,
-    phoneNumber: string,
-    email: string
+    name ?: string,
+    phoneNumber ?: string,
+    email ?: string
 }
 
 export type UpdateCustomerUseCase = IUseCase<UpdateCustomerInput, Result>

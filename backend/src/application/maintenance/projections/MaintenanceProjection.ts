@@ -36,7 +36,7 @@ export class MaintenanceProjection extends AbstractProjection {
 
     async applyUpdateEvent(event: UpdateMaintenanceEvent): Promise<VoidResult> {
         const maintenance = await this._maintenanceRepository.getByMaintenanceId(event.payload.maintenanceId)
-        if (!maintenance.success) return Result.FailureStr("Cannot delete maintenances")
+        if (!maintenance.success) return Result.FailureStr("Cannot update maintenances")
         if(maintenance.empty) return Result.FailureStr("Maintenance not found, this should not happen")
         const siret = event.payload.garageSiret ? Siret.create(event.payload.garageSiret) : null
         if(siret instanceof ApplicationException) return Result.Failure(siret)

@@ -36,7 +36,7 @@ export default function GarageRegisterForm() {
                 <div className="w-1/2">
                     <Input type="text" label={"Siret"} name="siret" placeholder={"Siret de la concession"}
                            value={state.siret}/>
-                    <Input type="text" label={"Nom du garage"} name="name" placeholder={"Nom de la concession"}/>
+                    <Input type="text" label={"Nom du garage"} name="name" placeholder={"Nom de la concession"} value={state.name}/>
                     <Input placeholder={"Téléphone"} label={"Téléphone"} name={"phoneNumber"} type={"phone"}
                            value={state.phoneNumber}/>
                 </div>
