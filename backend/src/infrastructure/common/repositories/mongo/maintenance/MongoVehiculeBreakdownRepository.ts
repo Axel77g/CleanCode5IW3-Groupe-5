@@ -25,7 +25,7 @@ export class MongoVehiculeBreakdownRepository extends AbstractMongoRepository im
         )
     }
 
-    getBreakdownByVehicule(vehiculeBreakdownId: string): Promise<OptionalResult<VehiculeBreakdown>> {
+    getBreakdownById(vehiculeBreakdownId: string): Promise<OptionalResult<VehiculeBreakdown>> {
         return this.catchError(
            async () => {
                const vehiculeBreakdownDocument = await this.getCollection().findOne({vehiculeBreakdownId: vehiculeBreakdownId});

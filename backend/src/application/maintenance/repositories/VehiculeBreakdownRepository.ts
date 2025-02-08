@@ -5,6 +5,6 @@ import {PaginatedInput} from "@shared/PaginatedInput";
 
 export interface VehiculeBreakdownRepository {
     store(breakdown: VehiculeBreakdown): Promise<VoidResult>
-    getBreakdownByVehicule(vehiculeBreakdownId: string): Promise<OptionalResult<VehiculeBreakdown>>
+    getBreakdownById(vehiculeBreakdownId: string): Promise<OptionalResult<VehiculeBreakdown>>
     listVehiculeBreakdowns(vehiculeImmatriculation: VehiculeImmatriculation, pagination: PaginatedInput): Promise<PaginatedResult<VehiculeBreakdown>>
 }

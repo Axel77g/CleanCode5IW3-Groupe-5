@@ -20,12 +20,12 @@ export function AssignBreakdownDialog(props: {isOpen: boolean, vehiculeBreakdown
         const fetchBreakdowns = async () => {
             try {
                 const response = await fetch(`/api/maintenances?immatriculation=${props.immatriculation}`);
-                console.log(response);
                 if (!response.ok) throw new Error("Erreur lors de la récupération des pannes.");
                 const data = await response.json();
+                console.log(data);
                 const formattedBreakdowns = data.map((breakdown: any) => ({
-                    title: breakdown.description,
-                    value: breakdown.vehiculeBreakdownId,
+                    title: new Date(breakdown.date).toLocaleDateString() + " - #" + breakdown.maintenanceId,
+                    value: breakdown.maintenanceId,
                 }));
                 setBreakdowns(formattedBreakdowns)
             } catch (e) {
@@ -38,11 +38,11 @@ export function AssignBreakdownDialog(props: {isOpen: boolean, vehiculeBreakdown
 
     if (!props.vehiculeBreakdownId) return null;
     return <Dialog isOpen={props.isOpen} onClose={props.onClose}>
-        <HeadingTile>Véhicule</HeadingTile>
-        <Form action={action} title={"Assigner une panne"} state={state}>
+        <HeadingTile>Véhicule #{props.immatriculation}</HeadingTile>
+        <Form action={action} title={"Assigner à une maintenance"} state={state}>
             <input type={"hidden"} name={"vehiculeBreakdownId"} value={props.vehiculeBreakdownId}/>
-            <Select name={"breakdownId"} label={"Panne"} options={breakdowns}/>
-            <Button>Assigner</Button>
+            <Select name={"breakdownId"} label={"Maintenance"} options={breakdowns}/>
+            <Button variant={"submit"}>Assigner</Button>
         </Form>
     </Dialog>
 }

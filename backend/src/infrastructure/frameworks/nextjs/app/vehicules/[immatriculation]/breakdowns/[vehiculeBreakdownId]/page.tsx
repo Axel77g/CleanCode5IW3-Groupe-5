@@ -9,7 +9,6 @@ import {
 export default async function CustomerDetailPage(pageProps: { params: any, searchParams: any }) {
     const {vehiculeBreakdownId, immatriculation} = await pageProps.params
     const result = await showVehiculeBreakdownUseCase({vehiculeBreakdownId})
-    console.log(result);
     if (!result.success) return <ErrorCallout>{result.error.message}</ErrorCallout>
     const {value} = result
     return <>
