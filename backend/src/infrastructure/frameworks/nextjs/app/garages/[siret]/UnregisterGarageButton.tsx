@@ -18,7 +18,7 @@ export function UnregisterGarageButton(props: { siretString: string }) {
         router.push("/garages")
     }
 
-    return <Button onClick={handleClick}>
+    return <Button onClick={handleClick} variant="danger">
         Supprimer le garage
     </Button>
 }

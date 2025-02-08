@@ -32,7 +32,9 @@ export default function RootLayout({
     <div className="flex h-screen bg-gray-50">
         {/* Sidebar */}
         <aside className="w-64 bg-white border-r border-gray-200 shadow-sm p-4 flex flex-col gap-6">
-            <h1 className="text-lg font-semibold text-gray-800">Dashboard</h1>
+
+            <img src="/triumph_logo.svg" alt="logo" className={"h-fit w-fit"}/>
+
             <nav className="flex flex-col gap-3">
                 <Link
                     href="/dealers"

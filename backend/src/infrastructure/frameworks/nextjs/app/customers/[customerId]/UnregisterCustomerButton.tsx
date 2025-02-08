@@ -18,7 +18,8 @@ export function UnregisterCustomerButton(props: { customerIdString: string }) {
         router.push("/customers")
     }
 
-    return <Button onClick={handleClick}>
+    return <Button onClick={handleClick} variant="danger"
+    >
         Supprimer le client
     </Button>
 }

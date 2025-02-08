@@ -18,7 +18,7 @@ export function UnregisterActionButton(props: { siretString: string }) {
         router.push("/dealers")
     }
 
-    return <Button onClick={handleClick}>
+    return <Button onClick={handleClick} variant="danger">
         Supprimer la concession
     </Button>
 }

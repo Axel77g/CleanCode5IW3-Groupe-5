@@ -19,7 +19,7 @@ export function UnregisterVehiculeActionButton(props : {immatriculationString: s
         router.push("/vehicules")
     }
 
-    return <Button onClick={handleClick}>
+    return <Button onClick={handleClick} variant="danger">
         Supprimer le véhicule
     </Button>
 }

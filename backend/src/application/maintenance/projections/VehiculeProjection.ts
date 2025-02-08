@@ -9,6 +9,7 @@ import {UpdateVehiculeEvent} from "@domain/maintenance/events/vehicule/UpdateVeh
 import {VehiculeMaintenanceInterval} from "@domain/maintenance/value-object/VehiculeMaintenanceInterval";
 import {ApplicationException} from "@shared/ApplicationException";
 import {Period} from "@domain/testDrive/value-object/Period";
+import {AssignVehiculeToCustomerEvent} from "@domain/maintenance/events/vehicule/AssignVehiculeToCustomerEvent";
 
 export class VehiculeProjection extends AbstractProjection {
     constructor(private _vehiculeRepository: VehiculeRepository) {
@@ -64,4 +65,13 @@ export class VehiculeProjection extends AbstractProjection {
         if (updatedVehicule instanceof ApplicationException) return Result.FailureStr("Cannot update vehicules")
         return this._vehiculeRepository.store(updatedVehicule)
     }
+
+    // async applyAssignVehiculeToCustomerEvent(event: AssignVehiculeToCustomerEvent): Promise<VoidResult> {
+    //     const immatriculation = VehiculeImmatriculation.create(event.payload.immatriculation)
+    //     if (immatriculation instanceof ApplicationException) return Result.FailureStr("Cannot assign vehicules")
+    //     const vehicule = await this._vehiculeRepository.getByImmatriculation(immatriculation)
+    //     if (!vehicule.success) return Result.FailureStr("Cannot assign vehicules")
+    //     if (vehicule.empty) return Result.FailureStr("Vehicule not found")
+    //     const customer = await this._customerRepositor.getCustomerById(event.payload.customerId)
+    // }
 }
