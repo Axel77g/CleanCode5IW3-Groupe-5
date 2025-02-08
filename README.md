@@ -38,6 +38,26 @@ Application Next JS : (port 8080)
 npm run dev:next
 ```
 
+## Tests et build
+
+Build typescript (sans next js):
+```bash
+npm run build
+```
+
+Tests unitaires :
+```bash
+npm run test
+```
+
+Tests linter avec eslint:
+```bash
+npm run lint
+```
+
+> Note : Ces trois tests sont lancés automatiquement lors d'un push sur chaque PullRequest et sur les commit sur la branche main via GitHub Actions.
+
+
 ## Séparation en sous-domaines
 
 Nous avons séparé notre application en trois sous-domaines afin de pouvoir, par la suite, les séparer en microservices :
