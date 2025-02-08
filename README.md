@@ -51,7 +51,7 @@ Tests linter avec eslint:
 npm run lint
 ```
 
-> Note : Ces trois tests sont lancés automatiquement lors d'un push sur chaque PullRequest et sur les commit sur la branche main via GitHub Actions.
+> Note : Ces trois tests sont lancés automatiquement lors d'un push sur chaque Pull Request et par commits sur la branche `main` via GitHub Actions.
 
 
 ## Séparation en sous-domaines
