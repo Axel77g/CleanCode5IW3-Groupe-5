@@ -8,6 +8,7 @@ import {VehiculeVin} from "../value-object/VehiculeVin";
 import {VehiculeMaintenanceInterval} from "@domain/maintenance/value-object/VehiculeMaintenanceInterval";
 import {UnregisterVehiculeEvent} from "@domain/maintenance/events/vehicule/UnregisterVehiculeEvent";
 import {UpdateVehiculeEvent} from "@domain/maintenance/events/vehicule/UpdateVehiculeEvent";
+import {AssignVehiculeToCustomerEvent} from "@domain/maintenance/events/vehicule/AssignVehiculeToCustomerEvent";
 
 export interface VehiculeDTO {
     immatriculation: string;
@@ -221,7 +222,6 @@ export class Vehicule {
             }
         })
     }
-
     needMaintenance(): boolean {
         return this.mileage - this.maintenanceInterval.lastMaintenance.mileage >= this.maintenanceInterval.mileage;
     }

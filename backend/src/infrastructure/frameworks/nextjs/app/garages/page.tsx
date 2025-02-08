@@ -20,10 +20,10 @@ export default async function GaragesListPage(pageProps: {searchParams: any}) {
         <>
             <HeadingTile>Liste des garages</HeadingTile>
 
-            <List>
+            <List >
                 {
                     value.map(garage => (
-                        <ListItem link={`/garages/${garage.siret.getValue()}`}>
+                        <ListItem link={`/garages/${garage.siret.getValue()}`} key={garage.siret.getValue()}>
                             <Chip>{garage.siret.getValue()}</Chip>
                             {garage.name}
                         </ListItem>

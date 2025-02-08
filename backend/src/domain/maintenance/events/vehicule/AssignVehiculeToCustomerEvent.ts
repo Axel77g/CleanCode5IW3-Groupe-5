@@ -1,3 +1,5 @@
+import {AbstractEvent} from "@shared/AbstractEvent";
+
 export interface AssignVehiculeToCustomerEventPayload {
     customerId: string,
     immatriculation: string
