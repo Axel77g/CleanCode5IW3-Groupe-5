@@ -26,7 +26,6 @@ const client = new MongoClient(url, {
 });
 
 async function main(){
-    console.log("Start")
     await client.connect()
 
     const eventObserver = new EventObserver()
@@ -65,7 +64,6 @@ async function main(){
     })
 
     if(!resultRegisterIncident.success) return console.error(resultRegisterIncident)
-    console.log(resultRegisterIncident)
 
     const immatriculation = VehiculeImmatriculation.create("AA-123-AA")
     if(immatriculation instanceof Error) return console.error(immatriculation)
@@ -81,9 +79,7 @@ async function main(){
     })
 
     if(!resultRegisterTestDrive.success) return console.error(resultRegisterTestDrive)
-    console.log(resultRegisterTestDrive)
 
-    console.log("End")
 
 }
 

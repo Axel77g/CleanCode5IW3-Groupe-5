@@ -12,7 +12,7 @@ export interface CustomerDTO {
     phoneNumber: string;
     email: string;
     address: AddressDTO;
-    vehiculeImmatriculations: VehiculeImmatriculation[];
+    vehiculeImmatriculations: string[];
 }
 
 export class Customer {
@@ -30,13 +30,19 @@ export class Customer {
         if (address instanceof ApplicationException) {
             return address;
         }
+
+        const vehiculeImmatriculations = object.vehiculeImmatriculations.map(vehiculeImmatriculation => VehiculeImmatriculation.create(vehiculeImmatriculation))
+        if(vehiculeImmatriculations.some(vehicule => vehicule instanceof ApplicationException)) {
+            return vehiculeImmatriculations.find(vehicule => vehicule instanceof ApplicationException) as ApplicationException
+        }
+
         return Customer.create({
             customerId: object.customerId,
             name: object.name,
             phoneNumber: object.phoneNumber,
             email: object.email,
             address,
-            vehiculeImmatriculations: object.vehiculeImmatriculations
+            vehiculeImmatriculations : vehiculeImmatriculations as VehiculeImmatriculation[]
         })
     }
 
@@ -65,7 +71,7 @@ export class Customer {
             phoneNumber: this.phoneNumber,
             email: this.email,
             address: this.address,
-            vehiculeImmatriculations: this.vehiculeImmatriculations
+            vehiculeImmatriculations: this.vehiculeImmatriculations.map(vehiculeImmatriculation => vehiculeImmatriculation.getValue())
         });
     }
 

@@ -89,8 +89,8 @@ export default function RootLayout({
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-6 bg-gray-50">
-            <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6">
+        <main className="flex-1 p-6 bg-gray-50 overflow-auto max-h-screen">
+            <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 min-h-full">
                 {children}
             </div>
         </main>

@@ -1,5 +1,11 @@
 import {ApplicationException} from "@shared/ApplicationException";
 
+export interface MaintenanceSparePartDTO {
+    unitPrice: number,
+    quantity: number,
+    sparePartReference: string,
+}
+
 export class MaintenanceSparePart{
     static errors= {
         NULL_UNIT_PRICE: new ApplicationException("MaintenanceSparePart.nullUnitPrice","The unit price must be greater than 0"),
@@ -19,6 +25,14 @@ export class MaintenanceSparePart{
         if(object.unitPrice <= 0) return MaintenanceSparePart.errors.NULL_UNIT_PRICE;
         if(object.quantity <= 0) return MaintenanceSparePart.errors.NULL_QUANTITY;
         return new MaintenanceSparePart(object.unitPrice, object.quantity, object.sparePartReference);
+    }
+
+    static createFormObject(object : MaintenanceSparePartDTO){
+        return MaintenanceSparePart.create({
+            unitPrice: object.unitPrice,
+            quantity: object.quantity,
+            sparePartReference: object.sparePartReference,
+        })
     }
 
     get price() : number {

@@ -1,6 +1,6 @@
 import {useServerPagination} from "@/hooks/useServerPagination";
 import HeadingTile from "@/components/HeadingTitle";
-import MaintenanceRegisterForm from "@/app/maintenances/MaintenanceRegisterForm";
+import MaintenanceForm from "@/app/maintenances/MaintenanceForm";
 import Pagination from "@/components/Pagination";
 import {
     listMaintenanceUseCase
@@ -19,7 +19,7 @@ export default async function MaintenancesPage(pageProps: {searchParams: any}) {
             {
                 value.map(
                     (maintenance, index) =>
-                        <ListItem key={index} link={`/${maintenance.maintenanceId}`}>
+                        <ListItem key={index} link={`/maintenances/${maintenance.maintenanceId}`}>
                             <div>Maintenance véhicule : {maintenance.vehiculeImmatriculation.getValue()} - {maintenance.date.toLocaleDateString()}</div>
                         </ListItem>
                 )
@@ -27,6 +27,6 @@ export default async function MaintenancesPage(pageProps: {searchParams: any}) {
         </List>
 
         <Pagination {...pagination} />
-        <MaintenanceRegisterForm/>
+        <MaintenanceForm/>
     </div>
 }

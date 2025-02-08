@@ -1,15 +1,22 @@
-// import {UseCaseImplementation} from "@infrastructureCore/useCaseImplementation/UseCaseImplementation";
-// import {updateMaintenanceRequest} from "@infrastructureCore/requests/maintenances/maintenances/updateMaintenanceRequest";
-// import {
-//     createUpdateMaintenanceUseCase,
-//     UpdateMaintenanceUseCase
-// } from "@application/maintenances/usecases/maintenances/UpdateMaintenanceUseCase";
-// import {maintenanceEventRepository} from "@infrastructureCore/repositories/maintenances/maintenanceEventRepository";
-// import {maintenanceRepository} from "@infrastructureCore/repositories/maintenances/maintenanceRepository";
-//
-//
-//
-// export const updateMaintenanceUseCase : UseCaseImplementation<typeof updateMaintenanceRequest, UpdateMaintenanceUseCase> = async (input) => {
-//     const useCase = createUpdateMaintenanceUseCase(maintenanceEventRepository, maintenanceRepository)
-//     return useCase(input)
-// }
+import {UseCaseImplementation} from "@infrastructureCore/useCaseImplementation/UseCaseImplementation";
+import {updateMaintenanceRequest} from "@infrastructureCore/requests/maintenance/maintenance/updateMaintenanceRequest";
+import {
+    createUpdateMaintenanceUseCase,
+    UpdateMaintenanceUseCase
+} from "@application/maintenance/usecases/maintenance/UpdateMaintenanceUseCase";
+import {maintenanceEventRepository} from "@infrastructureCore/repositories/maintenance/maintenanceEventRepository";
+import {maintenanceRepository} from "@infrastructureCore/repositories/maintenance/maintenanceRepository";
+import {Siret} from "@domain/shared/value-object/Siret";
+import {ApplicationException} from "@shared/ApplicationException";
+import {Result} from "@shared/Result";
+
+
+export const updateMaintenanceUseCase : UseCaseImplementation<typeof updateMaintenanceRequest, UpdateMaintenanceUseCase> = async (input) => {
+    const garageSiret = input.siret ? Siret.create(input.siret) : null
+    if(garageSiret instanceof ApplicationException) return Result.Failure(garageSiret);
+    const useCase = createUpdateMaintenanceUseCase(maintenanceEventRepository, maintenanceRepository)
+    return useCase({
+        ...input,
+        garageSiret
+    })
+}

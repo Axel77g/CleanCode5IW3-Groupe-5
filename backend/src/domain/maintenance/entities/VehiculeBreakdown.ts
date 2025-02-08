@@ -2,6 +2,10 @@ import {VehiculeImmatriculation} from "@domain/maintenance/value-object/Vehicule
 import {RegisterVehiculeBreakDownEvent} from "@domain/maintenance/events/breakdown/RegisterVehiculeBreakDownEvent";
 import {randomUUID} from "node:crypto";
 import {UnregisterVehiculeBreakdownEvent} from "@domain/maintenance/events/breakdown/UnregisterVehiculeBreakdownEvent";
+import {
+    AssignBreakdownToMaintenanceEvent
+} from "@domain/maintenance/events/breakdown/AssignBreakdownToMaintenanceEvent";
+import {ApplicationException} from "@shared/ApplicationException";
 
 export interface VehiculeBreakdownDTO {
     vehiculeBreakdownId?: string,
@@ -40,6 +44,25 @@ export interface VehiculeBreakdownDTO {
         maintenanceId ?: string
     }) {
         return new VehiculeBreakdown(object?.vehiculeBreakdownId || randomUUID(), object.vehiculeImmatriculation, object.description, object.date, object?.maintenanceId);
+    }
+
+    assignToMaintenance(maintenanceId: string) : VehiculeBreakdown | ApplicationException{
+        if(!this.maintenanceId) return new ApplicationException("VehicleBreackdown.cannotAssignToMaintenanceWithoutMaintenanceId","Cannot assign a breakdown to a maintenance without a maintenance id");
+        return new VehiculeBreakdown(
+            this.vehiculeBreakdownId,
+            this.vehiculeImmatriculation,
+            this.description,
+            this.date,
+            maintenanceId
+        )
+    }
+
+    assignToMaintenanceEvent() : AssignBreakdownToMaintenanceEvent | ApplicationException {
+        if(!this.maintenanceId) return new ApplicationException("VehicleBreackdown.cannotAssignToMaintenanceWithoutMaintenanceId","Cannot assign a breakdown to a maintenance without a maintenance id");
+        return new AssignBreakdownToMaintenanceEvent({
+            vehiculeBreakDownId: this.vehiculeBreakdownId,
+            maintenanceId : this.maintenanceId
+        })
     }
 
     registerEvent(): RegisterVehiculeBreakDownEvent {

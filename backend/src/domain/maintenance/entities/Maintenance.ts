@@ -9,7 +9,7 @@ import {randomUUID} from "node:crypto";
 
 export interface MaintenanceDTO {
     maintenanceId : string,
-    garageSiret : string,
+    garageSiret : string | null,
     vehiculeImmatriculation: string,
     maintenanceSpareParts : MaintenanceSparePart[],
     recommendation: string,
@@ -18,10 +18,10 @@ export interface MaintenanceDTO {
 }
 
 export class Maintenance{
-    constructor(
+    private constructor(
         public readonly maintenanceId : string,
         public readonly vehiculeImmatriculation: VehiculeImmatriculation,
-        public readonly garageSiret : Siret,
+        public readonly garageSiret : Siret | null,
         public readonly status : MaintenanceStatusEnum,
         public readonly maintenanceSpareParts : MaintenanceSparePart[],
         public readonly recommendation: string,
@@ -36,7 +36,7 @@ export class Maintenance{
     static create(object : {
         maintenanceId ?: string,
         vehiculeImmatriculation: VehiculeImmatriculation,
-        garageSiret : Siret,
+        garageSiret : Siret | null,
         status : MaintenanceStatusEnum,
         maintenanceSpareParts : MaintenanceSparePart[],
         recommendation: string,
@@ -48,7 +48,7 @@ export class Maintenance{
     static fromObject(payload : MaintenanceDTO) {
         const vehiculeImmatriculation = VehiculeImmatriculation.create(payload.vehiculeImmatriculation);
         if(vehiculeImmatriculation instanceof ApplicationException) return vehiculeImmatriculation;
-        const garageSiret = Siret.create(payload.garageSiret);
+        const garageSiret = payload.garageSiret ? Siret.create(payload.garageSiret) : null;
         if(garageSiret instanceof ApplicationException) return garageSiret;
         return this.create({
             maintenanceId: payload.maintenanceId,
@@ -62,6 +62,7 @@ export class Maintenance{
     }
 
     update( object : {
+        garageSiret : Siret | null,
         status : MaintenanceStatusEnum,
         recommendation: string,
         maintenanceSpareParts: MaintenanceSparePart[],
@@ -69,10 +70,10 @@ export class Maintenance{
         return new Maintenance(
             this.maintenanceId,
             this.vehiculeImmatriculation,
-            this.garageSiret,
-            object.status,
-            this.maintenanceSpareParts,
-            this.recommendation,
+            object.garageSiret,
+            object.status || this.status,
+            object.maintenanceSpareParts || this.maintenanceSpareParts,
+            object.recommendation || this.recommendation,
             this.date
         );
     }
@@ -80,7 +81,7 @@ export class Maintenance{
     registerEvent(): RegisterMaintenanceEvent {
         return new RegisterMaintenanceEvent({
             maintenanceId: this.maintenanceId,
-            garageSiret: this.garageSiret.getValue(),
+            garageSiret: this.garageSiret?.getValue() || null,
             vehiculeImmatriculation: this.vehiculeImmatriculation.getValue(),
             maintenanceSpareParts: this.maintenanceSpareParts,
             recommendation: this.recommendation,
@@ -92,6 +93,7 @@ export class Maintenance{
     updateEvent() : UpdateMaintenanceEvent {
         return new UpdateMaintenanceEvent({
             status: this.status,
+            garageSiret: this.garageSiret?.getValue() || null,
             maintenanceId: this.maintenanceId,
             maintenanceSpareParts: this.maintenanceSpareParts,
             recommendation: this.recommendation

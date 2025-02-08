@@ -176,6 +176,13 @@ export class Vehicule {
         })
     }
 
+    assignToCustomerEvent(customerId: string): AssignVehiculeToCustomerEvent {
+        return new AssignVehiculeToCustomerEvent({
+            customerId: customerId,
+            immatriculation: this.immatriculation.getValue()
+        })
+    }
+
     unregisterEvent(): UnregisterVehiculeEvent {
         return new UnregisterVehiculeEvent({
             immatriculation: this.immatriculation.getValue(),
@@ -188,7 +195,6 @@ export class Vehicule {
         status?: VehiculeStatusEnum
         warranty?: Period,
     }) {
-        console.log(object?.mileage, this.mileage)
         if (object.mileage && object?.mileage < this.mileage) return new ApplicationException("NONE", "Mileage cannot be greater than current mileage");
         if (object.maintenanceInterval && object.mileage && object.maintenanceInterval.lastMaintenance.mileage > this.mileage) return Vehicule.ApplicationExceptions.INVALID_LAST_MILEAGE;
         return new Vehicule(

@@ -25,7 +25,7 @@ export function AssignVehiculeDialog(props: {isOpen: boolean, customer : any, on
                 const data = await response.json();
                const formattedVehicules = data.map((vehicule: any) => ({
                    title: vehicule.model + " | " + vehicule.immatriculation.value,
-                   value: vehicule.immatriculation,
+                   value: vehicule.immatriculation.value,
                }));
                setVehicules(formattedVehicules)
               } catch (e) {
@@ -39,7 +39,6 @@ export function AssignVehiculeDialog(props: {isOpen: boolean, customer : any, on
     if(!props.customer) return null
     return <Dialog isOpen={props.isOpen} onClose={props.onClose}>
         <HeadingTile>Client | {props.customer.name}</HeadingTile>
-        {console.log(props.customer)}
         <Form action={action} title={"Assigner un véhicule"} state={state}>
             <input type={"hidden"} name={"customerId"} value={props.customer.customerId}/>
             <Select name={"vehiculeImmatriculation"} label={"Véhicule"} options={vehicules}/>

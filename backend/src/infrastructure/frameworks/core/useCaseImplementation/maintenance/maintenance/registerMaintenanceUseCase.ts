@@ -12,7 +12,7 @@ import { VehiculeImmatriculation } from "@domain/maintenance/value-object/Vehicu
 import { MaintenanceStatusEnum } from "@domain/maintenance/enums/MaintenanceStatusEnum";
 
 export const registerMaintenanceUseCase: UseCaseImplementation<typeof registerMaintenanceRequest, RegisterMaintenanceUseCase> = async (input) => {
-    const garageSiret = Siret.create(input.garageSiret);
+    const garageSiret = Siret.create(input.siret);
     if (garageSiret instanceof ApplicationException) return Result.Failure(garageSiret);
     const vehiculeImmatriculation = VehiculeImmatriculation.create(input.vehiculeImmatriculation);
     if (vehiculeImmatriculation instanceof ApplicationException) return Result.Failure(vehiculeImmatriculation);

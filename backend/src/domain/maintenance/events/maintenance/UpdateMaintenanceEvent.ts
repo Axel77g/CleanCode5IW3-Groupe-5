@@ -5,7 +5,7 @@ export class UpdateMaintenanceEvent extends AbstractEvent{
     static type = 'MAINTENANCE_UPDATED';
     readonly type = UpdateMaintenanceEvent.type;
     readonly streamId: string;
-    readonly payload: Pick<MaintenanceDTO, 'maintenanceId' | 'status' | "maintenanceSpareParts" | "recommendation">;
+    readonly payload: Pick<MaintenanceDTO, 'maintenanceId' | 'status' | "maintenanceSpareParts" | "recommendation" | "garageSiret">;
 
     constructor(payload: any) {
         super();

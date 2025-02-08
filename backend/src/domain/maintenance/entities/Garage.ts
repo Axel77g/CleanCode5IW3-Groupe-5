@@ -42,6 +42,13 @@ export class Garage {
         return new Garage(object.siret, object.name, object.address, object.phoneNumber);
     }
 
+    update(object:{
+        name: string,
+        phoneNumber: string
+    }) {
+        return new Garage(this.siret, object.name, this.address, object.phoneNumber);
+    }
+
     registerEvent(): RegisterGarageEvent {
         return new RegisterGarageEvent({
             siret: this.siret.getValue(),

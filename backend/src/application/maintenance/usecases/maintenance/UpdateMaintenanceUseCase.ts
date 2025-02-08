@@ -4,12 +4,15 @@ import {ApplicationException} from "@shared/ApplicationException";
 import {Result} from "@shared/Result";
 import {EventRepository} from "@application/shared/repositories/EventRepository";
 import {MaintenanceRepository} from "@application/maintenance/repositories/MaintenanceRepository";
-import {UpdateMaintenanceEvent} from "@domain/maintenance/events/maintenance/UpdateMaintenanceEvent";
+import {MaintenanceSparePart, MaintenanceSparePartDTO} from "@domain/maintenance/value-object/MaintenanceSparePart";
+import {Siret} from "@domain/shared/value-object/Siret";
 
 interface UpdateMaintenanceUseCaseInput extends IInputUseCase {
+    garageSiret: Siret | null,
     maintenanceId: string,
     status: MaintenanceStatusEnum,
     recommendation: string,
+    maintenanceSpareParts: MaintenanceSparePartDTO[]
 }
 
 export type UpdateMaintenanceUseCase = IUseCase<UpdateMaintenanceUseCaseInput, Result>;
@@ -23,14 +26,15 @@ export const createUpdateMaintenanceUseCase = (_eventRepository: EventRepository
         const maintenance = await _maintenanceRepository.getByMaintenanceId(input.maintenanceId);
         if (!maintenance.success) return maintenance;
         if (maintenance.empty) return Result.Failure(updateMaintenanceErrors.NOT_FOUND_MAINTENANCE);
-
-        const updatedMaintenance = new UpdateMaintenanceEvent({
-            maintenanceId: input.maintenanceId,
+        const maintenanceSparePart = input.maintenanceSpareParts.map(MaintenanceSparePart.createFormObject)
+        if(maintenanceSparePart.some(sparePart => sparePart instanceof ApplicationException)) return Result.Failure(maintenanceSparePart.find(sparePart => sparePart instanceof ApplicationException) as ApplicationException);
+        const updatedMaintenance = maintenance.value.update({
+            garageSiret: input.garageSiret,
             status: input.status,
             recommendation: input.recommendation,
+            maintenanceSpareParts: maintenanceSparePart as MaintenanceSparePart[]
         })
-
-        const repositoryResponse = await _eventRepository.storeEvent(updatedMaintenance);
+        const repositoryResponse = await _eventRepository.storeEvent(updatedMaintenance.updateEvent());
         if (!repositoryResponse.success) return repositoryResponse;
         return Result.Success("Maintenance updated successfully");
     }

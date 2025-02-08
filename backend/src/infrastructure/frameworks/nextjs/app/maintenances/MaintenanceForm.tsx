@@ -7,21 +7,19 @@ import { useActionState } from "react";
 import Input from "@/components/Input";
 import { Button } from "@/components/Button";
 import Select from "@/components/Select";
-import { registerMaintenanceAction } from "@/app/maintenances/actions";
+import {registerMaintenanceAction, updateMaintenanceAction} from "@/app/maintenances/actions";
 import ReferenceSelector from "@/components/ReferenceSelector";
 
 interface MaintenanceSparePartProps {
-
     unitPrice: string,
     quantity: string,
     sparePartReference: string,
-
 }
 
 
 interface MaintenanceRegisterFormProps {
     maintenanceId?: string,
-    garageSiret?: string,
+    siret?: string,
     vehiculeImmatriculation?: string,
     recommendation?: string,
     status?: MaintenanceStatusEnum,
@@ -34,10 +32,10 @@ interface ActionState extends MaintenanceRegisterFormProps {
     success: boolean
 }
 
-const initialState: ActionState = {
+let initialState: ActionState = {
     message: "",
     success: false,
-    garageSiret: "",
+    siret: "",
     vehiculeImmatriculation: "",
     recommendation: "",
     status: MaintenanceStatusEnum.WAITING,
@@ -60,11 +58,13 @@ const statusOptions = [
     },
 ];
 
-export default function MaintenanceRegisterForm() {
-    const [state, formAction] = useActionState<ActionState, FormData>(registerMaintenanceAction, initialState);
+export default function MaintenanceForm(props: {maintenance ?: MaintenanceRegisterFormProps}) {
+    const edit =    props.maintenance !== undefined;
+    initialState = {...initialState, ...props.maintenance};
+    const [state, formAction] = useActionState<ActionState, FormData>(edit ? updateMaintenanceAction : registerMaintenanceAction, initialState);
     const [garages, setGarages] = useState<{ title: string; value: string }[]>([]);
     const [vehicules, setVehicules] = useState<{ title: string; value: string }[]>([]);
-    const [maintenanceSpareParts, setMaintenanceSpareParts] = useState<MaintenanceSparePartProps[]>([]);
+    const [maintenanceSpareParts, setMaintenanceSpareParts] = useState<MaintenanceSparePartProps[]>(state.maintenanceSpareParts || []);
 
     useEffect(() => {
         const fetchGarages = async () => {
@@ -125,17 +125,18 @@ export default function MaintenanceRegisterForm() {
         temp[index] = maintenanceSparePart;
         setMaintenanceSpareParts(temp);
     }
-
     return (
-        <Form action={formAction} title={"Ajouter une maintenance"} state={state}>
+        <Form action={formAction} title={edit ? 'Mettre a jour la maintenance' : "Ajouter une maintenance"} state={state}>
             <input type="hidden" name="maintenanceId" value={state.maintenanceId} />
             <div className="grid grid-cols-12 gap-6">
                 <div className="col-span-6">
                     <Select
-                        name="garageSiret"
+                        name="siret"
                         label="Garage"
                         options={garages}
+                        value={state.siret}
                     />
+                    {state.siret}
                 </div>
 
                 <div className="col-span-6">
@@ -143,6 +144,9 @@ export default function MaintenanceRegisterForm() {
                         name="vehiculeImmatriculation"
                         label="Véhicule"
                         options={vehicules}
+                        value={state.vehiculeImmatriculation}
+                        disabled={edit}
+
                     />
                 </div>
 
@@ -161,6 +165,7 @@ export default function MaintenanceRegisterForm() {
                         name="status"
                         label="Statut"
                         options={statusOptions}
+                        value={state.status}
                     />
                 </div>
 
@@ -171,6 +176,7 @@ export default function MaintenanceRegisterForm() {
                         value={state.date ? new Date(state.date).toISOString().split("T")[0] : ""}
                         label={"Date de la maintenance"}
                         placeholder={"Date de la maintenance"}
+                        disabled={edit}
                     />
                 </div>
 
@@ -189,7 +195,9 @@ export default function MaintenanceRegisterForm() {
                 </div>
 
                 <div className="col-span-12">
-                    <Button>Ajouter une maintenance</Button>
+                    <Button>
+                        {edit ? "Mettre a jour la maintenance" : "Ajouter une maintenance"}
+                    </Button>
                 </div>
             </div>
         </Form>
@@ -210,7 +218,7 @@ function MaintenanceSparePartLine(props: {index: number,maintenanceSparePart : M
         <ReferenceSelector  label={"Pièce détachée"} reference={props.maintenanceSparePart.sparePartReference}  onChange={(sparePartReference) => props.onChange({...props.maintenanceSparePart, sparePartReference})}/>
         <input name={`maintenanceSpareParts[${props.index}].sparePartReference`} type={"hidden"} value={props.maintenanceSparePart.sparePartReference} onChange={handleChange} />
         <Input placeholder={"Quantité"} label={"Quantité"} name={`maintenanceSpareParts[${props.index}].quantity`} type={"number"} value={props.maintenanceSparePart.quantity} onChange={handleChange} />
-        <Input placeholder={"Prix unitaire"} label={"Prix unitaire"} name={`maintenanceSpareParts[${props.index}].price`} type={"number"} value={props.maintenanceSparePart.unitPrice} onChange={handleChange} />
+        <Input placeholder={"Prix unitaire"} label={"Prix unitaire"} name={`maintenanceSpareParts[${props.index}].unitPrice`} type={"number"} value={props.maintenanceSparePart.unitPrice} onChange={handleChange} />
         <Button onClick={props.onDelete}>Retirer</Button>
     </div>
 }

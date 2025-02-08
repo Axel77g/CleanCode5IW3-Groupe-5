@@ -1,12 +1,12 @@
 import {UseCaseImplementation} from "@infrastructureCore/useCaseImplementation/UseCaseImplementation";
-import {customerIdRequest} from "@infrastructureCore/requests/maintenance/customer/customerIdRequest";
 import {
-    createShowCustomerUseCase,
-    ShowCustomerUseCase
-} from "@application/maintenance/usecases/customer/ShowCustomerUseCase";
-import {customerRepository} from "@infrastructureCore/repositories/maintenance/customerRepository";
+    createShowMaintenanceUseCase,
+    ShowMaintenanceUseCase
+} from "@application/maintenance/usecases/maintenance/ShowMaintenanceUseCase";
+import {showMaintenanceRequest} from "@infrastructureCore/requests/maintenance/maintenance/showMaintenanceRequest";
+import {maintenanceRepository} from "@infrastructureCore/repositories/maintenance/maintenanceRepository";
 
-export const showCustomerUseCase: UseCaseImplementation<typeof customerIdRequest, ShowCustomerUseCase> = async (input) => {
-    const useCase = createShowCustomerUseCase(customerRepository)
+export const showMaintenanceUseCase: UseCaseImplementation<typeof showMaintenanceRequest, ShowMaintenanceUseCase> = async (input) => {
+    const useCase = createShowMaintenanceUseCase(maintenanceRepository)
     return useCase(input)
 }

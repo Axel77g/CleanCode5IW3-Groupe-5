@@ -1,10 +1,10 @@
 import {ErrorCallout} from "@/components/ErrorCallout";
 import {CustomerDTO} from "@domain/maintenance/entities/Customer";
-import {Button} from "@/components/Button";
-import Link from "next/link";
 import CustomerPatchForm from "@/app/customers/[customerId]/CustomerPatchForm";
 import {showCustomerUseCase} from "@infrastructureCore/useCaseImplementation/maintenance/customer/showCustomerUseCase";
 import {UnregisterCustomerButton} from "@/app/customers/[customerId]/UnregisterCustomerButton";
+import List from "@/components/List";
+import ListItem from "@/components/ListItem";
 
 export default async function CustomerDetailPage(pageProps: {params: any, searchParams:any}) {
     const {customerId} = await pageProps.params as {customerId: string}
@@ -21,9 +21,8 @@ export default async function CustomerDetailPage(pageProps: {params: any, search
             postalCode: result.value.address.postalCode,
             country: result.value.address.country
         },
-        vehiculeImmatriculations: [],
+        vehiculeImmatriculations: result.value.vehiculeImmatriculations.map(vehiculeImmatriculation => vehiculeImmatriculation.getValue()) || []
     }
-    const customerPath = `/customers/${customerId}`
     return (
         <div>
             <h1 className={"text-xl font-semibold"}>Détails du client {customerId}</h1>
@@ -37,12 +36,19 @@ export default async function CustomerDetailPage(pageProps: {params: any, search
 
                 <UnregisterCustomerButton customerIdString={customerId}/>
 
-                <Link href={`${customerPath}/vehicles`}>
-                    <Button>
-                        Accéder aux véhicules
-                    </Button>
-                </Link>
+
             </div>
+            <br/>
+
+            <h2>Véhicules</h2>
+
+            <List>
+                {
+                    customer.vehiculeImmatriculations.map((vehiculeImmatriculation, index) => {
+                        return <ListItem link={`/vehicules/${vehiculeImmatriculation}`} key={index}>{vehiculeImmatriculation}</ListItem>
+                    })
+                }
+            </List>
         </div>
     )
 }

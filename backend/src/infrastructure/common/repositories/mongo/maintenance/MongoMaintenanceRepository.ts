@@ -1,6 +1,9 @@
 import {AbstractMongoRepository} from "@infrastructure/common/repositories/mongo/AbstractMongoRepository";
 import {Maintenance} from "@domain/maintenance/entities/Maintenance";
-import {MaintenanceRepository} from "@application/maintenance/repositories/MaintenanceRepository";
+import {
+    ListGarageMaintenancesResult,
+    MaintenanceRepository
+} from "@application/maintenance/repositories/MaintenanceRepository";
 import {OptionalResult, PaginatedResult, Result, VoidResult} from "@shared/Result";
 import {MaintenanceMapper} from "@infrastructure/common/entityMappers/MaintenanceMapper";
 import {ApplicationException} from "@shared/ApplicationException";
@@ -17,19 +20,6 @@ export class MongoMaintenanceRepository extends AbstractMongoRepository implemen
             async () => {
                 session.startTransaction();
                 await this.getCollection().updateOne({maintenanceId: maintenance.maintenanceId}, {$set: MaintenanceMapper.toPersistence(maintenance)}, {upsert: true});
-                await session.commitTransaction();
-                return Result.SuccessVoid();
-            },
-            session.abortTransaction.bind(session),
-        )
-    }
-
-    async update(maintenanceId: string): Promise<VoidResult> {
-        const session = this.getSessionTransaction();
-        return this.catchError(
-            async () => {
-                session.startTransaction();
-                await this.getCollection().updateOne({maintenanceId}, {$set: {status: "done"}});
                 await session.commitTransaction();
                 return Result.SuccessVoid();
             },
@@ -60,15 +50,34 @@ export class MongoMaintenanceRepository extends AbstractMongoRepository implemen
         })
     }
 
-    listGarageMaintenances(garageSiret: Siret, pagination: PaginatedInput): Promise<PaginatedResult<Maintenance>> {
-        const {page, limit} = pagination;
-        return this.catchError(async () => {
-            const maintenancesDocuments = await this.getCollection().find({garageSiret}).skip((page - 1) * limit).limit(limit).toArray();
-            const maintenancesTotal = await this.getCollection().countDocuments({garageSiret});
-            const maintenances = MaintenanceMapper.toDomainList(maintenancesDocuments);
-            return Result.SuccessPaginated<Maintenance>(maintenances, maintenancesTotal, page, limit);
-        })
+    async listGarageMaintenances<T extends boolean>(
+        garageSiret: Siret,
+        pagination?: T extends true ? PaginatedInput : undefined
+    ): Promise<ListGarageMaintenancesResult<T>> {
+        if (pagination) {
+            const { page, limit } = pagination;
+            return this.catchError(async () => {
+                const maintenancesDocuments = await this.getCollection()
+                    .find({ garageSiret })
+                    .skip((page - 1) * limit)
+                    .limit(limit)
+                    .toArray();
+
+                const maintenancesTotal = await this.getCollection().countDocuments({ garageSiret });
+                const maintenances = MaintenanceMapper.toDomainList(maintenancesDocuments);
+
+                return Result.SuccessPaginated(maintenances, maintenancesTotal, page, limit);
+            }) as Promise<ListGarageMaintenancesResult<T>>;
+        } else {
+            return this.catchError(async () => {
+                const maintenancesDocuments = await this.getCollection().find({ garageSiret }).toArray();
+                const maintenances = MaintenanceMapper.toDomainList(maintenancesDocuments);
+
+                return Result.Success(maintenances);
+            }) as Promise<ListGarageMaintenancesResult<T>>;
+        }
     }
+
 
     async listMaintenance(pagination: PaginatedInput): Promise<PaginatedResult<Maintenance>> {
         const {limit, page} = pagination
