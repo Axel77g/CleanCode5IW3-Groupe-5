@@ -19,16 +19,16 @@ export default async function DriverIncidentsListPage(pageProps : {params : any,
     const {
         value, ...pagination
     } = result
-    return <div>
+    return <>
         <List>
             {value.map(incident => (
-                <ListItem link={`test`} key={incident.incidentId}>
-                    <Chip>{incident.type}</Chip> {incident.date.toISOString()}
+                <ListItem link={`#`} key={incident.incidentId}>
+                    <Chip>{incident.type}</Chip> {incident.date.toLocaleDateString("fr-FR")} {incident.description && "- " + incident.description}
                 </ListItem>
             ))
             }
         </List>
         <Pagination {...pagination}/>
         <DriverIncidentsForm driverLicenseId={driverLicenseId}/>
-    </div>
+    </>
 }

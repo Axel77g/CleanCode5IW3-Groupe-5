@@ -10,13 +10,13 @@ import {fileUploadService} from "@infrastructureCore/services/fileUploadService"
 import {DriverLicenseId} from "@domain/testDrive/value-object/DriverLicenseId";
 import {ApplicationException} from "@shared/ApplicationException";
 
-export const putDriverDocumentsUseCase : UseCaseImplementation<typeof putDriverDocumentsRequest, PutDriverDocumentsUseCase> = (input, files : File[]) => {
+export const putDriverDocumentsUseCase : UseCaseImplementation<typeof putDriverDocumentsRequest, PutDriverDocumentsUseCase> = (input, files ?: File[]) => {
     const driverLicenseId = DriverLicenseId.create(input.driverLicenseId);
     if(driverLicenseId instanceof ApplicationException) return Promise.reject(driverLicenseId);
     const useCase = createPutDriverDocumentsUseCase(testDriveEventRepository,driverRepository,fileUploadService);
     return useCase({
         ...input,
-        files,
+        files : files ?? [],
         driverLicenseId
     });
 }

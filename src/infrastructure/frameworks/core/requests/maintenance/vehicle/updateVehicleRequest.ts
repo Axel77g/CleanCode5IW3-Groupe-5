@@ -14,5 +14,5 @@ export const updateVehicleRequest = z.object({
             mileage: stringToNumber ,
         })
     }).optional(),
-    status: z.nativeEnum(VehicleStatusEnum).optional(),
+    status: z.nativeEnum(VehicleStatusEnum, {message: "Invalid status"}).optional(),
 });

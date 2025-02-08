@@ -21,17 +21,22 @@ export class MongoInventorySparePartRepository extends AbstractMongoRepository i
     }
 
     private async createTextIndex() {
-        const collection = this.getCollection();
-        const existingIndexes = await collection.indexes();
+        try{
+            const collection = this.getCollection();
+            const existingIndexes = await collection.indexes();
 
-        // Vérifie si un index texte existe déjà
-        const textIndexExists = existingIndexes.some(index =>
-            index.key.name === "text" || index.key.reference === "text"
-        );
+            // Vérifie si un index texte existe déjà
+            const textIndexExists = existingIndexes.some(index =>
+                index.key.name === "text" || index.key.reference === "text"
+            );
 
-        if (!textIndexExists) {
-            await collection.createIndex({ name: "text", reference: "text" }, { name: "textIndex" });
+            if (!textIndexExists) {
+                await collection.createIndex({ name: "text", reference: "text" }, { name: "textIndex" });
+            }
+        }catch (e) {
+            console.error("Cannot add the text index to the inventory spare parts collection, consider this error as a warning if you do not use search on inventory spare parts",e);
         }
+
     }
 
 

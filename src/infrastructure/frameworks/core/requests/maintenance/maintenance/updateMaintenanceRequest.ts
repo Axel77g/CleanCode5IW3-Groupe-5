@@ -5,7 +5,7 @@ import {stringToNumber} from "@infrastructureCore/requests/stringToNumber";
 export const updateMaintenanceRequest = z.object({
     maintenanceId:  z.string().uuid(),
     siret : z.string().nullable(),
-    status: z.nativeEnum(MaintenanceStatusEnum).optional(),
+    status: z.nativeEnum(MaintenanceStatusEnum,{message: "Invalid status"}).optional(),
     recommendation: z.string().max(255).optional(),
     maintenanceSpareParts: z.array(z.object({
         unitPrice: stringToNumber,

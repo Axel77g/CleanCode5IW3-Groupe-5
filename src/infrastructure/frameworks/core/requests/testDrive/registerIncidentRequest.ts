@@ -6,5 +6,5 @@ export const registerIncidentRequest = z.object({
     driverLicenseId: z.string(),
     description: z.string(),
     date: dateParser,
-    type: z.nativeEnum(IncidentType)
+    type: z.nativeEnum(IncidentType, {message: 'Invalid incident type'}),
 })
