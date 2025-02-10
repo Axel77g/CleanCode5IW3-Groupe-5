@@ -138,6 +138,7 @@ export class Vehicle {
         status?: VehicleStatusEnum
         warranty?: Period,
     }) {
+        if(object?.mileage && this.mileage > object.mileage) return Vehicle.ApplicationExceptions.CANNOT_HAVE_A_MILEAGE_LESS_THAN_PREVIOUS;
         if (object.maintenanceInterval && object.maintenanceInterval.mileage > this.mileage) return Vehicle.ApplicationExceptions.CANNOT_HAVE_A_MILEAGE_LESS_THAN_PREVIOUS;
         if (object.maintenanceInterval && object.mileage && object.maintenanceInterval.lastMaintenance.mileage > this.mileage) return Vehicle.ApplicationExceptions.INVALID_LAST_MILEAGE;
         return new Vehicle(
